@@ -1,29 +1,38 @@
 # pyDecisionProgramming
 Python interface for DecisionProgramming.jl
 
-Ubuntu 20.04:
+## Installation
+### Ubuntu 20.04:
+
+1. Install manual requirements
+ * Python3: install using `sudo apt install python3 python3-pip`
+ * Julia: Download and follow setup instructions
+ * Gurobi: download and follow the setup instructions
+
+2. Install Julia-side dependencies:
 ```
-sudo apt install python3 python3-pip
-install julia manually
-pip install pyJulia
+julia setup.jl
 ```
 
-To run REPL use `python-jl` (or `python-jl -m IPython`). Then
+3. Install python dependencies:
+```
+pip3 install -r requirements.txt
+```
+
+## Usage
+
+To run REPL use `python-jl` (or `python-jl -m IPython`).
+
+Set up the a new project using
+```
+import pyDecisionProgramming as pd
+pd.setup_project()
+```
+
+
+# TODO:
 
 ```
-from julia import Pkg
-Pkg.activate(".")
-
-Pkg.add(url="https://github.com/gamma-opt/DecisionProgramming.jl.git")
-Pkg.add("Gurobi")
-Pkg.add("JuMP")
-Pkg.add("Gurobi")
-
-from julia import Main
-
-Main.eval('using JuMP')
-Main.eval('using Gurobi')
-Main.eval('using DecisionProgramming')
 
 Main.eval('const O = 1')
 Main.eval('const T = 2')
