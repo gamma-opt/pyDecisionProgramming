@@ -1,6 +1,7 @@
 from julia import Pkg
 from julia import Main
 from julia import DecisionProgramming as jdp
+import uuid
 
 
 def setup_project():
