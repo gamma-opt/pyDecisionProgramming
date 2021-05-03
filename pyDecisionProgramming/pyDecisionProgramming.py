@@ -32,7 +32,7 @@ def setupProject():
     Main.eval('using JuMP')
 
 
-def statesFromList(state_list):
+def states(state_list):
     """ Set states in the graph
 
     state_list -- formatted as [(n, id)], where n is the
@@ -45,7 +45,7 @@ def statesFromList(state_list):
     return graph_states
 
 
-def createStates(ids, state_counts):
+def createFromLists(ids, state_counts):
     """ Set states in the graph
 
     ids -- a list of numbers identifying each node
@@ -53,7 +53,7 @@ def createStates(ids, state_counts):
     """
 
     params = [(c, [n]) for c, n in zip(state_counts, ids)]
-    graph_states = statesFromList(params)
+    graph_states = states(params)
     return graph_states
 
 
@@ -65,13 +65,26 @@ def createVector(type: str, name: str = None):
     '''
 
     if name is None:
-        # Generate a unique 8 character name
-        name = uuid.uuid4().hex[:8]
+        # Generate a unique 9 character name
+        name = 'n'+uuid.uuid4().hex[:8]
         print(name)
 
     print(f'{name} = Vector{{{type}}}()')
     Main.eval(f'{name} = Vector{{{type}}}()')
     return getattr(Main, name)
+
+
+def pushToVector(vec, element):
+    ''' Push and element to a given vector
+
+    vec -- the vector
+    element -- the new element
+    '''
+
+    Main.v = vec
+    Main.e = element
+    Main.eval('push!(Main.v, Main.e)')
+    return Main.v
 
 
 def chanceNode(id, nodes):
@@ -82,3 +95,13 @@ def chanceNode(id, nodes):
     '''
 
     return jdp.ChanceNode(id, nodes)
+
+
+def probabilities(id, probabilities):
+    ''' Create a chance node at given location in the graph
+
+    id -- The id of the node
+    nodes -- A vector of connected nodes
+    '''
+
+    return jdp.Probabilities(id, probabilities)
