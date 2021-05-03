@@ -81,10 +81,12 @@ def pushToVector(vec, element):
     element -- the new element
     '''
 
-    Main.v = vec
-    Main.e = element
-    Main.eval('push!(Main.v, Main.e)')
-    return Main.v
+    Main.pyDecisionProgramming_v = vec
+    Main.pyDecisionProgramming_e = element
+    Main.eval(
+        'push!(Main.pyDecisionProgramming_v, Main.pyDecisionProgramming_e)'
+    )
+    return Main.pyDecisionProgramming_v
 
 
 def chanceNode(id, nodes):
