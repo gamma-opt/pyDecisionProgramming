@@ -39,3 +39,30 @@ def create_states(ids, state_counts):
     params = [(c, [n]) for c, n in zip(state_counts, ids)]
     graph_states = states(params)
     return graph_states
+
+
+def create_vector(type: str, name: str = None):
+    ''' Create a new Julia vector of a given type
+
+    type: str -- The Julia type the vector contains
+    name: str -- Name of the vector in the Julia main namespace
+    '''
+
+    if name is None:
+        # Generate a unique 8 character name
+        name = uuid.uuid4().hex[:8]
+        print(name)
+
+    print(f'{name} = Vector{{{type}}}()')
+    Main.eval(f'{name} = Vector{{{type}}}()')
+    return getattr(Main, name)
+
+
+def chance_node(id, nodes):
+    ''' Create a chance node at given location in the graph
+
+    id -- The id of the node
+    nodes -- A vector of connected nodes
+    '''
+
+    return jdp.ChanceNode(id, nodes)
