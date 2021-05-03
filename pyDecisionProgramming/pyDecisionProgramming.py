@@ -4,7 +4,18 @@ from julia import DecisionProgramming as jdp
 import uuid
 
 
-def setup_project():
+def activate():
+    """ Activate a Julia environment in the working
+        directory
+    """
+
+    Pkg.activate(".")
+    Main.eval('using DecisionProgramming')
+    Main.eval('using Gurobi')
+    Main.eval('using JuMP')
+
+
+def setupProject():
     """ Activate a Julia environment in the working
         directory and install DecisionProgramming,
         Gurobi and JuMP
@@ -16,8 +27,12 @@ def setup_project():
     Pkg.add("Gurobi")
     Pkg.add("JuMP")
 
+    Main.eval('using DecisionProgramming')
+    Main.eval('using Gurobi')
+    Main.eval('using JuMP')
 
-def states(state_list):
+
+def statesFromList(state_list):
     """ Set states in the graph
 
     state_list -- formatted as [(n, id)], where n is the
@@ -30,7 +45,7 @@ def states(state_list):
     return graph_states
 
 
-def create_states(ids, state_counts):
+def createStates(ids, state_counts):
     """ Set states in the graph
 
     ids -- a list of numbers identifying each node
@@ -38,11 +53,11 @@ def create_states(ids, state_counts):
     """
 
     params = [(c, [n]) for c, n in zip(state_counts, ids)]
-    graph_states = states(params)
+    graph_states = statesFromList(params)
     return graph_states
 
 
-def create_vector(type: str, name: str = None):
+def createVector(type: str, name: str = None):
     ''' Create a new Julia vector of a given type
 
     type: str -- The Julia type the vector contains
@@ -59,7 +74,7 @@ def create_vector(type: str, name: str = None):
     return getattr(Main, name)
 
 
-def chance_node(id, nodes):
+def chanceNode(id, nodes):
     ''' Create a chance node at given location in the graph
 
     id -- The id of the node
