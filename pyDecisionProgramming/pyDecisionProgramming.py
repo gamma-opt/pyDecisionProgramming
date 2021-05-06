@@ -148,7 +148,7 @@ class Vector:
         ''' Sort the vector by node id contained in the elements
         '''
 
-        Main.eval(f'sort!({self.name}, by = x -> x.j))')
+        Main.eval(f'sort!({self.name}, by = x -> x.j)')
 
 
 class States:
