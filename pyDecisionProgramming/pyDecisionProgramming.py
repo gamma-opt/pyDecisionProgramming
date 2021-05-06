@@ -80,10 +80,8 @@ class Vector:
 
         # Generate a unique 9 character name
         self.name = 'n'+uuid.uuid4().hex[:8]
-        print('vector name', self.name)
         self.type = type
 
-        print(f'{self.name} = Vector{{{type}}}()')
         Main.eval(f'{self.name} = Vector{{{type}}}()')
 
     def __str__(self):
@@ -102,16 +100,12 @@ class Vector:
         if self.type == 'Probabilities':
             assert(isinstance(element, Probabilities))
 
-            print(f'push!(Main.{self.name}, Main.{element.name})')
             Main.eval(
                 f'push!(Main.{self.name}, Main.{element.name})'
             )
             return
 
         Main.pDR_e = element
-        print(Main.eval('typeof(Main.pDR_e)'))
-        print(Main.eval('Main.pDR_e'))
-        print(f'push!(Main.{self.name}, Main.pDR_e)')
         Main.eval(
             f'push!(Main.{self.name}, Main.pDR_e)'
         )
