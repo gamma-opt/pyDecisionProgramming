@@ -95,3 +95,5 @@ p = pd.DefaultPathProbability(c, x)
 print(p)
 u = pd.DefaultPathUtility(v, y)
 print(u)
+
+model = pd.Model()

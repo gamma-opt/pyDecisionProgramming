@@ -276,3 +276,9 @@ def validate_influence_diagram(
                     {decisionNodes.name},
                     {valueNodes.name}
                )''')
+
+
+def Model():
+    ''' Construct a Model (Julia Struct) '''
+
+    return Main.eval('Model()')
