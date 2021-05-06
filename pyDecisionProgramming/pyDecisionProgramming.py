@@ -25,6 +25,7 @@ def setupProject():
     github_url = "https://github.com/gamma-opt/DecisionProgramming.jl.git"
     Pkg.add(url=github_url)
     Pkg.add("Gurobi")
+    Pkg.build("Gurobi")
     Pkg.add("JuMP")
 
     Main.eval('using DecisionProgramming')
