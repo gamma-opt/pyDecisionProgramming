@@ -239,12 +239,25 @@ def DefaultPathProbability(chanceNodes, probabilites):
     ''' Construct a defaultPathProbability (Julia Struct)
 
     changeNodes -- Vector of ChangeNodes
-    probabilites -- Vector of Probabilities-object for each ChangeNode
+    probabilites -- Vector of Probabilities-objects for each ChangeNode
     '''
 
     return Main.eval(f'''DefaultPathProbability(
         {chanceNodes.name},
         {probabilites.name}
+    )''')
+
+
+def DefaultPathUtility(valueNodes, consequences):
+    ''' Construct a defaultPathProbability (Julia Struct)
+
+    valueNodes -- Vector of ValueNodes
+    consequences -- Vector of Consequences-objects for each ValueNode
+    '''
+
+    return Main.eval(f'''DefaultPathUtility(
+        {valueNodes.name},
+        {consequences.name}
     )''')
 
 
