@@ -144,7 +144,11 @@ class Vector:
             Main.pDR_e = element
             Main.eval(f'push!({self.name}, pDR_e)')
 
+    def sortByNode(self):
+        ''' Sort the vector by node id contained in the elements
+        '''
 
+        Main.eval(f'sort!({self.name}, by = x -> x.j))')
 
 
 class States:
