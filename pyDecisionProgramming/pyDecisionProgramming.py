@@ -34,8 +34,8 @@ def setupProject():
 
 
 class Probabilities:
-    ''' A wrapper for the DecisionProgramming.jl probabilities
-    class.
+    ''' A wrapper for the DecisionProgramming.jl Probabilities
+    type.
 
     Without the wrapper it get's interpreted as a python array,
     which in turn becomes a Julia vector.
@@ -61,7 +61,38 @@ class Probabilities:
         Main.eval(f'{self.name} = Probabilities(pDR_id, pDR_p)')
 
     def __str__(self):
-        return getattr(Main, self.name)
+        return getattr(Main, self.name).__str__()
+
+
+class Consequences:
+    ''' A wrapper for the DecisionProgramming.jl Consequences
+    type.
+
+    Without the wrapper it get's interpreted as a python array,
+    which in turn becomes a Julia vector.
+
+    self.id -- The node id the consequences correspond to
+    self.name -- The name of the Consequences-variable in
+        Julia main name space.
+    '''
+
+    def __init__(self, id, consequences):
+        ''' Set consequences to outcomes on a value node and
+        build the corresponding Consequences object.
+
+        id -- The id of the node
+        consequences -- List of consequences for each outcome
+        '''
+
+        self.id = id
+        self.name = 'n'+uuid.uuid4().hex[:8]
+        print('consq name', self.name)
+        Main.pDR_id = id
+        Main.pDR_c = consequences
+        Main.eval(f'{self.name} = Consequences(pDR_id, pDR_c)')
+
+    def __str__(self):
+        return getattr(Main, self.name).__str__()
 
 
 class Vector:
@@ -101,49 +132,50 @@ class Vector:
             assert(isinstance(element, Probabilities))
 
             Main.eval(
-                f'push!(Main.{self.name}, Main.{element.name})'
+                f'push!({self.name}, {element.name})'
             )
-            return
 
-        Main.pDR_e = element
-        Main.eval(
-            f'push!(Main.{self.name}, Main.pDR_e)'
-        )
+        elif self.type == 'Consequences':
+            assert(isinstance(element, Consequences))
 
+            Main.eval(f'push!({self.name}, {element.name})')
 
-def states(state_list):
-    """ Set states in the graph
-
-    state_list -- formatted as [(n, id)], where n is the
-    number of states and id an iteger identifying the node
-    """
-
-    params = [(c, [n]) for c, n in state_list]
-
-    graph_states = jdp.States(params)
-    return graph_states
+        else:
+            Main.pDR_e = element
+            Main.eval(f'push!({self.name}, pDR_e)')
 
 
-def statesFromLists(ids, state_counts):
-    """ Set states in the graph
-
-    ids -- a list of numbers identifying each node
-    state_counts -- list of the number of states on each node
-    """
-
-    params = [(c, [n]) for c, n in zip(state_counts, ids)]
-    graph_states = states(params)
-    return graph_states
 
 
-def consequences(id, probabilities):
-    ''' Set values for each outcome on a value node
+class States:
+    ''' A wrapper for the DecisionProgramming.jl States
+    type.
 
-    id -- The id of the node
-    probabilities -- A Probabilies-object describing the
+    Without the wrapper it get's interpreted as a python array,
+    which in turn becomes a Julia vector.
+
+    self.name -- The name of the States-variable in
+        Julia main name space.
     '''
 
-    return jdp.Probabilities(id, probabilities)
+    def __init__(self, state_list):
+        ''' Set consequences to outcomes on a value node and
+        build the corresponding Consequences object.
+
+        state_list -- A list of tuples of the form formatted as [(n, id)],
+        where n is the number of states and id an integer identifying the node
+        '''
+
+        Main.pDR_params = [(c, [n]) for c, n in state_list]
+        self.name = 'n'+uuid.uuid4().hex[:8]
+        print('States name', self.name)
+        Main.eval(f'{self.name} = States(pDR_params)')
+
+    def __getitem__(self, key):
+        return Main.eval(f'{self.name}[{key}]')
+
+    def __str__(self):
+        return getattr(Main, self.name).__str__()
 
 
 def ChanceNode(id, nodes):
