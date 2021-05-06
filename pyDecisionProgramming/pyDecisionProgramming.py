@@ -152,11 +152,13 @@ def consequences(id, probabilities):
     return jdp.Probabilities(id, probabilities)
 
 
-def chanceNode(id, nodes):
+def ChanceNode(id, nodes):
     ''' Create a chance node at given location in the graph
 
     id -- The id of the node
     nodes -- List of nodes connected to this node
+
+    return -- Changen
     '''
 
     if isinstance(nodes, Vector):
@@ -169,7 +171,7 @@ def chanceNode(id, nodes):
         return jdp.ChanceNode(id, nodes)
 
 
-def valueNode(id, nodes):
+def ValueNode(id, nodes):
     ''' Create a value node at given location in the graph
 
     id -- The id of the node
@@ -186,7 +188,7 @@ def valueNode(id, nodes):
         return jdp.ValueNode(id, nodes)
 
 
-def decisionNode(id, nodes):
+def DecisionNode(id, nodes):
     ''' Create a decision node at given location in the graph
 
     id -- The id of the node
