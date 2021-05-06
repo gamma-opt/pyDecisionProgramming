@@ -229,3 +229,15 @@ def DecisionNode(id, nodes):
     else:
         # Try with a python object, Julia will type-check
         return jdp.DecisionNode(id, nodes)
+
+
+def validate_influence_diagram(s, c, d, v):
+    """ Validate the current influence diagram
+    """
+
+    Main.eval(f'''validate_influence_diagram(
+                    {s.name},
+                    {c.name},
+                    {d.name},
+                    {v.name}
+               )''')
