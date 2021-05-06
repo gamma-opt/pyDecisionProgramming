@@ -88,8 +88,8 @@ y.push(consq)
 print(y)
 
 pd.validate_influence_diagram(s, c, d, v)
-for v in (c, d, v, x, y):
-    v.sortByNode()
+for vec in (c, d, v, x, y):
+    vec.sortByNode()
 
 p = pd.DefaultPathProbability(c, x)
 print(p)
