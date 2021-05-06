@@ -235,13 +235,31 @@ def DecisionNode(id, nodes):
         return jdp.DecisionNode(id, nodes)
 
 
-def validate_influence_diagram(s, c, d, v):
-    """ Validate the current influence diagram
+def DefaultPathProbability(chanceNodes, probabilites):
+    ''' Construct a defaultPathProbability (Julia Struct)
+
+    changeNodes -- Vector of ChangeNodes
+    probabilites -- Vector of Probabilities-object for each ChangeNode
+    '''
+
+    return Main.eval(f'''DefaultPathProbability(
+        {chanceNodes.name},
+        {probabilites.name}
+    )''')
+
+
+def validate_influence_diagram(
+    states,
+    chanceNodes,
+    decisionNodes,
+    valueNodes
+):
+    """ Validate an influence diagram
     """
 
     Main.eval(f'''validate_influence_diagram(
-                    {s.name},
-                    {c.name},
-                    {d.name},
-                    {v.name}
+                    {states.name},
+                    {chanceNodes.name},
+                    {decisionNodes.name},
+                    {valueNodes.name}
                )''')
