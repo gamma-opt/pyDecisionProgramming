@@ -294,3 +294,23 @@ def DecisionVariables(model, states, decisionNodes):
                           {states.name},
                           {decisionNodes.name}
                      )''')
+
+
+def PathProbabilityVariables(
+    model,
+    decisionVariables,
+    states,
+    defaultPathProbability
+):
+    ''' Construct a PathProbabilityVariables-object (Julia Struct) '''
+
+    Main.dp_model = model
+    Main.dp_decisionVariables = decisionVariables
+    Main.dp_defaultPathProbability = defaultPathProbability
+
+    return Main.eval(f'''PathProbabilityVariables(
+                          dp_model,
+                          dp_decisionVariables,
+                          {states.name},
+                          dp_defaultPathProbability
+                     )''')

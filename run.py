@@ -100,3 +100,5 @@ model = pd.Model()
 print(model)
 z_var = pd.DecisionVariables(model, s, d)
 print(z_var)
+
+pi_s = pd.PathProbabilityVariables(model, z_var, s, p)
