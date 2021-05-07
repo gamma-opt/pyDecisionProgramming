@@ -102,3 +102,10 @@ z_var = pd.DecisionVariables(model, s, d)
 print(z_var)
 
 pi_s = pd.PathProbabilityVariables(model, z_var, s, p)
+print(pi_s)
+
+ev = pd.expected_value(model, pi_s, u)
+print(ev)
+
+pd.set_objective(model, 'Max', ev)
+print(model)

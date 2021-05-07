@@ -296,21 +296,80 @@ def DecisionVariables(model, states, decisionNodes):
                      )''')
 
 
-def PathProbabilityVariables(
+class PathProbabilityVariables():
+    ''' A wrapper for the DecisionProgramming.jl PathProbabilityVariables
+    type.
+
+    Without the wrapper it get's interpreted as a python dictionary,
+    and does not preserve the Julia type.
+
+    self.name -- The name of the DecisionProgramming-variable in
+        Julia main name space.
+    '''
+
+    def __init__(self,
+                 model,
+                 decisionVariables,
+                 states,
+                 defaultPathProbability
+                 ):
+        ''' Construct a PathProbabilityVariables-object (Julia Struct)
+
+        model -- A wrapped Model object
+        decisionVariables -- A wrapped DecisionVariables object
+        states -- A pyDecisionProgramming States object
+        defaultPathProbability -- A wrapped defaultPathProbability object
+        '''
+
+        self.name = unique_name()
+        Main.dp_model = model
+        Main.dp_decisionVariables = decisionVariables
+        Main.dp_defaultPathProbability = defaultPathProbability
+
+        Main.eval(f'''{self.name} = PathProbabilityVariables(
+                    dp_model,
+                    dp_decisionVariables,
+                    {states.name},
+                    dp_defaultPathProbability
+               )''')
+
+
+def expected_value(
     model,
-    decisionVariables,
-    states,
-    defaultPathProbability
+    pathProbabilityVariables,
+    defaultPathUtility
 ):
-    ''' Construct a PathProbabilityVariables-object (Julia Struct) '''
+    ''' Construct a expected-value objective (Julia Struct) '''
 
     Main.dp_model = model
-    Main.dp_decisionVariables = decisionVariables
-    Main.dp_defaultPathProbability = defaultPathProbability
+    Main.dp_defaultPathUtility = defaultPathUtility
 
-    return Main.eval(f'''PathProbabilityVariables(
+    return Main.eval(f'''expected_value(
                           dp_model,
-                          dp_decisionVariables,
-                          {states.name},
-                          dp_defaultPathProbability
+                          {pathProbabilityVariables.name},
+                          dp_defaultPathUtility
                      )''')
+
+
+def set_objective(
+    model,
+    direction,
+    objective
+):
+    ''' Set an objective for the DecisionProgramming model
+
+    model -- A wrapped Model object
+    direction -- string: "Max" to maximize and "Min" to minimize
+    objective -- An objective-object created by pyDecisionProgramming
+    '''
+
+    Main.dp_model = model
+    Main.dp_objective = objective
+
+    return Main.eval(f'''@objective(
+                          dp_model,
+                          {direction},
+                          dp_objective
+                     )''')
+
+
