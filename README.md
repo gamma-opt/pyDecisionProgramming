@@ -237,7 +237,7 @@ udist = pd.UtilityDistribution(s, p, u, z)
 
 From the utility distribution, we can see that Joe's profit with this strategy is 15 USD, with a 20% probability (the car is a lemon) and 35 USD with an 80% probability (the car is a peach).
 
-```julia-repl
+```python-repl
 >>> print_statistics(udist)
 ┌──────────┬────────────┐
 │     Name │ Statistics │
