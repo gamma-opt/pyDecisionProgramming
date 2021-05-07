@@ -33,6 +33,12 @@ def setupProject():
     Main.eval('using JuMP')
 
 
+def unique_name():
+    ''' A utility for generating unique names for the Julia main name space '''
+
+    return 'pyDP'+uuid.uuid4().hex[:10]
+
+
 class Probabilities:
     ''' A wrapper for the DecisionProgramming.jl Probabilities
     type.
@@ -54,7 +60,7 @@ class Probabilities:
         '''
 
         self.id = id
-        self.name = 'n'+uuid.uuid4().hex[:8]
+        self.name = unique_name()
         print('prob name', self.name)
         Main.pDR_id = id
         Main.pDR_p = probabilities
@@ -85,7 +91,7 @@ class Consequences:
         '''
 
         self.id = id
-        self.name = 'n'+uuid.uuid4().hex[:8]
+        self.name = unique_name()
         print('consq name', self.name)
         Main.pDR_id = id
         Main.pDR_c = consequences
@@ -109,18 +115,13 @@ class Vector:
         type: str -- The Julia type the vector contains
         '''
 
-        # Generate a unique 9 character name
-        self.name = 'n'+uuid.uuid4().hex[:8]
+        self.name = unique_name()
         self.type = type
 
         Main.eval(f'{self.name} = Vector{{{type}}}()')
 
     def __str__(self):
         return getattr(Main, self.name).__str__()
-
-    def setName(self, name):
-        Main.eval(f'{name} = {self.name}')
-        self.name = name
 
     def push(self, element):
         ''' Push and element to a given vector
@@ -171,8 +172,7 @@ class States:
         '''
 
         Main.pDR_params = [(c, [n]) for c, n in state_list]
-        self.name = 'n'+uuid.uuid4().hex[:8]
-        print('States name', self.name)
+        self.name = unique_name()
         Main.eval(f'{self.name} = States(pDR_params)')
 
     def __getitem__(self, key):
