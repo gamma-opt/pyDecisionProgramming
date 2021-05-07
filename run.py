@@ -1,9 +1,8 @@
 import pyDecisionProgramming as pd
 import numpy as np
 
-#pd.setupProject()
+# pd.setupProject()
 pd.activate()
-
 
 o = 1
 t = 2
@@ -72,10 +71,8 @@ i_v2 = [a]
 y_v2 = [100.0, 40.0, 0.0]
 vn = pd.ValueNode(6, i_v2)
 v.push(vn)
-print(v)
 consq = pd.Consequences(6, y_v2)
 y.push(consq)
-print(y)
 
 i_v3 = [o, a]
 y_v3 = [[-200.0, 0.0, 0.0],
@@ -92,23 +89,13 @@ for vec in (c, d, v, x, y):
     vec.sortByNode()
 
 p = pd.DefaultPathProbability(c, x)
-print(p)
 u = pd.DefaultPathUtility(v, y)
-print(u)
 
 model = pd.Model()
-print(model)
 z_var = pd.DecisionVariables(model, s, d)
-print(z_var)
-
 pi_s = pd.PathProbabilityVariables(model, z_var, s, p)
-print(pi_s)
-
 ev = pd.expected_value(model, pi_s, u)
-print(ev)
-
 pd.set_objective(model, 'Max', ev)
-print(model)
 
 pd.setup_Gurobi_optimizer(
    model,
@@ -121,6 +108,6 @@ pd.optimize(model)
 z = pd.DecisionStrategy(z_var)
 pd.print_decision_strategy(s, z)
 
-u = pd.UtilityDistribution(s, p, u, z)
-pd.print_utility_distribution(u)
-pd.print_statistics(u)
+udist = pd.UtilityDistribution(s, p, u, z)
+pd.print_utility_distribution(udist)
+pd.print_statistics(udist)
