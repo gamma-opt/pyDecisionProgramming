@@ -109,3 +109,18 @@ print(ev)
 
 pd.set_objective(model, 'Max', ev)
 print(model)
+
+pd.setup_Gurobi_optimizer(
+   model,
+   ("IntFeasTol", 1e-9),
+   ("LazyConstraints", 1)
+)
+
+pd.optimize(model)
+
+z = pd.DecisionStrategy(z_var)
+pd.print_decision_strategy(s, z)
+
+u = pd.UtilityDistribution(s, p, u, z)
+pd.print_utility_distribution(u)
+pd.print_statistics(u)

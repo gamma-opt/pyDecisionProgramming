@@ -373,3 +373,107 @@ def set_objective(
                      )''')
 
 
+def setup_Gurobi_optimizer(model, *constraints):
+    ''' Create a JuMP optimizer
+
+    constraints -- Tuple formatted as (constraint_name, constraint)
+    '''
+
+    julia_command = '''optimizer = optimizer_with_attributes(
+                 () -> Gurobi.Optimizer(Gurobi.Env())'''
+
+    for constraint in constraints:
+        julia_command += f''',
+                     "{constraint[0]}" => {constraint[1]}'''
+
+    julia_command += ')'
+
+    Main.eval(julia_command)
+    Main.eval('print(optimizer)')
+
+    Main.dp_model = model
+    Main.eval('set_optimizer(dp_model, optimizer)')
+
+
+def optimize(model):
+    ''' Create a JuMP optimizer
+
+    model -- A wrapped Model object
+    '''
+
+    Main.dp_model = model
+    Main.eval('optimize!(dp_model)')
+
+
+def DecisionStrategy(decisionVariables):
+    ''' Create a JuMP optimizer
+
+    decisionVariables -- A DecisionVariables object
+    '''
+
+    Main.dp_decisionVariables = decisionVariables
+    return Main.eval('DecisionStrategy(dp_decisionVariables)')
+
+
+def print_decision_strategy(states, decisionVariables):
+    ''' Create a JuMP optimizer
+
+    states -- A pyDecisionProgramming States object
+    decisionVariables -- A DecisionVariables object
+    '''
+
+    Main.dp_decisionVariables = decisionVariables
+    return Main.eval(f'''print_decision_strategy(
+        {states.name},
+        dp_decisionVariables)
+        ''')
+
+
+def UtilityDistribution(
+       states,
+       defaultPathProbability,
+       defaultPathUtility,
+       decisionVariables
+):
+    ''' Build a utility distribution
+
+    states -- A pyDecisionProgramming States object
+    defaultPathProbability -- A wrapped defaultPathProbability object
+    defaultPathUtility -- A wrapped defaultPathUtility object
+    decisionVariables -- A wrapped decisionVariables object
+    '''
+
+    Main.dp_defaultPathProbability = defaultPathProbability
+    Main.dp_defaultPathUtility = defaultPathUtility
+    Main.dp_decisionVariables = decisionVariables
+    return Main.eval(f'''UtilityDistribution(
+        {states.name},
+        dp_defaultPathProbability,
+        dp_defaultPathUtility,
+        dp_decisionVariables
+        )
+    ''')
+
+
+def print_utility_distribution(utilityDistribution):
+    ''' Print information about the utility distribution.
+
+    utilityDistribution -- A utilityDistribution object
+    '''
+
+    Main.dp_utilityDistribution = utilityDistribution
+    return Main.eval('''print_utility_distribution(
+        dp_utilityDistribution)
+        ''')
+
+
+def print_statistics(utilityDistribution):
+    ''' Print additional statistics about the utility distibution
+
+    utilityDistribution -- A utilityDistribution object
+    '''
+
+    Main.dp_utilityDistribution = utilityDistribution
+    return Main.eval('''print_statistics(
+        dp_utilityDistribution)
+        ''')
