@@ -211,7 +211,7 @@ def ValueNode(id, nodes):
     if isinstance(nodes, Vector):
         assert(nodes.type == 'Node')
 
-        return Main.eval(f'ValueNode({id}, Main.{nodes.name})')
+        return Main.eval(f'ValueNode({id}, {nodes.name})')
 
     else:
         # Try with a python object, Julia will type-check
@@ -281,4 +281,16 @@ def validate_influence_diagram(
 def Model():
     ''' Construct a Model (Julia Struct) '''
 
-    return Main.eval('Model()')
+    return jdp.Model()
+
+
+def DecisionVariables(model, states, decisionNodes):
+    ''' Construct a DecisionVariables-object (Julia Struct) '''
+
+    Main.dp_model = model
+
+    return Main.eval(f'''DecisionVariables(
+                          dp_model,
+                          {states.name},
+                          {decisionNodes.name}
+                     )''')

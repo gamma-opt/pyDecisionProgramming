@@ -97,3 +97,6 @@ u = pd.DefaultPathUtility(v, y)
 print(u)
 
 model = pd.Model()
+print(model)
+z_var = pd.DecisionVariables(model, s, d)
+print(z_var)
