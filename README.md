@@ -51,8 +51,8 @@ We now add two new features to the problem. A stranger approaches Joe and offers
 We present the new influence diagram above. The decision node $T$ denotes the decision to accept or decline the stranger's offer, and $R$ is the outcome of the test. We introduce new value nodes $V_1$ and $V_2$ to represent the testing costs and the base profit from purchasing the car. Additionally, the decision node $A$ now can choose to buy with a guarantee.
 
 ```python
-import numpy
-import pyDecisionProgramming
+import numpy as np
+import pyDecisionProgramming as pd
 pd.activate()
 
 o = 1
