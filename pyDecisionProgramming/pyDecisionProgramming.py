@@ -278,19 +278,47 @@ def validate_influence_diagram(
                )''')
 
 
-def Model():
-    ''' Construct a Model (Julia Struct) '''
+class Model():
+    ''' A wrapper for the DecisionProgramming.jl Model
+    type.
 
-    return jdp.Model()
+    Members include functions that modify the model.
+
+    self.name -- The name of the DecisionProgramming-variable in
+        Julia main name space.
+
+    self.probability_cut() -- Adds a probability cut to the model
+        as a lazy constraint
+    '''
+
+    def __init__(self):
+        ''' Initialize a pyDecisionProgramming Model '''
+        self.name = unique_name()
+        Main.eval(f'''{self.name} = Model()''')
+
+    def probability_cut(self, pi_s, P, probability_scale_factor=1.0):
+        '''Adds a probability cut to the model as a lazy constraint
+
+        pi_s -- A PathProbabilityVariables object
+        P -- An AbstractPathProbability object
+        probability_scale_factor -- An additional scaling factor
+        '''
+
+        Main.eval(f'''DecisionVariables(
+                              {self.name},
+                              {pi_s.name},
+                              {P.name}
+                         )''')
+
+    def __str__(self):
+        return Main.eval(f'''{self.name}''')
 
 
 def DecisionVariables(model, states, decisionNodes):
     ''' Construct a DecisionVariables-object (Julia Struct) '''
 
-    Main.dp_model = model
-
     return Main.eval(f'''DecisionVariables(
-                          dp_model,
+                          {model.name},
                           {states.name},
                           {decisionNodes.name}
                      )''')
@@ -322,12 +350,11 @@ class PathProbabilityVariables():
         '''
 
         self.name = unique_name()
-        Main.dp_model = model
         Main.dp_decisionVariables = decisionVariables
         Main.dp_defaultPathProbability = defaultPathProbability
 
         Main.eval(f'''{self.name} = PathProbabilityVariables(
-                    dp_model,
+                    {model.name},
                     dp_decisionVariables,
                     {states.name},
                     dp_defaultPathProbability
@@ -341,11 +368,10 @@ def expected_value(
 ):
     ''' Construct a expected-value objective (Julia Struct) '''
 
-    Main.dp_model = model
     Main.dp_defaultPathUtility = defaultPathUtility
 
     return Main.eval(f'''expected_value(
-                          dp_model,
+                          {model.name},
                           {pathProbabilityVariables.name},
                           dp_defaultPathUtility
                      )''')
@@ -363,11 +389,10 @@ def set_objective(
     objective -- An objective-object created by pyDecisionProgramming
     '''
 
-    Main.dp_model = model
     Main.dp_objective = objective
 
     return Main.eval(f'''@objective(
-                          dp_model,
+                          {model.name},
                           {direction},
                           dp_objective
                      )''')
@@ -391,8 +416,7 @@ def setup_Gurobi_optimizer(model, *constraints):
     Main.eval(julia_command)
     Main.eval('print(optimizer)')
 
-    Main.dp_model = model
-    Main.eval('set_optimizer(dp_model, optimizer)')
+    Main.eval(f'set_optimizer({model.name}, optimizer)')
 
 
 def optimize(model):
@@ -401,8 +425,7 @@ def optimize(model):
     model -- A wrapped Model object
     '''
 
-    Main.dp_model = model
-    Main.eval('optimize!(dp_model)')
+    Main.eval(f'optimize!({model.name})')
 
 
 def DecisionStrategy(decisionVariables):
