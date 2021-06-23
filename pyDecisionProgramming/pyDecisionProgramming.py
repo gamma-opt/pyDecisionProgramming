@@ -296,6 +296,31 @@ class Model():
         self.name = unique_name()
         Main.eval(f'''{self.name} = Model()''')
 
+    def setup_Gurobi_optimizer(self, *constraints):
+        ''' Create a JuMP optimizer
+
+        constraints -- Tuple formatted as (constraint_name, constraint)
+        '''
+
+        julia_command = '''optimizer = optimizer_with_attributes(
+                     () -> Gurobi.Optimizer(Gurobi.Env())'''
+
+        for constraint in constraints:
+            julia_command += f''',
+                         "{constraint[0]}" => {constraint[1]}'''
+
+        julia_command += ')'
+
+        Main.eval(julia_command)
+        Main.eval('print(optimizer)')
+
+        Main.eval(f'set_optimizer({self.name}, optimizer)')
+
+    def optimize(self):
+        ''' Run the current optimizer '''
+
+        Main.eval(f'optimize!({self.name})')
+
     def probability_cut(self, pi_s, P, probability_scale_factor=1.0):
         '''Adds a probability cut to the model as a lazy constraint
 
@@ -396,36 +421,6 @@ def set_objective(
                           {direction},
                           dp_objective
                      )''')
-
-
-def setup_Gurobi_optimizer(model, *constraints):
-    ''' Create a JuMP optimizer
-
-    constraints -- Tuple formatted as (constraint_name, constraint)
-    '''
-
-    julia_command = '''optimizer = optimizer_with_attributes(
-                 () -> Gurobi.Optimizer(Gurobi.Env())'''
-
-    for constraint in constraints:
-        julia_command += f''',
-                     "{constraint[0]}" => {constraint[1]}'''
-
-    julia_command += ')'
-
-    Main.eval(julia_command)
-    Main.eval('print(optimizer)')
-
-    Main.eval(f'set_optimizer({model.name}, optimizer)')
-
-
-def optimize(model):
-    ''' Create a JuMP optimizer
-
-    model -- A wrapped Model object
-    '''
-
-    Main.eval(f'optimize!({model.name})')
 
 
 def DecisionStrategy(decisionVariables):

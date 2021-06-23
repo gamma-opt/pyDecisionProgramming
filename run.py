@@ -97,13 +97,12 @@ pi_s = pd.PathProbabilityVariables(model, z_var, s, p)
 ev = pd.expected_value(model, pi_s, u)
 pd.set_objective(model, 'Max', ev)
 
-pd.setup_Gurobi_optimizer(
-   model,
+model.setup_Gurobi_optimizer(
    ("IntFeasTol", 1e-9),
    ("LazyConstraints", 1)
 )
 
-pd.optimize(model)
+model.optimize()
 
 z = pd.DecisionStrategy(z_var)
 pd.print_decision_strategy(s, z)
