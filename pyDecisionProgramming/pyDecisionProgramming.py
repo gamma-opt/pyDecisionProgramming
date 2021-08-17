@@ -6,7 +6,7 @@ import uuid
 
 def activate():
     """ Activate a Julia environment in the working
-        directory
+        directory and load requirements
     """
 
     Pkg.activate(".")
@@ -164,8 +164,7 @@ class States:
     '''
 
     def __init__(self, state_list):
-        ''' Set consequences to outcomes on a value node and
-        build the corresponding Consequences object.
+        ''' Set node states and build the corresponding States object.
 
         state_list -- A list of tuples of the form formatted as [(n, id)],
         where n is the number of states and id an integer identifying the node
@@ -188,7 +187,7 @@ def ChanceNode(id, nodes):
     id -- The id of the node
     nodes -- List of nodes connected to this node
 
-    return -- Changen
+    return -- Change node
     '''
 
     if isinstance(nodes, Vector):

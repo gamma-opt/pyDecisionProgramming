@@ -114,7 +114,7 @@ c.push(pd.ChanceNode(r, i_r))
 x.push(pd.Probabilities(r, x_r))
 ```
 
-### Purchace Decision
+### Purchase Decision
 ```python
 i_a = [r]
 d.push(pd.DecisionNode(a, i_a))
