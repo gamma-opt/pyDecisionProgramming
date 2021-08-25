@@ -46,7 +46,7 @@ We can easily determine the optimal strategy for this problem. If Joe decides no
 We now add two new features to the problem. A stranger approaches Joe and offers to tell Joe whether the car is a lemon or a peach for 25 USD. Additionally, the car dealer offers a guarantee plan which costs 60 USD and covers 50% of the repair costs. Joe notes that this is not a very good deal, and the dealer includes an anti-lemon feature: if the total repair cost exceeds 100 USD, the quarantee will fully cover the repairs.
 
 ## Influence diagram
-![used-car-buyer-2](https://github.com/gamma-opt/pyDecisionProgramming/blob/main/figures/used-car-buyer-2.svg)
+![used-car-buyer-2](./figures/used-car-buyer-2.svg)
 
 We present the new influence diagram above. The decision node $T$ denotes the decision to accept or decline the stranger's offer, and $R$ is the outcome of the test. We introduce new value nodes $V_1$ and $V_2$ to represent the testing costs and the base profit from purchasing the car. Additionally, the decision node $A$ now can choose to buy with a guarantee.
 
