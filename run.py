@@ -4,6 +4,43 @@ import numpy as np
 # pd.setupProject()
 pd.activate()
 
+diagram = pd.InfluenceDiagram()
+
+car_results = pd.ChanceNode("O", [], ["lemon", "peach"])
+diagram.add_node(car_results)
+
+test_options = pd.DecisionNode("T", [], ["no test", "test"])
+diagram.add_node(test_options)
+
+test_outcomes = pd.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
+diagram.add_node(test_outcomes)
+
+buy_options = pd.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
+diagram.add_node(buy_options)
+
+
+value_node = pd.ValueNode("V1", ["T"])
+diagram.add_node(value_node)
+value_node = pd.ValueNode("V2", ["A"])
+diagram.add_node(value_node)
+value_node = pd.ValueNode("V3", ["O", "A"])
+diagram.add_node(value_node)
+
+diagram.generate_arcs()
+
+probabilities = pd.ProbabilityMatrix(diagram, "O")
+probabilities.set("peach", 0.8)
+probabilities.set("lemon", 0.2)
+diagram.add_probabilities("O", probabilities)
+
+# X_O = ProbabilityMatrix(diagram, "O")
+# X_O["peach"] = 0.8
+# X_O["lemon"] = 0.2
+# add_probabilities!(diagram, "O", X_O)
+
+import sys
+sys.exit()
+
 o = 1
 t = 2
 r = 3

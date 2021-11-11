@@ -39,6 +39,109 @@ def unique_name():
     return 'pyDP'+uuid.uuid4().hex[:10]
 
 
+class InfluenceDiagram():
+
+    def __init__(self):
+        self.name = unique_name()
+        Main.eval(f'{self.name} = InfluenceDiagram()')
+
+    def add_node(self, node):
+        Main.eval(f'add_node!({self.name}, {node.name})')
+
+    def generate_arcs(self):
+        Main.eval(f'generate_arcs!({self.name})')
+
+    def add_probabilities(self, node, probability_matrix):
+        Main.eval(f'add_probabilities!({self.name}, "{node}", {probability_matrix.name})')
+
+
+class ChanceNode():
+    def __init__(self, id, nodes, names):
+        ''' Create a chance node
+
+        id -- The id of the node
+        nodes -- List of nodes connected to this node
+        names -- List of node names
+
+        return -- Change node
+        '''
+
+        self.name = unique_name()
+
+        if isinstance(nodes, Vector):
+            assert(isinstance(names, Vector))
+
+            Main.eval(f'{self.name} = ChanceNode({id}, Main.{nodes.name}, Main.{names.name})')
+
+        else:
+            # Try with a python object, Julia will type-check
+            Main.tmp = jdp.ChanceNode(id, nodes, names)
+            Main.eval(f'{self.name} = tmp')
+
+
+class DecisionNode():
+    def __init__(self, id, nodes, names):
+        ''' Create a decision node
+
+        id -- The id of the node
+        nodes -- List of nodes connected to this node
+        names -- List of node names
+
+        return -- Change node
+        '''
+
+        self.name = unique_name()
+
+        if isinstance(nodes, Vector):
+            assert(isinstance(names, Vector))
+
+            Main.eval(f'{self.name} = DecisionNode({id}, Main.{nodes.name}, Main.{names.name})')
+
+        else:
+            # Try with a python object, Julia will type-check
+            Main.tmp = jdp.DecisionNode(id, nodes, names)
+            Main.eval(f'{self.name} = tmp')
+
+
+class ValueNode():
+    def __init__(self, id, nodes):
+        ''' Create a value node
+
+        id -- The id of the node
+        nodes -- List of nodes connected to this node
+        names -- List of node names
+
+        return -- Change node
+        '''
+
+        self.name = unique_name()
+
+        if isinstance(nodes, Vector):
+            Main.eval(f'{self.name} = ValueNode({id}, {nodes.name})')
+
+        else:
+            # Try with a python object, Julia will type-check
+            Main.tmp = jdp.ValueNode(id, nodes)
+            Main.eval(f'{self.name} = tmp')
+
+
+class ProbabilityMatrix():
+    def __init__(self, diagram, node):
+        ''' Create a propability matrix
+
+        return -- Change node
+        '''
+
+        self.name = unique_name()
+
+        command = f'{self.name} = ProbabilityMatrix({diagram.name}, "{node}")'
+        Main.eval(command)
+
+    def set(self, outcome, probability):
+        Main.eval(f'{self.name}["{outcome}"] = {probability}')
+
+
+
 class Probabilities:
     ''' A wrapper for the DecisionProgramming.jl Probabilities
     type.
@@ -179,59 +282,6 @@ class States:
 
     def __str__(self):
         return getattr(Main, self.name).__str__()
-
-
-def ChanceNode(id, nodes):
-    ''' Create a chance node at given location in the graph
-
-    id -- The id of the node
-    nodes -- List of nodes connected to this node
-
-    return -- Change node
-    '''
-
-    if isinstance(nodes, Vector):
-        assert(nodes.type == 'Node')
-
-        return Main.eval(f'ChanceNode({id}, Main.{nodes.name})')
-
-    else:
-        # Try with a python object, Julia will type-check
-        return jdp.ChanceNode(id, nodes)
-
-
-def ValueNode(id, nodes):
-    ''' Create a value node at given location in the graph
-
-    id -- The id of the node
-    nodes -- List of nodes connected to this node
-    '''
-
-    if isinstance(nodes, Vector):
-        assert(nodes.type == 'Node')
-
-        return Main.eval(f'ValueNode({id}, {nodes.name})')
-
-    else:
-        # Try with a python object, Julia will type-check
-        return jdp.ValueNode(id, nodes)
-
-
-def DecisionNode(id, nodes):
-    ''' Create a decision node at given location in the graph
-
-    id -- The id of the node
-    nodes -- List of nodes connected to this node
-    '''
-
-    if isinstance(nodes, Vector):
-        assert(nodes.type == 'Node')
-
-        return Main.eval(f'DecisionNode({id}, Main.{nodes.name})')
-
-    else:
-        # Try with a python object, Julia will type-check
-        return jdp.DecisionNode(id, nodes)
 
 
 def DefaultPathProbability(chanceNodes, probabilites):
