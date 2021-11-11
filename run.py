@@ -28,15 +28,27 @@ diagram.add_node(value_node)
 
 diagram.generate_arcs()
 
-probabilities = pd.ProbabilityMatrix(diagram, "O")
-probabilities.set("peach", 0.8)
-probabilities.set("lemon", 0.2)
-diagram.add_probabilities("O", probabilities)
+matrix = diagram.probability_matrix('O')
+diagram.set_probabilities('O', [0.8, 0.2])
 
-# X_O = ProbabilityMatrix(diagram, "O")
-# X_O["peach"] = 0.8
-# X_O["lemon"] = 0.2
-# add_probabilities!(diagram, "O", X_O)
+matrix = diagram.probability_matrix('R')
+matrix[0, 0, :] = [1, 0, 0]
+matrix[0, 1, :] = [0, 1, 0]
+matrix[1, 0, :] = [1, 0, 0]
+matrix[1, 1, :] = [0, 0, 1]
+diagram.set_probabilities('R', matrix)
+
+matrix = diagram.utility__matrix('V1')
+print(matrix)
+matrix[0] = -25
+matrix[1] = 0
+print(matrix)
+diagram.set_utility('V1', matrix)
+
+# Y_V1 = UtilityMatrix(diagram, "V1")
+# Y_V1["test"] = -25
+# Y_V1["no test"] = 0
+# add_utilities!(diagram, "V1", Y_V1)
 
 import sys
 sys.exit()

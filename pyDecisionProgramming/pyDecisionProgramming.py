@@ -1,6 +1,7 @@
 from julia import Pkg
 from julia import Main
 from julia import DecisionProgramming as jdp
+import numpy as np
 import uuid
 
 
@@ -51,8 +52,33 @@ class InfluenceDiagram():
     def generate_arcs(self):
         Main.eval(f'generate_arcs!({self.name})')
 
-    def add_probabilities(self, node, probability_matrix):
-        Main.eval(f'add_probabilities!({self.name}, "{node}", {probability_matrix.name})')
+    def probability_matrix(self, node):
+        Main.eval(f'tmp = {self.name}')
+        matrix = Main.ProbabilityMatrix(Main.tmp, node)
+        return np.array(matrix)
+
+    def set_probabilities(self, node, matrix):
+        if isinstance(matrix, Vector):
+            print()
+        else:
+            Main.tmp = matrix
+
+            Main.eval('tmp = convert(Array{Float64}, tmp)')
+            Main.eval(f'add_probabilities!({self.name}, "{node}", tmp)')
+
+    def utility__matrix(self, value):
+        Main.eval(f'tmp = {self.name}')
+        matrix = Main.UtilityMatrix(Main.tmp, value)
+        return np.array(matrix)
+
+    def set_utility(self, value, matrix):
+        if isinstance(matrix, Vector):
+            print()
+        else:
+            Main.tmp = matrix
+
+            Main.eval('tmp = convert(Array{Float64}, tmp)')
+            Main.eval(f'add_utilities!({self.name}, "{value}", tmp)')
 
 
 class ChanceNode():
@@ -127,7 +153,7 @@ class ValueNode():
 
 class ProbabilityMatrix():
     def __init__(self, diagram, node):
-        ''' Create a propability matrix
+        ''' Create a probability matrix
 
         return -- Change node
         '''
