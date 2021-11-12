@@ -27,38 +27,40 @@ diagram.add_node(value_node)
 
 diagram.generate_arcs()
 
-# A probability or utility matrix can be set to a Numpy list
-diagram.set_probabilities('O', [0.8, 0.2])
+X_O = pdp.ProbabilityMatrix(diagram, "O")
+X_O["peach"] = 0.8
+X_O["lemon"] = 0.2
+diagram.set_probabilities("O", X_O)
 
 # You can also get the current matrix and change it
-R_probs = diagram.probability_matrix('R')
-R_probs[0, 0, :] = [1, 0, 0]
-R_probs[0, 1, :] = [0, 1, 0]
-R_probs[1, 0, :] = [1, 0, 0]
-R_probs[1, 1, :] = [0, 0, 1]
+R_probs = pdp.ProbabilityMatrix(diagram, 'R')
+R_probs["lemon", "no test", :] = [1, 0, 0]
+R_probs["lemon", "test", :] = [0, 1, 0]
+R_probs["peach", "no test", :] = [1, 0, 0]
+R_probs["peach", "test", :] = [0, 0, 1]
 diagram.set_probabilities('R', R_probs)
 
-V1_utilities = diagram.utility_matrix('V1')
+V1_utilities = pdp.UtilityMatrix(diagram, 'V1')
 print(V1_utilities)
-V1_utilities[0] = -25
-V1_utilities[1] = 0
+V1_utilities["test"] = -25
+V1_utilities["no test"] = 0
 print(V1_utilities)
 diagram.set_utility('V1', V1_utilities)
 
-V2_utilities = diagram.utility_matrix('V2')
+V2_utilities = pdp.UtilityMatrix(diagram, 'V2')
 print(V2_utilities)
-V2_utilities[0] = 100
-V2_utilities[1] = 40
-V2_utilities[2] = 0
+V2_utilities["buy without guarantee"] = 100
+V2_utilities["buy with guarantee"] = 40
+V2_utilities["don't buy"] = 0
 print(V2_utilities)
 diagram.set_utility('V2', V2_utilities)
 
-V3_utilities = diagram.utility_matrix('V3')
+V3_utilities = pdp.UtilityMatrix(diagram, 'V3')
 print(V3_utilities)
-V3_utilities[0, 0] = -200
-V3_utilities[0, 1] = 0
-V3_utilities[0, 2] = 0
-V3_utilities[1, :] = [-40, -20, 0]
+V3_utilities["lemon", "buy without guarantee"] = -200
+V3_utilities["lemon", "buy with guarantee"] = 0
+V3_utilities["lemon", "don't buy"] = 0
+V3_utilities["peach", :] = [-40, -20, 0]
 print(V3_utilities)
 diagram.set_utility('V3', V3_utilities)
 
@@ -69,8 +71,10 @@ z = pdp.DecisionVariables(model, diagram)
 print(z)
 x_s = pdp.PathCompatibilityVariables(model, diagram, z)
 print(x_s)
-EV = model.expected_value(diagram, x_s)
+EV = pdp.ExpectedValue(model, diagram, x_s)
 print(EV)
+
+model.objective("Max", EV)
 
 model.setup_Gurobi_optimizer(
    ("IntFeasTol", 1e-9),
