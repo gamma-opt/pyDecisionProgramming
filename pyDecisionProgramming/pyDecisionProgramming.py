@@ -144,15 +144,31 @@ class DecisionStrategy():
 class StateProbabilities():
     def __init__(self, diagram, decision_strategy):
         self.name = unique_name()
+        self.diagram = diagram
+        self.decision_strategy = decision_strategy
         commmand = f'{self.name} = StateProbabilities({diagram.name}, {decision_strategy.name})'
         Main.eval(commmand)
+
+    def print(self):
+        Main.eval(f'''print_decision_strategy(
+            {self.diagram.name},
+            {self.decision_strategy.name},
+            {self.name})''')
 
 
 class UtilityDistribution():
     def __init__(self, diagram, decision_strategy):
         self.name = unique_name()
+        self.diagram = diagram
+        self.decision_strategy = decision_strategy
         commmand = f'{self.name} = UtilityDistribution({diagram.name}, {decision_strategy.name})'
         Main.eval(commmand)
+
+    def print_distribution(self):
+        Main.eval(f'''print_utility_distribution({self.name})''')
+
+    def print_statistics(self):
+        Main.eval(f'''print_statistics({self.name})''')
 
 
 class ChanceNode():
@@ -241,6 +257,10 @@ class ProbabilityMatrix():
         Main.eval(f'{self.name}["{outcome}"] = {probability}')
 
 
+
+
+
+
 def DecisionStrategy_old(decisionVariables):
     ''' Create a JuMP optimizer
 
@@ -248,11 +268,6 @@ def DecisionStrategy_old(decisionVariables):
     '''
 
     return Main.eval(f'DecisionStrategy({decisionVariables.name})')
-
-
-
-
-
 
 
 class Probabilities:
@@ -551,21 +566,6 @@ def set_objective(
                      )''')
 
 
-
-
-
-def print_decision_strategy(states, decisionVariables):
-    ''' Create a JuMP optimizer
-
-    states -- A pyDecisionProgramming States object
-    decisionVariables -- A DecisionVariables object
-    '''
-
-    Main.dp_decisionVariables = decisionVariables
-    return Main.eval(f'''print_decision_strategy(
-        {states.name},
-        dp_decisionVariables)
-        ''')
 
 
 def UtilityDistribution_old(
