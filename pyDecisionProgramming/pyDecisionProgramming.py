@@ -66,7 +66,7 @@ class InfluenceDiagram():
             Main.eval('tmp = convert(Array{Float64}, tmp)')
             Main.eval(f'add_probabilities!({self.name}, "{node}", tmp)')
 
-    def utility__matrix(self, value):
+    def utility_matrix(self, value):
         Main.eval(f'tmp = {self.name}')
         matrix = Main.UtilityMatrix(Main.tmp, value)
         return np.array(matrix)
@@ -79,6 +79,80 @@ class InfluenceDiagram():
 
             Main.eval('tmp = convert(Array{Float64}, tmp)')
             Main.eval(f'add_utilities!({self.name}, "{value}", tmp)')
+
+    def generate(self):
+        Main.eval(f'generate_diagram!({self.name})')
+
+
+class Model():
+    def __init__(self):
+        self.name = unique_name()
+        Main.eval(f'{self.name} = Model()')
+
+    def expected_value(self, diagram, decision_variables):
+        commmand = f'tmp = expected_value({self.name}, {diagram.name}, {decision_variables.name})'
+        Main.eval(commmand)
+        return Main.tmp
+
+    def setup_Gurobi_optimizer(self, *constraints):
+        ''' Create a JuMP optimizer
+
+        constraints -- Tuple formatted as (constraint_name, constraint)
+        '''
+
+        julia_command = '''optimizer = optimizer_with_attributes(
+                     () -> Gurobi.Optimizer(Gurobi.Env())'''
+
+        for constraint in constraints:
+            julia_command += f''',
+                         "{constraint[0]}" => {constraint[1]}'''
+
+        julia_command += ')'
+
+        Main.eval(julia_command)
+        Main.eval('print(optimizer)')
+
+        Main.eval(f'set_optimizer({self.name}, optimizer)')
+
+    def optimize(self):
+        ''' Run the current optimizer '''
+
+        Main.eval(f'optimize!({self.name})')
+
+
+class DecisionVariables():
+    def __init__(self, model, diagram):
+        self.name = unique_name()
+        commmand = f'{self.name} = DecisionVariables({model.name}, {diagram.name})'
+        Main.eval(commmand)
+
+
+class PathCompatibilityVariables():
+    def __init__(self, model, diagram, decision_variables):
+        self.name = unique_name()
+        commmand = f'{self.name} = PathCompatibilityVariables({model.name}, {diagram.name}, {decision_variables.name})'
+        Main.eval(commmand)
+
+
+class DecisionStrategy():
+    def __init__(self, decision_variables):
+        self.name = unique_name()
+        commmand = f'{self.name} = DecisionStrategy({decision_variables.name})'
+        Main.eval(commmand)
+
+
+class StateProbabilities():
+    def __init__(self, diagram, decision_strategy):
+        self.name = unique_name()
+        commmand = f'{self.name} = StateProbabilities({diagram.name}, {decision_strategy.name})'
+        Main.eval(commmand)
+
+
+class UtilityDistribution():
+    def __init__(self, diagram, decision_strategy):
+        self.name = unique_name()
+        commmand = f'{self.name} = UtilityDistribution({diagram.name}, {decision_strategy.name})'
+        Main.eval(commmand)
 
 
 class ChanceNode():
@@ -165,6 +239,19 @@ class ProbabilityMatrix():
 
     def set(self, outcome, probability):
         Main.eval(f'{self.name}["{outcome}"] = {probability}')
+
+
+def DecisionStrategy_old(decisionVariables):
+    ''' Create a JuMP optimizer
+
+    decisionVariables -- A DecisionVariables object
+    '''
+
+    return Main.eval(f'DecisionStrategy({decisionVariables.name})')
+
+
+
+
 
 
 
@@ -353,7 +440,7 @@ def validate_influence_diagram(
                )''')
 
 
-class Model():
+class Model_old():
     ''' A wrapper for the DecisionProgramming.jl Model
     type.
 
@@ -370,31 +457,6 @@ class Model():
         ''' Initialize a pyDecisionProgramming Model '''
         self.name = unique_name()
         Main.eval(f'''{self.name} = Model()''')
-
-    def setup_Gurobi_optimizer(self, *constraints):
-        ''' Create a JuMP optimizer
-
-        constraints -- Tuple formatted as (constraint_name, constraint)
-        '''
-
-        julia_command = '''optimizer = optimizer_with_attributes(
-                     () -> Gurobi.Optimizer(Gurobi.Env())'''
-
-        for constraint in constraints:
-            julia_command += f''',
-                         "{constraint[0]}" => {constraint[1]}'''
-
-        julia_command += ')'
-
-        Main.eval(julia_command)
-        Main.eval('print(optimizer)')
-
-        Main.eval(f'set_optimizer({self.name}, optimizer)')
-
-    def optimize(self):
-        ''' Run the current optimizer '''
-
-        Main.eval(f'optimize!({self.name})')
 
     def probability_cut(self, pi_s, P, probability_scale_factor=1.0):
         '''Adds a probability cut to the model as a lazy constraint
@@ -413,15 +475,6 @@ class Model():
     def __str__(self):
         return Main.eval(f'''{self.name}''')
 
-
-def DecisionVariables(model, states, decisionNodes):
-    ''' Construct a DecisionVariables-object (Julia Struct) '''
-
-    return Main.eval(f'''DecisionVariables(
-                          {model.name},
-                          {states.name},
-                          {decisionNodes.name}
-                     )''')
 
 
 class PathProbabilityVariables():
@@ -498,14 +551,7 @@ def set_objective(
                      )''')
 
 
-def DecisionStrategy(decisionVariables):
-    ''' Create a JuMP optimizer
 
-    decisionVariables -- A DecisionVariables object
-    '''
-
-    Main.dp_decisionVariables = decisionVariables
-    return Main.eval('DecisionStrategy(dp_decisionVariables)')
 
 
 def print_decision_strategy(states, decisionVariables):
@@ -522,7 +568,7 @@ def print_decision_strategy(states, decisionVariables):
         ''')
 
 
-def UtilityDistribution(
+def UtilityDistribution_old(
        states,
        defaultPathProbability,
        defaultPathUtility,

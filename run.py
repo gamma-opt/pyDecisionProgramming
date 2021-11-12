@@ -1,54 +1,92 @@
-import pyDecisionProgramming as pd
+import pyDecisionProgramming as pdp
 import numpy as np
 
-# pd.setupProject()
-pd.activate()
+# pdp.setupProject()
+pdp.activate()
 
-diagram = pd.InfluenceDiagram()
+diagram = pdp.InfluenceDiagram()
 
-car_results = pd.ChanceNode("O", [], ["lemon", "peach"])
+car_results = pdp.ChanceNode("O", [], ["lemon", "peach"])
 diagram.add_node(car_results)
 
-test_options = pd.DecisionNode("T", [], ["no test", "test"])
+test_options = pdp.DecisionNode("T", [], ["no test", "test"])
 diagram.add_node(test_options)
 
-test_outcomes = pd.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
+test_outcomes = pdp.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
 diagram.add_node(test_outcomes)
 
-buy_options = pd.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
+buy_options = pdp.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
 diagram.add_node(buy_options)
 
 
-value_node = pd.ValueNode("V1", ["T"])
+value_node = pdp.ValueNode("V1", ["T"])
 diagram.add_node(value_node)
-value_node = pd.ValueNode("V2", ["A"])
+value_node = pdp.ValueNode("V2", ["A"])
 diagram.add_node(value_node)
-value_node = pd.ValueNode("V3", ["O", "A"])
+value_node = pdp.ValueNode("V3", ["O", "A"])
 diagram.add_node(value_node)
 
 diagram.generate_arcs()
 
-matrix = diagram.probability_matrix('O')
+# A probability or utility matrix can be set to a Numpy list
 diagram.set_probabilities('O', [0.8, 0.2])
 
-matrix = diagram.probability_matrix('R')
-matrix[0, 0, :] = [1, 0, 0]
-matrix[0, 1, :] = [0, 1, 0]
-matrix[1, 0, :] = [1, 0, 0]
-matrix[1, 1, :] = [0, 0, 1]
-diagram.set_probabilities('R', matrix)
+# You can also get the current matrix and change it
+R_probs = diagram.probability_matrix('R')
+R_probs[0, 0, :] = [1, 0, 0]
+R_probs[0, 1, :] = [0, 1, 0]
+R_probs[1, 0, :] = [1, 0, 0]
+R_probs[1, 1, :] = [0, 0, 1]
+diagram.set_probabilities('R', R_probs)
 
-matrix = diagram.utility__matrix('V1')
-print(matrix)
-matrix[0] = -25
-matrix[1] = 0
-print(matrix)
-diagram.set_utility('V1', matrix)
+V1_utilities = diagram.utility_matrix('V1')
+print(V1_utilities)
+V1_utilities[0] = -25
+V1_utilities[1] = 0
+print(V1_utilities)
+diagram.set_utility('V1', V1_utilities)
 
-# Y_V1 = UtilityMatrix(diagram, "V1")
-# Y_V1["test"] = -25
-# Y_V1["no test"] = 0
-# add_utilities!(diagram, "V1", Y_V1)
+V2_utilities = diagram.utility_matrix('V2')
+print(V2_utilities)
+V2_utilities[0] = 100
+V2_utilities[1] = 40
+V2_utilities[2] = 0
+print(V2_utilities)
+diagram.set_utility('V2', V2_utilities)
+
+V3_utilities = diagram.utility_matrix('V3')
+print(V3_utilities)
+V3_utilities[0, 0] = -200
+V3_utilities[0, 1] = 0
+V3_utilities[0, 2] = 0
+V3_utilities[1, :] = [-40, -20, 0]
+print(V3_utilities)
+diagram.set_utility('V3', V3_utilities)
+
+diagram.generate()
+
+model = pdp.Model()
+z = pdp.DecisionVariables(model, diagram)
+print(z)
+x_s = pdp.PathCompatibilityVariables(model, diagram, z)
+print(x_s)
+EV = model.expected_value(diagram, x_s)
+print(EV)
+
+model.setup_Gurobi_optimizer(
+   ("IntFeasTol", 1e-9),
+   ("LazyConstraints", 1)
+)
+
+model.optimize()
+
+Z = pdp.DecisionStrategy(z)
+print(Z)
+S_probabilities = pdp.StateProbabilities(diagram, Z)
+print(S_probabilities)
+U_distribution = pdp.UtilityDistribution(diagram, Z)
+print(U_distribution)
+
 
 import sys
 sys.exit()
@@ -62,7 +100,7 @@ T_states = ["no test", "test"]
 R_states = ["no test", "lemon", "peach"]
 A_states = ["buy without guarantee", "buy with guarantee", "don\'t buy"]
 
-s = pd.States([
+s = pdp.States([
  (len(O_states), o),
  (len(T_states), t),
  (len(R_states), r),
@@ -70,20 +108,20 @@ s = pd.States([
 ])
 print(s)
 
-c = pd.Vector('ChanceNode')
-d = pd.Vector('DecisionNode')
-v = pd.Vector('ValueNode')
-x = pd.Vector('Probabilities')
-y = pd.Vector('Consequences')
+c = pdp.Vector('ChanceNode')
+d = pdp.Vector('DecisionNode')
+v = pdp.Vector('ValueNode')
+x = pdp.Vector('Probabilities')
+y = pdp.Vector('Consequences')
 
-i_o = pd.Vector('Node')
-cn = pd.ChanceNode(o, i_o)
+i_o = pdp.Vector('Node')
+cn = pdp.ChanceNode(o, i_o)
 c.push(cn)
-probs = pd.Probabilities(o, [0.2, 0.8])
+probs = pdp.Probabilities(o, [0.2, 0.8])
 x.push(probs)
 
-i_t = pd.Vector('Node')
-dn = pd.DecisionNode(t, i_t)
+i_t = pdp.Vector('Node')
+dn = pdp.DecisionNode(t, i_t)
 d.push(dn)
 
 i_r = [o, t]
@@ -92,59 +130,59 @@ x_r[0, 0, :] = [1.0, 0.0, 0.0]
 x_r[0, 1, :] = [0.0, 1.0, 0.0]
 x_r[1, 0, :] = [1.0, 0.0, 0.0]
 x_r[1, 1, :] = [0.0, 0.0, 1.0]
-cn = pd.ChanceNode(r, i_r)
+cn = pdp.ChanceNode(r, i_r)
 c.push(cn)
-pd.Main.p = probs
-print(pd.Main.eval('typeof(p)'))
-probs = pd.Probabilities(r, x_r)
-pd.Main.p = probs
-print(pd.Main.eval('typeof(p)'))
+pdp.Main.p = probs
+print(pdp.Main.eval('typeof(p)'))
+probs = pdp.Probabilities(r, x_r)
+pdp.Main.p = probs
+print(pdp.Main.eval('typeof(p)'))
 print(x)
 x.push(probs)
 
 i_a = [r]
-dn = pd.DecisionNode(a, i_a)
+dn = pdp.DecisionNode(a, i_a)
 d.push(dn)
 print(d)
 
 i_v1 = [t]
 y_v1 = [0.0, -25.0]
-vn = pd.ValueNode(5, i_v1)
+vn = pdp.ValueNode(5, i_v1)
 v.push(vn)
 print(v)
-consequences = pd.Consequences(5, y_v1)
+consequences = pdp.Consequences(5, y_v1)
 y.push(consequences)
 print(y)
 
 i_v2 = [a]
 y_v2 = [100.0, 40.0, 0.0]
-vn = pd.ValueNode(6, i_v2)
+vn = pdp.ValueNode(6, i_v2)
 v.push(vn)
-consq = pd.Consequences(6, y_v2)
+consq = pdp.Consequences(6, y_v2)
 y.push(consq)
 
 i_v3 = [o, a]
 y_v3 = [[-200.0, 0.0, 0.0],
         [-40.0, -20.0, 0.0]]
-vn = pd.ValueNode(7, i_v3)
+vn = pdp.ValueNode(7, i_v3)
 v.push(vn)
 print(v)
-consq = pd.Consequences(7, y_v3)
+consq = pdp.Consequences(7, y_v3)
 y.push(consq)
 print(y)
 
-pd.validate_influence_diagram(s, c, d, v)
+pdp.validate_influence_diagram(s, c, d, v)
 for vec in (c, d, v, x, y):
     vec.sortByNode()
 
-p = pd.DefaultPathProbability(c, x)
-u = pd.DefaultPathUtility(v, y)
+p = pdp.DefaultPathProbability(c, x)
+u = pdp.DefaultPathUtility(v, y)
 
-model = pd.Model()
-z_var = pd.DecisionVariables(model, s, d)
-pi_s = pd.PathProbabilityVariables(model, z_var, s, p)
-ev = pd.expected_value(model, pi_s, u)
-pd.set_objective(model, 'Max', ev)
+model = pdp.Model()
+z_var = pdp.DecisionVariables(model, s, d)
+pi_s = pdp.PathProbabilityVariables(model, z_var, s, p)
+ev = pdp.expected_value(model, pi_s, u)
+pdp.set_objective(model, 'Max', ev)
 
 model.setup_Gurobi_optimizer(
    ("IntFeasTol", 1e-9),
@@ -153,9 +191,9 @@ model.setup_Gurobi_optimizer(
 
 model.optimize()
 
-z = pd.DecisionStrategy(z_var)
-pd.print_decision_strategy(s, z)
+z = pdp.DecisionStrategy(z_var)
+pdp.print_decision_strategy(s, z)
 
-udist = pd.UtilityDistribution(s, p, u, z)
-pd.print_utility_distribution(udist)
-pd.print_statistics(udist)
+udist = pdp.UtilityDistribution(s, p, u, z)
+pdp.print_utility_distribution(udist)
+pdp.print_statistics(udist)
