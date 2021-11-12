@@ -1,5 +1,4 @@
 import pyDecisionProgramming as pdp
-import numpy as np
 
 # pdp.setupProject()
 pdp.activate()

@@ -41,56 +41,171 @@ def unique_name():
 
 
 class InfluenceDiagram():
+    '''
+    Holds information about the influence diagram, including nodes
+    and possible states.
+
+    See the latest documentation for the Julia type at
+    (https://gamma-opt.github.io/DecisionProgramming.jl/dev/api/).
+
+    Methods
+    -------
+    add_node(node)
+        Add a node to the influence diagram. The node can a ChanceNode,
+        DecisionNode, or a ValueNode.
+
+    generate_arcs()
+        Generate arc structures using nodes added to influence diagram, by
+        ordering nodes, giving them indices and generating correct values for
+        the vectors Names, I_j, states, S, C, D, V in the influence diagram.
+        Abstraction is created and the names of the nodes and states are only
+        used in the user interface from here on.
+
+    probability_matrix(change_node_name)
+        Construct an empty probability matrix for the given chance node.
+        This is helpful in setting probabilities, since it provides a matrix
+        of the righ size and default zero values to all entries.
+
+    set_probabilities(change_node_name, matrix)
+        Set the probability matrix at a given node. The matrix is a Numpy
+        array. You can use the probability_matrix-method to find the matrix
+        size.
+
+    utility_matrix(value_node_name)
+        Construct an empty utility matrix for the given value node.
+        This is helpful in setting utilities, since it provides a matrix
+        of the right size.
+
+    set_utility(value_node_name, matrix)
+        Set the utility matrix at a given node. The matrix is a Numpy
+        array. You can use the utility_matrix-method to find the matrix
+        size.
+
+    generate(
+               default_probability=true,
+               default_utility=true,
+               positive_path_utility=false,
+               negative_path_utility=false
+            )
+        Generate complete influence diagram with probabilities and utilities as well.
+    '''
 
     def __init__(self):
-        self.name = unique_name()
-        Main.eval(f'{self.name} = InfluenceDiagram()')
+        self.__name = unique_name()
+        Main.eval(f'{self.__name} = InfluenceDiagram()')
 
     def add_node(self, node):
-        Main.eval(f'add_node!({self.name}, {node.name})')
+        """
+        Parameters
+        ----------
+        node : ChanceNode, DecisionNode, or ValueNode
+        """
+        Main.eval(f'add_node!({self.__name}, {node.__name})')
 
     def generate_arcs(self):
-        Main.eval(f'generate_arcs!({self.name})')
+        Main.eval(f'generate_arcs!({self.__name})')
 
     def probability_matrix(self, node):
-        Main.eval(f'tmp = {self.name}')
+        """
+        Parameters
+        ----------
+        node : str
+            The name of a ChanceNode. The probability matrix of this node is
+            returned.
+
+        Returns
+        -------
+            An empty probability matrix as a Numpy array
+        """
+        Main.eval(f'tmp = {self.__name}')
         matrix = Main.ProbabilityMatrix(Main.tmp, node)
         return np.array(matrix)
 
     def set_probabilities(self, node, matrix):
-        if isinstance(matrix, Vector):
-            print()
-        else:
-            Main.tmp = matrix
+        """set_probabilities
+        Parameters
+        ----------
+        node : str
+            The name of a ChanceNode. The probability matrix of this node is
+            returned.
 
-            Main.eval('tmp = convert(Array{Float64}, tmp)')
-            Main.eval(f'add_probabilities!({self.name}, "{node}", tmp)')
+        matrix : Numpy array
+            The probability matrix that replaces the current one.
+        """
+        Main.tmp = matrix
+        Main.eval('tmp = convert(Array{Float64}, tmp)')
+        Main.eval(f'add_probabilities!({self.__name}, "{node}", tmp)')
 
     def utility_matrix(self, value):
-        Main.eval(f'tmp = {self.name}')
+        """
+        Parameters
+        ----------
+        node : str
+            The name of a ValueNode. The probability matrix of this node is
+            returned.
+
+        Returns
+        -------
+            An empty utility matrix as a Numpy array
+        """
+        Main.eval(f'tmp = {self.__name}')
         matrix = Main.UtilityMatrix(Main.tmp, value)
         return np.array(matrix)
 
     def set_utility(self, value, matrix):
-        if isinstance(matrix, Vector):
-            print()
-        else:
-            Main.tmp = matrix
+        """
+        Parameters
+        ----------
+        node : str
+            The name of a ChanceNode. The probability matrix of this node is
+            returned.
 
-            Main.eval('tmp = convert(Array{Float64}, tmp)')
-            Main.eval(f'add_utilities!({self.name}, "{value}", tmp)')
+        matrix : Numpy array
+            The probability matrix that replaces the current one.
+        """
+        Main.tmp = matrix
 
-    def generate(self):
-        Main.eval(f'generate_diagram!({self.name})')
+        Main.eval('tmp = convert(Array{Float64}, tmp)')
+        Main.eval(f'add_utilities!({self.__name}, "{value}", tmp)')
+
+    def generate(self,
+                 default_probability=True,
+                 default_utility=True,
+                 positive_path_utility=False,
+                 negative_path_utility=False
+                 ):
+        """
+        Parameters
+        ----------
+            default_probability: bool = True
+                Choice to use default path probabilities
+
+            default_utility: bool = True
+                Choice to use default path utilities
+
+            positive_path_utility : bool = False
+                Choice to use a positive path utility translation
+
+            negative_path_utility : bool = False
+                Choice to use a negative path utility translation
+        """
+        Main.tmp1 = default_probability
+        Main.tmp2 = default_utility
+        Main.tmp3 = positive_path_utility
+        Main.tmp4 = negative_path_utility
+        Main.eval(f'''generate_diagram!(
+            {self.__name},
+            tmp1, tmp2, tmp3, tmp4
+        )''')
 
 
 class Model():
     def __init__(self):
-        self.name = unique_name()
-        Main.eval(f'{self.name} = Model()')
+        self.__name = unique_name()
+        Main.eval(f'{self.__name} = Model()')
 
     def expected_value(self, diagram, decision_variables):
-        commmand = f'tmp = expected_value({self.name}, {diagram.name}, {decision_variables.name})'
+        commmand = f'tmp = expected_value({self.__name}, {diagram.__name}, {decision_variables.__name})'
         Main.eval(commmand)
         return Main.tmp
 
@@ -112,63 +227,63 @@ class Model():
         Main.eval(julia_command)
         Main.eval('print(optimizer)')
 
-        Main.eval(f'set_optimizer({self.name}, optimizer)')
+        Main.eval(f'set_optimizer({self.__name}, optimizer)')
 
     def optimize(self):
         ''' Run the current optimizer '''
 
-        Main.eval(f'optimize!({self.name})')
+        Main.eval(f'optimize!({self.__name})')
 
 
 class DecisionVariables():
     def __init__(self, model, diagram):
-        self.name = unique_name()
-        commmand = f'{self.name} = DecisionVariables({model.name}, {diagram.name})'
+        self.__name = unique_name()
+        commmand = f'{self.__name} = DecisionVariables({model.__name}, {diagram.__name})'
         Main.eval(commmand)
 
 
 class PathCompatibilityVariables():
     def __init__(self, model, diagram, decision_variables):
-        self.name = unique_name()
-        commmand = f'{self.name} = PathCompatibilityVariables({model.name}, {diagram.name}, {decision_variables.name})'
+        self.__name = unique_name()
+        commmand = f'{self.__name} = PathCompatibilityVariables({model.__name}, {diagram.__name}, {decision_variables.__name})'
         Main.eval(commmand)
 
 
 class DecisionStrategy():
     def __init__(self, decision_variables):
-        self.name = unique_name()
-        commmand = f'{self.name} = DecisionStrategy({decision_variables.name})'
+        self.__name = unique_name()
+        commmand = f'{self.__name} = DecisionStrategy({decision_variables.__name})'
         Main.eval(commmand)
 
 
 class StateProbabilities():
     def __init__(self, diagram, decision_strategy):
-        self.name = unique_name()
+        self.__name = unique_name()
         self.diagram = diagram
         self.decision_strategy = decision_strategy
-        commmand = f'{self.name} = StateProbabilities({diagram.name}, {decision_strategy.name})'
+        commmand = f'{self.__name} = StateProbabilities({diagram.__name}, {decision_strategy.__name})'
         Main.eval(commmand)
 
     def print(self):
         Main.eval(f'''print_decision_strategy(
-            {self.diagram.name},
-            {self.decision_strategy.name},
-            {self.name})''')
+            {self.diagram.__name},
+            {self.decision_strategy.__name},
+            {self.__name})''')
 
 
 class UtilityDistribution():
     def __init__(self, diagram, decision_strategy):
-        self.name = unique_name()
+        self.__name = unique_name()
         self.diagram = diagram
         self.decision_strategy = decision_strategy
-        commmand = f'{self.name} = UtilityDistribution({diagram.name}, {decision_strategy.name})'
+        commmand = f'{self.__name} = UtilityDistribution({diagram.__name}, {decision_strategy.__name})'
         Main.eval(commmand)
 
     def print_distribution(self):
-        Main.eval(f'''print_utility_distribution({self.name})''')
+        Main.eval(f'''print_utility_distribution({self.__name})''')
 
     def print_statistics(self):
-        Main.eval(f'''print_statistics({self.name})''')
+        Main.eval(f'''print_statistics({self.__name})''')
 
 
 class ChanceNode():
@@ -182,17 +297,17 @@ class ChanceNode():
         return -- Change node
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
 
         if isinstance(nodes, Vector):
             assert(isinstance(names, Vector))
 
-            Main.eval(f'{self.name} = ChanceNode({id}, Main.{nodes.name}, Main.{names.name})')
+            Main.eval(f'{self.__name} = ChanceNode({id}, Main.{nodes.__name}, Main.{names.__name})')
 
         else:
             # Try with a python object, Julia will type-check
             Main.tmp = jdp.ChanceNode(id, nodes, names)
-            Main.eval(f'{self.name} = tmp')
+            Main.eval(f'{self.__name} = tmp')
 
 
 class DecisionNode():
@@ -206,17 +321,17 @@ class DecisionNode():
         return -- Change node
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
 
         if isinstance(nodes, Vector):
             assert(isinstance(names, Vector))
 
-            Main.eval(f'{self.name} = DecisionNode({id}, Main.{nodes.name}, Main.{names.name})')
+            Main.eval(f'{self.__name} = DecisionNode({id}, Main.{nodes.__name}, Main.{names.__name})')
 
         else:
             # Try with a python object, Julia will type-check
             Main.tmp = jdp.DecisionNode(id, nodes, names)
-            Main.eval(f'{self.name} = tmp')
+            Main.eval(f'{self.__name} = tmp')
 
 
 class ValueNode():
@@ -230,15 +345,15 @@ class ValueNode():
         return -- Change node
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
 
         if isinstance(nodes, Vector):
-            Main.eval(f'{self.name} = ValueNode({id}, {nodes.name})')
+            Main.eval(f'{self.__name} = ValueNode({id}, {nodes.__name})')
 
         else:
             # Try with a python object, Julia will type-check
             Main.tmp = jdp.ValueNode(id, nodes)
-            Main.eval(f'{self.name} = tmp')
+            Main.eval(f'{self.__name} = tmp')
 
 
 class ProbabilityMatrix():
@@ -248,13 +363,13 @@ class ProbabilityMatrix():
         return -- Change node
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
 
-        command = f'{self.name} = ProbabilityMatrix({diagram.name}, "{node}")'
+        command = f'{self.__name} = ProbabilityMatrix({diagram.__name}, "{node}")'
         Main.eval(command)
 
     def set(self, outcome, probability):
-        Main.eval(f'{self.name}["{outcome}"] = {probability}')
+        Main.eval(f'{self.__name}["{outcome}"] = {probability}')
 
 
 
@@ -267,7 +382,7 @@ def DecisionStrategy_old(decisionVariables):
     decisionVariables -- A DecisionVariables object
     '''
 
-    return Main.eval(f'DecisionStrategy({decisionVariables.name})')
+    return Main.eval(f'DecisionStrategy({decisionVariables.__name})')
 
 
 class Probabilities:
@@ -278,7 +393,7 @@ class Probabilities:
     which in turn becomes a Julia vector.
 
     self.id -- The node id the probabilies correspond to
-    self.name -- The name of the Probabilities-variable in
+    self.__name -- The name of the Probabilities-variable in
         Julia main name space.
     '''
 
@@ -291,14 +406,14 @@ class Probabilities:
         '''
 
         self.id = id
-        self.name = unique_name()
-        print('prob name', self.name)
+        self.__name = unique_name()
+        print('prob name', self.__name)
         Main.pDR_id = id
         Main.pDR_p = probabilities
-        Main.eval(f'{self.name} = Probabilities(pDR_id, pDR_p)')
+        Main.eval(f'{self.__name} = Probabilities(pDR_id, pDR_p)')
 
     def __str__(self):
-        return getattr(Main, self.name).__str__()
+        return getattr(Main, self.__name).__str__()
 
 
 class Consequences:
@@ -309,7 +424,7 @@ class Consequences:
     which in turn becomes a Julia vector.
 
     self.id -- The node id the consequences correspond to
-    self.name -- The name of the Consequences-variable in
+    self.__name -- The name of the Consequences-variable in
         Julia main name space.
     '''
 
@@ -322,14 +437,14 @@ class Consequences:
         '''
 
         self.id = id
-        self.name = unique_name()
-        print('consq name', self.name)
+        self.__name = unique_name()
+        print('consq name', self.__name)
         Main.pDR_id = id
         Main.pDR_c = consequences
-        Main.eval(f'{self.name} = Consequences(pDR_id, pDR_c)')
+        Main.eval(f'{self.__name} = Consequences(pDR_id, pDR_c)')
 
     def __str__(self):
-        return getattr(Main, self.name).__str__()
+        return getattr(Main, self.__name).__str__()
 
 
 class Vector:
@@ -346,13 +461,13 @@ class Vector:
         type: str -- The Julia type the vector contains
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
         self.type = type
 
-        Main.eval(f'{self.name} = Vector{{{type}}}()')
+        Main.eval(f'{self.__name} = Vector{{{type}}}()')
 
     def __str__(self):
-        return getattr(Main, self.name).__str__()
+        return getattr(Main, self.__name).__str__()
 
     def push(self, element):
         ''' Push and element to a given vector
@@ -364,23 +479,23 @@ class Vector:
             assert(isinstance(element, Probabilities))
 
             Main.eval(
-                f'push!({self.name}, {element.name})'
+                f'push!({self.__name}, {element.__name})'
             )
 
         elif self.type == 'Consequences':
             assert(isinstance(element, Consequences))
 
-            Main.eval(f'push!({self.name}, {element.name})')
+            Main.eval(f'push!({self.__name}, {element.__name})')
 
         else:
             Main.pDR_e = element
-            Main.eval(f'push!({self.name}, pDR_e)')
+            Main.eval(f'push!({self.__name}, pDR_e)')
 
     def sortByNode(self):
         ''' Sort the vector by node id contained in the elements
         '''
 
-        Main.eval(f'sort!({self.name}, by = x -> x.j)')
+        Main.eval(f'sort!({self.__name}, by = x -> x.j)')
 
 
 class States:
@@ -390,7 +505,7 @@ class States:
     Without the wrapper it get's interpreted as a python array,
     which in turn becomes a Julia vector.
 
-    self.name -- The name of the States-variable in
+    self.__name -- The name of the States-variable in
         Julia main name space.
     '''
 
@@ -402,14 +517,14 @@ class States:
         '''
 
         Main.pDR_params = [(c, [n]) for c, n in state_list]
-        self.name = unique_name()
-        Main.eval(f'{self.name} = States(pDR_params)')
+        self.__name = unique_name()
+        Main.eval(f'{self.__name} = States(pDR_params)')
 
     def __getitem__(self, key):
-        return Main.eval(f'{self.name}[{key}]')
+        return Main.eval(f'{self.__name}[{key}]')
 
     def __str__(self):
-        return getattr(Main, self.name).__str__()
+        return getattr(Main, self.__name).__str__()
 
 
 def DefaultPathProbability(chanceNodes, probabilites):
@@ -420,8 +535,8 @@ def DefaultPathProbability(chanceNodes, probabilites):
     '''
 
     return Main.eval(f'''DefaultPathProbability(
-        {chanceNodes.name},
-        {probabilites.name}
+        {chanceNodes.__name},
+        {probabilites.__name}
     )''')
 
 
@@ -433,8 +548,8 @@ def DefaultPathUtility(valueNodes, consequences):
     '''
 
     return Main.eval(f'''DefaultPathUtility(
-        {valueNodes.name},
-        {consequences.name}
+        {valueNodes.__name},
+        {consequences.__name}
     )''')
 
 
@@ -448,10 +563,10 @@ def validate_influence_diagram(
     """
 
     Main.eval(f'''validate_influence_diagram(
-                    {states.name},
-                    {chanceNodes.name},
-                    {decisionNodes.name},
-                    {valueNodes.name}
+                    {states.__name},
+                    {chanceNodes.__name},
+                    {decisionNodes.__name},
+                    {valueNodes.__name}
                )''')
 
 
@@ -461,7 +576,7 @@ class Model_old():
 
     Members include functions that modify the model.
 
-    self.name -- The name of the DecisionProgramming-variable in
+    self.__name -- The name of the DecisionProgramming-variable in
         Julia main name space.
 
     self.probability_cut() -- Adds a probability cut to the model
@@ -470,8 +585,8 @@ class Model_old():
 
     def __init__(self):
         ''' Initialize a pyDecisionProgramming Model '''
-        self.name = unique_name()
-        Main.eval(f'''{self.name} = Model()''')
+        self.__name = unique_name()
+        Main.eval(f'''{self.__name} = Model()''')
 
     def probability_cut(self, pi_s, P, probability_scale_factor=1.0):
         '''Adds a probability cut to the model as a lazy constraint
@@ -482,13 +597,13 @@ class Model_old():
         '''
 
         Main.eval(f'''DecisionVariables(
-                              {self.name},
-                              {pi_s.name},
-                              {P.name}
+                              {self.__name},
+                              {pi_s.__name},
+                              {P.__name}
                          )''')
 
     def __str__(self):
-        return Main.eval(f'''{self.name}''')
+        return Main.eval(f'''{self.__name}''')
 
 
 
@@ -499,7 +614,7 @@ class PathProbabilityVariables():
     Without the wrapper it get's interpreted as a python dictionary,
     and does not preserve the Julia type.
 
-    self.name -- The name of the DecisionProgramming-variable in
+    self.__name -- The name of the DecisionProgramming-variable in
         Julia main name space.
     '''
 
@@ -517,14 +632,14 @@ class PathProbabilityVariables():
         defaultPathProbability -- A wrapped defaultPathProbability object
         '''
 
-        self.name = unique_name()
+        self.__name = unique_name()
         Main.dp_decisionVariables = decisionVariables
         Main.dp_defaultPathProbability = defaultPathProbability
 
-        Main.eval(f'''{self.name} = PathProbabilityVariables(
-                    {model.name},
+        Main.eval(f'''{self.__name} = PathProbabilityVariables(
+                    {model.__name},
                     dp_decisionVariables,
-                    {states.name},
+                    {states.__name},
                     dp_defaultPathProbability
                )''')
 
@@ -539,8 +654,8 @@ def expected_value(
     Main.dp_defaultPathUtility = defaultPathUtility
 
     return Main.eval(f'''expected_value(
-                          {model.name},
-                          {pathProbabilityVariables.name},
+                          {model.__name},
+                          {pathProbabilityVariables.__name},
                           dp_defaultPathUtility
                      )''')
 
@@ -560,7 +675,7 @@ def set_objective(
     Main.dp_objective = objective
 
     return Main.eval(f'''@objective(
-                          {model.name},
+                          {model.__name},
                           {direction},
                           dp_objective
                      )''')
@@ -586,7 +701,7 @@ def UtilityDistribution_old(
     Main.dp_defaultPathUtility = defaultPathUtility
     Main.dp_decisionVariables = decisionVariables
     return Main.eval(f'''UtilityDistribution(
-        {states.name},
+        {states.__name},
         dp_defaultPathProbability,
         dp_defaultPathUtility,
         dp_decisionVariables
