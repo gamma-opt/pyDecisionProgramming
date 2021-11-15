@@ -63,7 +63,6 @@ diagram.generate(positive_path_utility=True)
 model = pdp.Model()
 z = pdp.DecisionVariables(model, diagram)
 x_s = pdp.PathCompatibilityVariables(model, diagram, z, probability_cut = False)
-
 EV = pdp.ExpectedValue(model, diagram, x_s)
 model.objective("Max", EV)
 
