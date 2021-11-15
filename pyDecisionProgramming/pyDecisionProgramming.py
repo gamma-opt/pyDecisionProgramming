@@ -34,13 +34,20 @@ def setupProject():
     Main.eval('using JuMP')
 
 
-def unique_name():
-    ''' A utility for generating unique names for the Julia main name space '''
+class JuliaName():
+    '''
+    Base class for all following Julia objects. Stores the object
+    name in the Julia main name space and defines string
+    representation from Julia.
+    '''
+    def __init__(self):
+        self._name = 'pyDP'+uuid.uuid4().hex[:10]
 
-    return 'pyDP'+uuid.uuid4().hex[:10]
+    def __str__():
+        return Main.eval(f'repr(self._name)')
 
 
-class InfluenceDiagram():
+class InfluenceDiagram(JuliaName):
     '''
     Holds information about the influence diagram, including nodes
     and possible states.
@@ -81,7 +88,7 @@ class InfluenceDiagram():
     '''
 
     def __init__(self):
-        self._name = unique_name()
+        super().__init__()
         Main.eval(f'{self._name} = InfluenceDiagram()')
 
     def add_node(self, node):
@@ -175,7 +182,7 @@ class InfluenceDiagram():
         )''')
 
 
-class Model():
+class Model(JuliaName):
     """
     Wraps a JuMP optimizer model and decision model variables.
 
@@ -188,7 +195,7 @@ class Model():
         Run the optimizer.
     """
     def __init__(self):
-        self._name = unique_name()
+        super().__init__()
         Main.eval(f'{self._name} = Model()')
 
     def setup_Gurobi_optimizer(self, *constraints):
@@ -231,7 +238,7 @@ class Model():
         Main.eval(f'optimize!({self._name})')
 
 
-class DecisionVariables():
+class DecisionVariables(JuliaName):
     """
     Create decision variables and constraints.
     """
@@ -252,7 +259,7 @@ class DecisionVariables():
         name: str
             Prefix for predefined decision variable naming convention
         """
-        self._name = unique_name()
+        super().__init__()
         self.diagram = diagram
         self.model = model
         Main.tmp1 = names
@@ -266,7 +273,7 @@ class DecisionVariables():
         Main.eval(commmand)
 
 
-class PathCompatibilityVariables():
+class PathCompatibilityVariables(JuliaName):
     """
     Create path compatibility variables and constraints
 
@@ -327,7 +334,7 @@ class PathCompatibilityVariables():
             Adjusts conditional value at risk model to be compatible with the
             expected value expression if the probabilities were scaled there.
         """
-        self._name = unique_name()
+        super().__init__()
         self.model = model
         self.diagram = diagram
         self.decision_variables = decision_variables
@@ -348,7 +355,7 @@ class PathCompatibilityVariables():
         Main.eval(commmand)
 
 
-class ExpectedValue():
+class ExpectedValue(JuliaName):
     """
     An expected value object JuMP can minimize on maximize
     """
@@ -363,7 +370,7 @@ class ExpectedValue():
         pathcompatibility: PathCompatibilityVariables
 
         """
-        self._name = unique_name()
+        super().__init__()
         commmand = f'''{self._name} = expected_value(
             {model._name},
             {diagram._name},
@@ -372,7 +379,7 @@ class ExpectedValue():
         Main.eval(commmand)
 
 
-class DecisionStrategy():
+class DecisionStrategy(JuliaName):
     """
     Extract values for decision variables from solved decision model.
     """
@@ -382,35 +389,46 @@ class DecisionStrategy():
         ----------
         A decision variables for a solved model
         """
-        self._name = unique_name()
+        super().__init__()
         commmand = f'{self._name} = DecisionStrategy({decision_variables._name})'
         Main.eval(commmand)
 
 
-class StateProbabilities():
+class StateProbabilities(JuliaName):
     """
     Extract state propabilities from a solved model
 
     Methods
     -------
-    print()
+    print_decision_strategy()
         Pretty print the decision strategy
+
+    print()
+        Pretty print state probabilities for a list of nodes
     """
     def __init__(self, diagram, decision_strategy):
-        self._name = unique_name()
+        super().__init__()
         self.diagram = diagram
         self.decision_strategy = decision_strategy
         commmand = f'{self._name} = StateProbabilities({diagram._name}, {decision_strategy._name})'
         Main.eval(commmand)
 
-    def print(self):
+    def print_decision_strategy(self):
         Main.eval(f'''print_decision_strategy(
             {self.diagram._name},
             {self.decision_strategy._name},
             {self._name})''')
 
+    def print(self, nodes):
+        # Format the nodes list using " instead of '
+        node_string = str(nodes).replace("\'", "\"")
+        Main.eval(f'''print_state_probabilities(
+            {self.diagram._name},
+            {self._name},
+            {node_string})''')
 
-class UtilityDistribution():
+
+class UtilityDistribution(JuliaName):
     """
     Extract utility distribution from a solved model
 
@@ -432,7 +450,7 @@ class UtilityDistribution():
         decision_strategy: DecisionStrategy
             A decition strategy extracted from a solved model.
         """
-        self._name = unique_name()
+        super().__init__()
         self.diagram = diagram
         self.decision_strategy = decision_strategy
         commmand = f'{self._name} = UtilityDistribution({diagram._name}, {decision_strategy._name})'
@@ -445,7 +463,7 @@ class UtilityDistribution():
         Main.eval(f'''print_statistics({self._name})''')
 
 
-class ChanceNode():
+class ChanceNode(JuliaName):
     """
     Create a change node that can be added into a Diagram
     """
@@ -463,13 +481,13 @@ class ChanceNode():
             List of node connected_nodes
         '''
 
-        self._name = unique_name()
+        super().__init__()
 
         Main.tmp = jdp.ChanceNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
 
 
-class DecisionNode():
+class DecisionNode(JuliaName):
     """
     Create a decision node that can be added into a Diagram
     """
@@ -487,12 +505,12 @@ class DecisionNode():
             List of node connected_nodes
         '''
 
-        self._name = unique_name()
+        super().__init__()
         Main.tmp = jdp.DecisionNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
 
 
-class ValueNode():
+class ValueNode(JuliaName):
     """
     Create a value node that can be added into a Diagram
     """
@@ -510,7 +528,7 @@ class ValueNode():
             List of node connected_nodes
         '''
 
-        self._name = unique_name()
+        super().__init__()
 
         Main.tmp = jdp.ValueNode(id, nodes)
         Main.eval(f'{self._name} = tmp')
@@ -549,7 +567,7 @@ def handle_index_syntax(key):
     return index_string
 
 
-class ProbabilityMatrix():
+class ProbabilityMatrix(JuliaName):
     """
     Construct an empty probability matrix for a chance node.
     """
@@ -564,7 +582,7 @@ class ProbabilityMatrix():
             The name of a ChanceNode. The probability matrix of this node is
             returned.
         """
-        self._name = unique_name()
+        super().__init__()
         self.diagram = diagram
         Main.eval(f'''{self._name} = ProbabilityMatrix(
            {diagram._name},
@@ -590,7 +608,7 @@ class ProbabilityMatrix():
         Main.eval(f'{self._name}[{index_string}] = {value}')
 
 
-class UtilityMatrix():
+class UtilityMatrix(JuliaName):
     """
     Construct an empty probability matrix for a chance node.
     """
@@ -605,7 +623,7 @@ class UtilityMatrix():
             The name of a ChanceNode. The probability matrix of this node is
             returned.
         """
-        self._name = unique_name()
+        super().__init__()
         self.diagram = diagram
         Main.eval(f'''{self._name} = UtilityMatrix(
            {diagram._name},

@@ -78,6 +78,6 @@ Z = pdp.DecisionStrategy(z)
 S_probabilities = pdp.StateProbabilities(diagram, Z)
 U_distribution = pdp.UtilityDistribution(diagram, Z)
 
-S_probabilities.print()
+S_probabilities.print_decision_strategy()
 U_distribution.print_distribution()
 U_distribution.print_statistics()
