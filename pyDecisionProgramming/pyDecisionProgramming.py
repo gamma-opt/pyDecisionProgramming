@@ -649,3 +649,22 @@ class UtilityMatrix(JuliaName):
         Main.eval(f'{self._name}[{index_string}] = {value}')
 
 
+class Paths():
+    def __init__(self, states, fixed=None):
+        Main.eval(f'tmp = States(State.({states}))')
+        if fixed == None:
+            Main.eval('tmp = paths(tmp)')
+        else:
+            Main.eval(f'tmp = paths(tmp; fixed={fixed})')
+        self.paths = Main.tmp
+
+    def __iter__(self):
+        self._iterator = iter(Main.tmp)
+        return self
+
+    def __next__(self):
+        path = next(self._iterator)
+        if path:
+            path = [i-1 for i in path]
+        return path
+
