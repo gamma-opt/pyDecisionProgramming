@@ -41,38 +41,29 @@ R_probs["peach", "test", :] = [0, 0, 1]
 diagram.set_probabilities('R', R_probs)
 
 V1_utilities = pdp.UtilityMatrix(diagram, 'V1')
-print(V1_utilities)
 V1_utilities["test"] = -25
 V1_utilities["no test"] = 0
-print(V1_utilities)
 diagram.set_utility('V1', V1_utilities)
 
 V2_utilities = pdp.UtilityMatrix(diagram, 'V2')
-print(V2_utilities)
 V2_utilities["buy without guarantee"] = 100
 V2_utilities["buy with guarantee"] = 40
 V2_utilities["don't buy"] = 0
-print(V2_utilities)
 diagram.set_utility('V2', V2_utilities)
 
 V3_utilities = pdp.UtilityMatrix(diagram, 'V3')
-print(V3_utilities)
 V3_utilities["lemon", "buy without guarantee"] = -200
 V3_utilities["lemon", "buy with guarantee"] = 0
 V3_utilities["lemon", "don't buy"] = 0
 V3_utilities["peach", :] = [-40, -20, 0]
-print(V3_utilities)
 diagram.set_utility('V3', V3_utilities)
 
 diagram.generate()
 
 model = pdp.Model()
 z = pdp.DecisionVariables(model, diagram)
-print(z)
 x_s = pdp.PathCompatibilityVariables(model, diagram, z)
-print(x_s)
 EV = pdp.ExpectedValue(model, diagram, x_s)
-print(EV)
 
 model.objective("Max", EV)
 
@@ -84,11 +75,8 @@ model.setup_Gurobi_optimizer(
 model.optimize()
 
 Z = pdp.DecisionStrategy(z)
-print(Z)
 S_probabilities = pdp.StateProbabilities(diagram, Z)
-print(S_probabilities)
 U_distribution = pdp.UtilityDistribution(diagram, Z)
-print(U_distribution)
 
 S_probabilities.print()
 U_distribution.print_distribution()
