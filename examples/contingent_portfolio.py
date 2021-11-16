@@ -45,8 +45,32 @@ diagram.generate(default_utility=False)
 model = pdp.Model()
 z = pdp.DecisionVariables(model, diagram)
 
-n_DP = diagram.num_states(diagram, "DP")
-n_CT = diagram.num_states(diagram, "CT")
-n_DA = diagram.num_states(diagram, "DA")
-n_CM = diagram.num_states(diagram, "CM")
+n_DP = diagram.num_states("DP")
+n_CT = diagram.num_states("CT")
+n_DA = diagram.num_states("DA")
+n_CM = diagram.num_states("CM")
+
+n_T = 5               # number of technology projects
+n_A = 5               # number of application projects
+I_t = np.random.random(n_T)*0.1   # costs of technology projects
+O_t = np.random.randint(1, 4, n_T)   # number of patents for each tech project
+I_a = np.random.random(n_T)*2     # costs of application projects
+O_a = np.random.randint(2, 5, n_T)   # number of applications for each appl. project
+
+V_A = np.random.random((n_CM, n_A)) + 0.5  # Value of an application
+V_A[0, :] += -0.5           # Low market share: less value
+V_A[2, :] += 0.5            # High market share: more value
+
+pdp.JuMP_Variable(model, [n_DP, n_T], binary=True)
+pdp.JuMP_Variable(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+
+M = 20                      # a large constant
+eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
+
+q_P = [0, 3, 6, 9]          # limits of the technology intervals
+q_A = [0, 5, 10, 15]        # limits of the application intervals
+
+model.constraint("[i=1:n_DP]", "sum(x_T[i,t] for t in 1:n_T) <= z_dP[i]*n_T]")
+
+
 
