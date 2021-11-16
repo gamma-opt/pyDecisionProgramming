@@ -182,7 +182,7 @@ class InfluenceDiagram(JuliaName):
         )''')
 
     def num_states(self, node):
-        Main.eval(f'''tmp = num_states!(
+        Main.eval(f'''tmp = num_states(
             {self._name}, "{node}"
         )''')
         return Main.tmp
