@@ -43,8 +43,11 @@ class JuliaName():
     def __init__(self):
         self._name = 'pyDP'+uuid.uuid4().hex[:10]
 
-    def __str__():
-        return Main.eval(f'repr(self._name)')
+    def __str__(self):
+        return Main.eval(f'repr({self._name})')
+
+    def __str__(self):
+        return Main.eval(f'repr({self._name})')
 
 
 class InfluenceDiagram(JuliaName):
@@ -243,6 +246,33 @@ class Model(JuliaName):
 
         Main.eval(f'optimize!({self._name})')
 
+    def constraint(self, *args):
+        print(args)
+        argument_text = ",".join(args)
+        print(argument_text)
+        Main.eval(f'''@constraint(
+            {self._name},
+            {argument_text}
+        )''')
+
+
+class JuMP_Variable(JuliaName):
+    def __init__(self, model, size, binary=False):
+        size_string = str(size).replace("\'", "\"")
+        binary_arg = ""
+        if binary:
+            binary_arg = "; binary=true, "
+        # Note: ending the command with ;0 to prevent
+        # Julia from returning the object. Otherwise
+        # the Python julia library will try to convert
+        # this to a Python object and cause an exception.
+        command = f'''tmp = @variable(
+            {model._name},
+            {size_string}
+            {binary_arg}
+        ); 0'''
+        Main.eval(command)
+
 
 class DecisionVariables(JuliaName):
     """
@@ -277,6 +307,9 @@ class DecisionVariables(JuliaName):
             name=tmp2
         )'''
         Main.eval(commmand)
+
+    def set(self, index, value):
+        Main.eval(f'''{self._name}.z[{index+1}] = {value}''')
 
 
 class PathCompatibilityVariables(JuliaName):
