@@ -181,6 +181,12 @@ class InfluenceDiagram(JuliaName):
             negative_path_utility=tmp4
         )''')
 
+    def num_states(self, node):
+        Main.eval(f'''tmp = num_states!(
+            {self._name}, "{node}"
+        )''')
+        return Main.tmp
+
 
 class Model(JuliaName):
     """
