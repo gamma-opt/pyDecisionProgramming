@@ -1,8 +1,34 @@
 from julia import Pkg
 from julia import Main
 from julia import DecisionProgramming as jdp
-import numpy as np
 import uuid
+
+
+class JuliaMain():
+    '''
+    Maps to julia.main from the julia library, unless the setting
+    an object implemented here (inherits JuliaName). JuliaNames are
+    assigned directly.
+    '''
+
+    def __setattr__(self, name, value):
+        if type(value) == JuliaName or JuliaName in type(value).__bases__:
+            print(name)
+            Main.eval(f'{name} = {value._name}')
+        else:
+            Main.__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if Main.eval(f"isdefined(Main, :{name})"):
+            return Main.__getattr__(name)
+        else:
+            return None
+
+    def eval(self, command):
+        return Main.eval(command)
+
+
+julia = JuliaMain()
 
 
 def activate():
