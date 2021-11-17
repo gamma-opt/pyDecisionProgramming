@@ -52,25 +52,81 @@ n_CM = diagram.num_states("CM")
 
 n_T = 5               # number of technology projects
 n_A = 5               # number of application projects
+
+# Here we set stuff in Julia name space directly
 I_t = np.random.random(n_T)*0.1   # costs of technology projects
 O_t = np.random.randint(1, 4, n_T)   # number of patents for each tech project
 I_a = np.random.random(n_T)*2     # costs of application projects
 O_a = np.random.randint(2, 5, n_T)   # number of applications for each appl. project
 
+# Set the names in julia to use them when setting constraints
+pdp.julia.I_t = I_t
+pdp.julia.O_t = O_t
+pdp.julia.I_a = I_a
+pdp.julia.O_a = O_a
+
 V_A = np.random.random((n_CM, n_A)) + 0.5  # Value of an application
 V_A[0, :] += -0.5           # Low market share: less value
 V_A[2, :] += 0.5            # High market share: more value
 
-pdp.JuMP_Variable(model, [n_DP, n_T], binary=True)
-pdp.JuMP_Variable(model, [n_DP, n_CT, n_DA, n_A], binary=True)
-
-M = 20                      # a large constant
-eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
-
-q_P = [0, 3, 6, 9]          # limits of the technology intervals
-q_A = [0, 5, 10, 15]        # limits of the application intervals
-
-model.constraint("[i=1:n_DP]", "sum(x_T[i,t] for t in 1:n_T) <= z_dP[i]*n_T]")
+pdp.julia.V_A = V_A
 
 
+x_T = pdp.JuMP_Array(model, [n_DP, n_T], binary=True)
+x_A = pdp.JuMP_Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+pdp.julia.x_T = x_T
+pdp.julia.x_A = x_A
 
+
+pdp.julia.M = 20                      # a large constant
+pdp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
+
+pdp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
+pdp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
+
+pdp.julia.z_dP = z.z[0]
+print(pdp.julia.z_dP)
+pdp.julia.z_dA = z.z[1]
+
+model.constraint(
+    f"[i=1:{n_DP}]",
+    f"sum(x_T[i,t] for t in 1:{n_T}) <= z_dP[i]*{n_T}"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"sum(x_A[i,j,k,a] for a in 1:{n_A}) <= z_dP[i]*{n_A}"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"sum(x_A[i,j,k,a] for a in 1:{n_A}) <= z_dA[i,j,k]*{n_A}"
+)
+
+model.constraint(
+    f"[i=1:{n_DP}]",
+    f"q_P[i] - (1 - z_dP[i])*M <= sum(x_T[i,t]*O_t[t] for t in 1:{n_T})"
+)
+model.constraint(
+    f"[i=1:{n_DP}]",
+    f"sum(x_T[i,t]*O_t[t] for t in 1:{n_T}) <= q_P[i+1] + (1 - z_dP[i])*M - eps"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"q_A[k] - (1 - z_dA[i,j,k])*M <= sum(x_A[i,j,k,a]*O_a[a] for a in 1:{n_A})"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"sum(x_A[i,j,k,a]*O_a[a] for a in 1:{n_A}) <= q_A[k+1] + (1 - z_dA[i,j,k])*M - eps"
+)
+
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"x_A[i,j,k,1] <= x_T[i,1]"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"x_A[i,j,k,2] <= x_T[i,1]"
+)
+model.constraint(
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"x_A[i,j,k,2] <= x_T[i,2]"
+)
