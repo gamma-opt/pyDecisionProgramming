@@ -394,9 +394,6 @@ class DecisionVariables(JuliaName):
         )'''
         Main.eval(commmand)
 
-    def set(self, index, value):
-        Main.eval(f'''{self._name}.z[{index+1}] = {value}''')
-
 
 class PathCompatibilityVariables(JuliaName):
     """
@@ -659,39 +656,6 @@ class ValueNode(JuliaName):
         Main.eval(f'{self._name} = tmp')
 
 
-def handle_index_syntax(key):
-    """
-    Turn a key tuple into Julia slicing and indexing syntax
-
-    Parameters
-    ----------
-    key: String, integer, slice or a tuple of these
-    """
-    if isinstance(key, tuple):
-        indexes = []
-        for index in key:
-            if index == slice(None):
-                indexes += ':'
-            elif isinstance(index, str):
-                indexes += [f'"{index}"']
-            elif isinstance(index, int):
-                indexes += [str(index+1)]
-            else:
-                raise IndexError('Index not must be string, integer or string')
-        index_string = ','.join(indexes)
-
-    elif key == slice(None):
-        index_string = ':'
-    elif isinstance(key, str):
-        index_string = f'"{key}"'
-    elif isinstance(key, int):
-        index_string = key+1
-    else:
-        raise IndexError('Index not must be string, integer or string')
-
-    return index_string
-
-
 class ProbabilityMatrix(JuliaName):
     """
     Construct an empty probability matrix for a chance node.
@@ -713,24 +677,6 @@ class ProbabilityMatrix(JuliaName):
            {diagram._name},
            "{node}"
         )''')
-
-    def __getitem__(self, key):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'''tmp = {self._name}[{index_string}]''')
-        return Main.tmp
-
-    def __getslice__(self, key):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'''tmp = {self._name}[{index_string}]''')
-        return Main.tmp
-
-    def __setitem__(self, key, value):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
-
-    def __setslice__(self, key, value):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
 
 
 class UtilityMatrix(JuliaName):
@@ -754,24 +700,6 @@ class UtilityMatrix(JuliaName):
            {diagram._name},
            "{node}"
         )''')
-
-    def __getitem__(self, key):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'''tmp = {self._name}[{index_string}]''')
-        return Main.tmp
-
-    def __getslice__(self, key):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'''tmp = {self._name}[{index_string}]''')
-        return Main.tmp
-
-    def __setitem__(self, key, value):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
-
-    def __setslice__(self, key, value):
-        index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
 
 
 class Paths():
