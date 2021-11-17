@@ -60,6 +60,39 @@ def setupProject():
     Main.eval('using JuMP')
 
 
+def handle_index_syntax(key):
+    """
+    Turn a key tuple into Julia slicing and indexing syntax
+
+    Parameters
+    ----------
+    key: String, integer, slice or a tuple of these
+    """
+    if isinstance(key, tuple):
+        indexes = []
+        for index in key:
+            if index == slice(None):
+                indexes += ':'
+            elif isinstance(index, str):
+                indexes += [f'"{index}"']
+            elif isinstance(index, int):
+                indexes += [str(index+1)]
+            else:
+                raise IndexError('Index not must be string, integer or string')
+        index_string = ','.join(indexes)
+
+    elif key == slice(None):
+        index_string = ':'
+    elif isinstance(key, str):
+        index_string = f'"{key}"'
+    elif isinstance(key, int):
+        index_string = key+1
+    else:
+        raise IndexError('Index not must be string, integer or string')
+
+    return index_string
+
+
 class JuliaName():
     '''
     Base class for all following Julia objects. Stores the object
@@ -72,8 +105,35 @@ class JuliaName():
     def __str__(self):
         return Main.eval(f'repr({self._name})')
 
-    def __str__(self):
+    def __repr__(self):
         return Main.eval(f'repr({self._name})')
+
+    def __getattr__(self, name):
+        if Main.eval(f"isdefined(Main, :{self._name})") and Main.eval(f"hasproperty({self._name}, :{name})"):
+            r = JuliaName()
+            Main.eval(f'{r._name} = {self._name}.{name}')
+            return r
+        return None
+
+    def __getitem__(self, key):
+        r = JuliaName()
+        index_string = handle_index_syntax(key)
+        Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        return r
+
+    def __getslice__(self, key):
+        r = JuliaName()
+        index_string = handle_index_syntax(key)
+        Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        return r
+
+    def __setitem__(self, key, value):
+        index_string = handle_index_syntax(key)
+        Main.eval(f'{self._name}[{index_string}] = {value}')
+
+    def __setslice__(self, key, value):
+        index_string = handle_index_syntax(key)
+        Main.eval(f'{self._name}[{index_string}] = {value}')
 
 
 class InfluenceDiagram(JuliaName):
