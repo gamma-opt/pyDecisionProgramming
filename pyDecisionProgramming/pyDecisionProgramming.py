@@ -333,18 +333,19 @@ class Model(JuliaName):
         Main.eval(f'optimize!({self._name})')
 
     def constraint(self, *args):
-        print(args)
         argument_text = ",".join(args)
-        print(argument_text)
+        # Note: ending the command with ;0 to prevent
+        # Julia from returning the object. Otherwise
+        # the Python julia library will try to convert
+        # this to a Python object and cause an exception.
         Main.eval(f'''@constraint(
             {self._name},
             {argument_text}
-        )''')
+        ); 0''')
 
 
 class JuMP_Variable(JuliaName):
-    def __init__(self, model, size, binary=False):
-        size_string = str(size).replace("\'", "\"")
+    def __init__(self, model, binary=False):
         binary_arg = ""
         if binary:
             binary_arg = "; binary=true, "
@@ -354,9 +355,28 @@ class JuMP_Variable(JuliaName):
         # this to a Python object and cause an exception.
         command = f'''tmp = @variable(
             {model._name},
-            {size_string}
             {binary_arg}
         ); 0'''
+        Main.eval(command)
+
+
+class JuMP_Array(JuliaName):
+    '''
+    An array of JuMP variables. Makes it easier to define contraints
+    using the @constraint syntax.
+    '''
+    def __init__(self, model, dims, binary=False):
+        super().__init__()
+        binary_arg = ""
+        if binary:
+            binary_arg = "binary=true, "
+        command = f'''
+            tmp = Array{{VariableRef}}(undef, {dims}...)
+            for i in eachindex(tmp)
+                tmp[i] = @variable({model._name}, {binary_arg})
+            end
+            {self._name} = tmp
+        '''
         Main.eval(command)
 
 
