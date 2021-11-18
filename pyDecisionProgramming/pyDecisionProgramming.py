@@ -360,8 +360,39 @@ class Model(JuliaName):
         ); 0''')
 
 
-class JuMP_Variable(JuliaName):
+class JuMPExpression(JuliaName):
+    def __init__(self, model, *args):
+        super().__init__()
+        argument_text = ",".join(args)
+        # Note: ending the command with ;0 to prevent
+        # Julia from returning the object. Otherwise
+        # the Python julia library will try to convert
+        # this to a Python object and cause an exception.
+        command = f'''{self._name} = @expression(
+            {model._name},
+            {argument_text}
+        ); 0'''
+        Main.eval(command)
+
+
+class JuMPObjective(JuliaName):
+    def __init__(self, model, objective, *args):
+        super().__init__()
+        argument_text = ",".join(args)
+        # Note: ending the command with ;0 to prevent
+        # Julia from returning the object. Otherwise
+        # the Python julia library will try to convert
+        # this to a Python object and cause an exception.
+        command = f'''{self._name} = @expression(
+            {model._name}, {objective},
+            {argument_text}
+        ); 0'''
+        Main.eval(command)
+
+
+class JuMPVariable(JuliaName):
     def __init__(self, model, binary=False):
+        super().__init__()
         binary_arg = ""
         if binary:
             binary_arg = "; binary=true, "
@@ -369,14 +400,14 @@ class JuMP_Variable(JuliaName):
         # Julia from returning the object. Otherwise
         # the Python julia library will try to convert
         # this to a Python object and cause an exception.
-        command = f'''tmp = @variable(
+        command = f'''{self._name} = @variable(
             {model._name},
             {binary_arg}
         ); 0'''
         Main.eval(command)
 
 
-class JuMP_Array(JuliaName):
+class JuMPArray(JuliaName):
     '''
     An array of JuMP variables. Makes it easier to define contraints
     using the @constraint syntax.
