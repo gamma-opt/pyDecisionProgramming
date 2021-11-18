@@ -722,9 +722,14 @@ class UtilityMatrix(JuliaName):
         )''')
 
 
-class Paths():
+class Paths(JuliaName):
     def __init__(self, states, fixed=None):
-        Main.eval(f'tmp = States(State.({states}))')
+        super().__init__()
+        if type(states) == list and type(states[0]) == int:
+            Main.eval(f'tmp = States(State.({states}))')
+        elif type(states) == JuliaName:
+            Main.eval(f'tmp = {states._name}')
+
         if fixed == None:
             Main.eval('tmp = paths(tmp)')
         else:
