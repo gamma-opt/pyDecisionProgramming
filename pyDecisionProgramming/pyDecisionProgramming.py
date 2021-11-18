@@ -179,6 +179,7 @@ class InfluenceDiagram(JuliaName):
     def __init__(self):
         super().__init__()
         Main.eval(f'{self._name} = InfluenceDiagram()')
+        self.define_path_utility()
 
     def add_node(self, node):
         """
@@ -278,6 +279,25 @@ class InfluenceDiagram(JuliaName):
 
     def index_of(self, name):
         return Main.eval(f'''index_of({self._name}, "{name}")''')-1
+
+    def define_path_utility(self):
+        command = f'''struct PathUtility <: AbstractPathUtility
+                data::Array{{AffExpr}}
+            end
+            Base.getindex(U::PathUtility, i::State) = getindex(U.data, i)
+            Base.getindex(U::PathUtility, I::Vararg{{State,N}}) where N = getindex(U.data, I...)
+            (U::PathUtility)(s::Path) = value.(U[s...])
+        '''
+        Main.eval(command)
+
+    def set_path_utilities(self, expressions):
+        expr = [e._name for e in expressions]
+        expressions_text = "[" + ",".join(expr) + "]"
+        print(expressions_text)
+        Main.eval(f'''
+            {self._name}.U = PathUtility({expressions_text})
+        ''')
+
 
 class Model(JuliaName):
     """

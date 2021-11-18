@@ -72,8 +72,8 @@ V_A[2, :] += 0.5            # High market share: more value
 pdp.julia.V_A = V_A
 
 
-x_T = pdp.JuMP_Array(model, [n_DP, n_T], binary=True)
-x_A = pdp.JuMP_Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+x_T = pdp.JuMPArray(model, [n_DP, n_T], binary=True)
+x_A = pdp.JuMPArray(model, [n_DP, n_CT, n_DA, n_A], binary=True)
 pdp.julia.x_T = x_T
 pdp.julia.x_A = x_A
 
@@ -84,8 +84,8 @@ pdp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ in
 pdp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
 pdp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
 
+pdp.julia.diagram = diagram
 pdp.julia.z_dP = z.z[0]
-print(pdp.julia.z_dP)
 pdp.julia.z_dA = z.z[1]
 
 model.constraint(
@@ -130,3 +130,54 @@ model.constraint(
     f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
     f"x_A[i,j,k,2] <= x_T[i,2]"
 )
+
+
+pdp.julia.patent_investment_cost = pdp.JuMPExpression(
+    model,
+    f"[i=1:{n_DP}]",
+    f"sum(x_T[i, t] * I_t[t] for t in 1:{n_T})"
+)
+
+pdp.julia.application_investment_cost = pdp.JuMPExpression(
+    model,
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
+    f"sum(x_A[i, j, k, a] * I_a[a] for a in 1:{n_A})"
+)
+
+
+pdp.julia.application_value = pdp.JuMPExpression(
+    model,
+    f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}, l=1:{n_CM}]",
+    f"sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:{n_A})"
+)
+
+model.objective(
+    f"sum( sum( diagram.P(convert.(State, (i,j,k,l))) * (application_value[i,j,k,l] - application_investment_cost[i,j,k]) for j in 1:{n_CT}, k in 1:{n_DA}, l in 1:{n_CM} ) - patent_investment_cost[i] for i in 1:{n_DP} )"
+)
+
+model.setup_Gurobi_optimizer(
+   ("IntFeasTol", 1e-9),
+   ("LazyConstraints", 1)
+)
+model.optimize()
+
+Z = pdp.DecisionStrategy(z)
+S_probabilities = pdp.StateProbabilities(diagram, Z)
+S_probabilities.print_decision_strategy()
+
+path_utilities = []
+for s in pdp.Paths(diagram.S):
+    pdp.julia.CT_i = s[diagram.index_of("CT")] + 1
+    pdp.julia.DA_i = s[diagram.index_of("DA")] + 1
+    pdp.julia.DP_i = s[diagram.index_of("DP")] + 1
+    pdp.julia.CM_i = s[diagram.index_of("CM")] + 1
+    path_utilities.append(pdp.JuMPExpression(
+        model,
+        f"""sum(x_A[DP_i, CT_i, DA_i, a] * (V_A[CM_i, a] - I_a[a]) for a in 1:{n_A}) -
+            sum(x_T[DP_i, t] * I_t[t] for t in 1:{n_T})
+        """
+    ))
+
+diagram.set_path_utilities(path_utilities)
+
+U_distribution = pdp.UtilityDistribution(diagram, Z)
