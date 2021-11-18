@@ -276,6 +276,8 @@ class InfluenceDiagram(JuliaName):
         )''')
         return Main.tmp
 
+    def index_of(self, name):
+        return Main.eval(f'''index_of({self._name}, "{name}")''')-1
 
 class Model(JuliaName):
     """
