@@ -315,7 +315,7 @@ class Model(JuliaName):
         Main.eval(command)
         Main.eval(f'set_optimizer({self._name}, optimizer)')
 
-    def objective(self, op, expected_value):
+    def objective(self, objective, operator="Max"):
         """
         Set the objective for the optimizer
 
@@ -327,7 +327,21 @@ class Model(JuliaName):
         expected_value: ExpectedValue
             An ExpectedValue object. Describes the objective function.
         """
-        Main.eval(f'@objective({self._name}, Max, {expected_value._name})')
+        if type(objective) == ExpectedValue:
+            Main.eval(f'''@objective(
+                {self._name}, {operator},
+                {objective._name})
+            ''')
+        elif type(objective) == str:
+            # Note: ending the command with ;0 to prevent
+            # Julia from returning the object. Otherwise
+            # the Python julia library will try to convert
+            # this to a Python object and cause an exception.
+            command = f'''@objective(
+                {self._name}, {operator},
+                {objective}
+            ); 0'''
+            Main.eval(command)
 
     def optimize(self):
         ''' Run the current optimizer '''
