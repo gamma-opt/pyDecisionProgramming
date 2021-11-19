@@ -259,16 +259,16 @@ class InfluenceDiagram(JuliaName):
             negative_path_utility : bool = False
                 Choice to use a negative path utility translation
         """
-        Main.tmp1 = default_probability
-        Main.tmp2 = default_utility
-        Main.tmp3 = positive_path_utility
-        Main.tmp4 = negative_path_utility
+        Main.default_probability = default_probability
+        Main.default_utility = default_utility
+        Main.positive_path_utility = positive_path_utility
+        Main.negative_path_utility = negative_path_utility
         Main.eval(f'''generate_diagram!(
             {self._name};
-            default_probability=tmp1,
-            default_utility=tmp2,
-            positive_path_utility=tmp3,
-            negative_path_utility=tmp4
+            default_probability=default_probability,
+            default_utility=default_utility,
+            positive_path_utility=positive_path_utility,
+            negative_path_utility=negative_path_utility
         )''')
 
     def num_states(self, node):
