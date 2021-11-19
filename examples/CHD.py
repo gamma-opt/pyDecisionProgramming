@@ -83,7 +83,7 @@ def state_probabilities(risk_p, t, h, prior):
 
     # special case: the highest risk level[101] = 100%
     indexes = data.risk_levels[100] <= risk_p
-    state_probabilites[i] = np.sum(p_scores[indexes])
+    state_probabilites[100] = np.sum(p_scores[indexes])
 
     return state_probabilites
 
@@ -124,9 +124,6 @@ for s_R0 in range(101):
         for s_T1 in range(3):
             risk = update_risk_distribution(s_R0, s_T1)
             probs = state_probabilities(risk, s_T1, s_H, s_R0)
-            print(risk)
-            print(probs)
-            print("sum", s_R0, s_H, s_T1, np.sum(probs))
             X_R[s_R0, s_H, s_T1, :] = probs.tolist()
 
 diagram.set_probabilities("R1", X_R)
