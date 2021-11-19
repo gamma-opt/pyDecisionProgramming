@@ -13,7 +13,6 @@ class JuliaMain():
 
     def __setattr__(self, name, value):
         if type(value) == JuliaName or JuliaName in type(value).__bases__:
-            print(name)
             Main.eval(f'{name} = {value._name}')
         else:
             Main.__setattr__(name, value)
@@ -129,11 +128,13 @@ class JuliaName():
 
     def __setitem__(self, key, value):
         index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
+        command = f'{self._name}[{index_string}] = {value}'
+        Main.eval(command)
 
     def __setslice__(self, key, value):
         index_string = handle_index_syntax(key)
-        Main.eval(f'{self._name}[{index_string}] = {value}')
+        command = f'{self._name}[{index_string}] = {value}'
+        Main.eval(command)
 
 
 class InfluenceDiagram(JuliaName):
