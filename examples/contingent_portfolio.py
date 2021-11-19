@@ -23,23 +23,23 @@ diagram.add_node(outcome_node)
 
 diagram.generate_arcs()
 
-probs = pdp.ProbabilityMatrix(diagram, "CT")
-probs[0, :] = [1/2, 1/3, 1/6]
-probs[1, :] = [1/3, 1/3, 1/3]
-probs[2, :] = [1/6, 1/3, 1/2]
-diagram.set_probabilities("CT", probs)
+X_CT = pdp.ProbabilityMatrix(diagram, "CT")
+X_CT[0, :] = [1/2, 1/3, 1/6]
+X_CT[1, :] = [1/3, 1/3, 1/3]
+X_CT[2, :] = [1/6, 1/3, 1/2]
+diagram.set_probabilities("CT", X_CT)
 
-probs = pdp.ProbabilityMatrix(diagram, "CM")
-probs[0, 0, :] = [2/3, 1/4, 1/12]
-probs[0, 1, :] = [1/2, 1/3, 1/6]
-probs[0, 2, :] = [1/3, 1/3, 1/3]
-probs[1, 0, :] = [1/2, 1/3, 1/6]
-probs[1, 1, :] = [1/3, 1/3, 1/3]
-probs[1, 2, :] = [1/6, 1/3, 1/2]
-probs[2, 0, :] = [1/3, 1/3, 1/3]
-probs[2, 1, :] = [1/6, 1/3, 1/2]
-probs[2, 2, :] = [1/12, 1/4, 2/3]
-diagram.set_probabilities("CM", probs)
+X_CM = pdp.ProbabilityMatrix(diagram, "CM")
+X_CM[0, 0, :] = [2/3, 1/4, 1/12]
+X_CM[0, 1, :] = [1/2, 1/3, 1/6]
+X_CM[0, 2, :] = [1/3, 1/3, 1/3]
+X_CM[1, 0, :] = [1/2, 1/3, 1/6]
+X_CM[1, 1, :] = [1/3, 1/3, 1/3]
+X_CM[1, 2, :] = [1/6, 1/3, 1/2]
+X_CM[2, 0, :] = [1/3, 1/3, 1/3]
+X_CM[2, 1, :] = [1/6, 1/3, 1/2]
+X_CM[2, 2, :] = [1/12, 1/4, 2/3]
+diagram.set_probabilities("CM", X_CM)
 
 diagram.generate(default_utility=False)
 model = pdp.Model()
@@ -144,12 +144,12 @@ pdp.julia.application_investment_cost = pdp.JuMPExpression(
     f"sum(x_A[i, j, k, a] * I_a[a] for a in 1:{n_A})"
 )
 
-
 pdp.julia.application_value = pdp.JuMPExpression(
     model,
     f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}, l=1:{n_CM}]",
     f"sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:{n_A})"
 )
+
 
 model.objective(
     f"sum( sum( diagram.P(convert.(State, (i,j,k,l))) * (application_value[i,j,k,l] - application_investment_cost[i,j,k]) for j in 1:{n_CT}, k in 1:{n_DA}, l in 1:{n_CM} ) - patent_investment_cost[i] for i in 1:{n_DP} )"
@@ -165,19 +165,23 @@ Z = pdp.DecisionStrategy(z)
 S_probabilities = pdp.StateProbabilities(diagram, Z)
 S_probabilities.print_decision_strategy()
 
-path_utilities = []
-for s in pdp.Paths(diagram.S):
-    pdp.julia.CT_i = s[diagram.index_of("CT")] + 1
-    pdp.julia.DA_i = s[diagram.index_of("DA")] + 1
-    pdp.julia.DP_i = s[diagram.index_of("DP")] + 1
-    pdp.julia.CM_i = s[diagram.index_of("CM")] + 1
-    path_utilities.append(pdp.JuMPExpression(
-        model,
-        f"""sum(x_A[DP_i, CT_i, DA_i, a] * (V_A[CM_i, a] - I_a[a]) for a in 1:{n_A}) -
-            sum(x_T[DP_i, t] * I_t[t] for t in 1:{n_T})
-        """
-    ))
+# We save the integer indeces of the nodes into Julia namespace.
+# Note that indexing in Julia starts from 1, so we must add 1 to
+# each index
+pdp.julia.DP_i = diagram.index_of("DP") + 1
+pdp.julia.CT_i = diagram.index_of("CT") + 1
+pdp.julia.DA_i = diagram.index_of("DA") + 1
+pdp.julia.CM_i = diagram.index_of("CM") + 1
+path_utilities = pdp.ExpressionPathUtilities(
+    model, diagram,
+    f'''sum(x_A[s[index_of(diagram, "DP")], s[index_of(diagram, "CT")], s[index_of(diagram, "DA")], a] * (V_A[s[index_of(diagram, "CM")], a] - I_a[a]) for a in 1:{n_A}) -
+        sum(x_T[s[index_of(diagram, "DP")], t] * I_t[t] for t in 1:{n_T})
+    ''',
+    path_name = "s"
+)
 
 diagram.set_path_utilities(path_utilities)
 
 U_distribution = pdp.UtilityDistribution(diagram, Z)
+U_distribution.print_distribution()
+U_distribution.print_statistics()
