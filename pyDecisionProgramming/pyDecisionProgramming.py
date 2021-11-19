@@ -291,11 +291,8 @@ class InfluenceDiagram(JuliaName):
         Main.eval(command)
 
     def set_path_utilities(self, expressions):
-        expr = [e._name for e in expressions]
-        expressions_text = "[" + ",".join(expr) + "]"
-        print(expressions_text)
         Main.eval(f'''
-            {self._name}.U = PathUtility({expressions_text})
+            {self._name}.U = PathUtility({expressions._name})
         ''')
 
 
@@ -443,6 +440,18 @@ class JuMPArray(JuliaName):
                 tmp[i] = @variable({model._name}, {binary_arg})
             end
             {self._name} = tmp
+        '''
+        Main.eval(command)
+
+
+class ExpressionPathUtilities(JuliaName):
+    '''
+    Creates path utilites from an expression.
+    '''
+    def __init__(self, model, diagram, expression, path_name="s"):
+        super().__init__()
+        command = f''' {self._name} =
+            [{expression} for {path_name} in paths({diagram._name}.S)]
         '''
         Main.eval(command)
 
