@@ -29,7 +29,7 @@ def update_risk_distribution(prior, t):
         # if the denominator is zero, post_risk is NaN, changing those to 0
         posterior_risks = posterior_risks.replace([np.nan], 0)
 
-        return posterior_risks
+        return posterior_risks.to_numpy()
 
     elif t == 2:  # the test is GRS
         numerators = data.GRS_if_sick * data.risk_levels[prior]
@@ -40,7 +40,7 @@ def update_risk_distribution(prior, t):
         # if the denominator is zero, post_risk is NaN, changing those to 0
         posterior_risks = posterior_risks.replace([np.nan], 0)
 
-        return posterior_risks
+        return posterior_risks.to_numpy()
 
     else:  # no test performed
         risks_unchanged = np.zeros(101)
@@ -79,11 +79,11 @@ def state_probabilities(risk_p, t, h, prior):
         next_risk_level = data.risk_levels[i+1]
         indexes = np.logical_and(risk_level <= risk_p, risk_p < next_risk_level)
 
-        state_probabilites[i] += np.sum(p_scores[indexes])
+        state_probabilites[i] = np.sum(p_scores[indexes])
 
     # special case: the highest risk level[101] = 100%
-    indexes = data.risk_levels[100] <= risk_level
-    state_probabilites[indexes] += np.sum(p_scores[indexes])
+    indexes = data.risk_levels[100] <= risk_p
+    state_probabilites[i] = np.sum(p_scores[indexes])
 
     return state_probabilites
 
@@ -120,11 +120,13 @@ diagram.set_probabilities("H", X_H)
 
 X_R = pdp.ProbabilityMatrix(diagram, "R1")
 for s_R0 in range(101):
-    print(s_R0)
     for s_H in range(2):
         for s_T1 in range(3):
             risk = update_risk_distribution(s_R0, s_T1)
             probs = state_probabilities(risk, s_T1, s_H, s_R0)
+            print(risk)
+            print(probs)
+            print("sum", s_R0, s_H, s_T1, np.sum(probs))
             X_R[s_R0, s_H, s_T1, :] = probs.tolist()
 
 diagram.set_probabilities("R1", X_R)
