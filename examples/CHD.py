@@ -17,8 +17,9 @@ utility_CHD_nottreated = 6.65436854256236
 utility_noCHD_treated = 7.64528451705134
 utility_noCHD_nottreated = 7.70088349200034
 
-risk_step = 5
-chosen_risk_level = "10%" # The prior must be a multiple of risk_step
+# To create a faster example, we bin the risk ranges into 2% intervals
+risk_step = 2
+chosen_risk_level = "12%" # The prior must be a multiple of risk_step
 n_risk_levels = int(100/risk_step)+1
 risk_levels = risk_step*np.array(range(n_risk_levels))
 
