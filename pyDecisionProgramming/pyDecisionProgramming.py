@@ -77,7 +77,7 @@ def handle_index_syntax(key):
             elif isinstance(index, int):
                 indexes += [str(index+1)]
             else:
-                raise IndexError('Index not must be string, integer or string')
+                raise IndexError('Index not must be string, integer or ":"')
         index_string = ','.join(indexes)
 
     elif key == slice(None):
@@ -87,7 +87,7 @@ def handle_index_syntax(key):
     elif isinstance(key, int):
         index_string = key+1
     else:
-        raise IndexError('Index not must be string, integer or string')
+        raise IndexError('Index not must be string, integer or ":"')
 
     return index_string
 
@@ -356,7 +356,8 @@ class Model(JuliaName):
             # the Python julia library will try to convert
             # this to a Python object and cause an exception.
             command = f'''@objective(
-                {self._name}, {operator},
+                {self._name},
+                {operator},
                 {objective}
             ); 0'''
             Main.eval(command)
@@ -515,8 +516,8 @@ class PathCompatibilityVariables(JuliaName):
                  decision_variables,
                  names=False,
                  name="x",
-                 # TODO: forbidden_paths=ForbiddenPath([]),
-                 # TODO: fixed=FixedPath(),
+                 forbidden_paths=None,
+                 fixed=None,
                  probability_cut=True,
                  probability_scale_factor=1.0
                  ):
@@ -557,21 +558,30 @@ class PathCompatibilityVariables(JuliaName):
         self.model = model
         self.diagram = diagram
         self.decision_variables = decision_variables
-        Main.tmp1 = names
-        Main.tmp2 = name
-        # TODO: Main.tmp3 = forbidden_paths
-        # TODO: Main.tmp4 = fixed
-        Main.tmp5 = probability_cut
-        Main.tmp6 = probability_scale_factor
-        commmand = f'''{self._name} = PathCompatibilityVariables(
+        Main.names = names
+        Main.name = name
+        forbidden_str=""
+        if forbidden_paths is not None:
+            forbidden_paths = [x._name for x in forbidden_paths]
+            forbidden_str = "forbidden_paths = [" + ",".join(forbidden_paths) + "],"
+
+        if fixed is not None:
+            fixed_str = f"fixed = {fixed._name},"
+
+        Main.probability_cut = probability_cut
+        Main.probability_scale_factor = probability_scale_factor
+        command = f'''{self._name} = PathCompatibilityVariables(
             {model._name},
             {diagram._name},
             {decision_variables._name};
-            names = tmp1, name = tmp2,
-            probability_cut = tmp5,
-            probability_scale_factor = tmp6
+            names = names,
+            name = name,
+            {forbidden_str}
+            {fixed_str}
+            probability_cut = probability_cut,
+            probability_scale_factor = probability_scale_factor
         )'''
-        Main.eval(commmand)
+        Main.eval(command)
 
 
 class ExpectedValue(JuliaName):
@@ -796,6 +806,34 @@ class UtilityMatrix(JuliaName):
         Main.eval(f'''{self._name} = UtilityMatrix(
            {diagram._name},
            "{node}"
+        )''')
+
+
+class ForbiddenPath(JuliaName):
+    def __init__(self, diagram, nodes, states):
+        super().__init__()
+        node_string = str(nodes).replace("\'", "\"")
+        states_string = str(states).replace("\'", "\"")
+        Main.eval(f'''{self._name} = ForbiddenPath(
+            {diagram._name},
+            {node_string},
+            {states_string}
+        )''')
+
+
+class FixedPath(JuliaName):
+    def __init__(self, diagram, paths):
+        super().__init__()
+        path_string = "Dict("
+        for key, val in paths.items():
+            if type(val) == str:
+                path_string += f'''"{key}" => "{val}",'''
+            else:
+                path_string += f'''"{key}" => {val},'''
+        path_string += ")"
+        Main.eval(f'''{self._name} = FixedPath(
+            {diagram._name},
+            {path_string}
         )''')
 
 
