@@ -1,3 +1,11 @@
+from __future__ import annotations
+from julia import Julia
+
+# Create an instance of julia without incremental precompilation.
+# This does not seem to affect performance much
+base_julia = Julia(compiled_modules=False)
+
+# These must be imported after creating the julia name space
 from julia import Pkg
 from julia import Main
 from julia import DecisionProgramming as jdp
