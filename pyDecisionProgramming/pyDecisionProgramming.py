@@ -10,7 +10,6 @@ class JuliaMain():
     an object implemented here (inherits JuliaName). JuliaNames are
     assigned directly.
     '''
-
     def __setattr__(self, name, value):
         if type(value) == JuliaName or JuliaName in type(value).__bases__:
             Main.eval(f'{name} = {value._name}')
@@ -296,6 +295,59 @@ class InfluenceDiagram(JuliaName):
             {self._name}.U = PathUtility({expressions._name})
         ''')
 
+    def construct_probability_matrix(self, node):
+        return ProbabilityMatrix(self, node)
+
+    def construct_utility_matrix(self, node):
+        return UtilityMatrix(self, node)
+
+    def decision_variables(self, model):
+        return DecisionVariables(model, self)
+
+    def path_compatibility_variables(
+        self, model,
+        decision_variables=None,
+        names=False,
+        name="x",
+        forbidden_paths=None,
+        fixed=None,
+        probability_cut=True,
+        probability_scale_factor=1.0
+    ):
+        if decision_variables is None:
+            decision_variables = self.decision_variables(model)
+        return PathCompatibilityVariables(
+            model, self,
+            decision_variables,
+            names=names,
+            name=name,
+            forbidden_paths=forbidden_paths,
+            fixed=fixed,
+            probability_cut=probability_cut,
+            probability_scale_factor=probability_scale_factor
+        )
+
+    def expected_value(
+        self, model,
+        path_compatibility_variables=None
+    ):
+        x_s = path_compatibility_variables
+        if x_s is None:
+            x_s = self.path_compatibility_variables(model)
+        return ExpectedValue(model, self, path_compatibility_variables)
+
+    def state_probabilities(self, decision_strategy):
+        return StateProbabilities(self, decision_strategy)
+
+    def utility_distribution(self, decision_strategy):
+        return UtilityDistribution(self, decision_strategy)
+
+    def forbidden_path(self, nodes, values):
+        return ForbiddenPath(self, nodes, values)
+
+    def fixed_path(self, node_values):
+        return FixedPath(self, node_values)
+
 
 class Model(JuliaName):
     """
@@ -311,6 +363,7 @@ class Model(JuliaName):
     """
     def __init__(self):
         super().__init__()
+        self.optimizer_set = False
         Main.eval(f'{self._name} = Model()')
 
     def setup_Gurobi_optimizer(self, *constraints):
@@ -332,6 +385,7 @@ class Model(JuliaName):
 
         Main.eval(command)
         Main.eval(f'set_optimizer({self._name}, optimizer)')
+        self.optimizer_set = True
 
     def objective(self, objective, operator="Max"):
         """
@@ -364,6 +418,9 @@ class Model(JuliaName):
 
     def optimize(self):
         ''' Run the current optimizer '''
+
+        if not self.optimizer_set:
+            self.setup_Gurobi_optimizer()
 
         Main.eval(f'optimize!({self._name})')
 
@@ -492,6 +549,24 @@ class DecisionVariables(JuliaName):
         )'''
         Main.eval(commmand)
 
+    def decision_strategy(self):
+        return DecisionStrategy(self)
+
+
+class DecisionStrategy(JuliaName):
+    """
+    Extract values for decision variables from solved decision model.
+    """
+    def __init__(self, decision_variables):
+        """
+        Parameters
+        ----------
+        A decision variables for a solved model
+        """
+        super().__init__()
+        commmand = f'{self._name} = DecisionStrategy({decision_variables._name})'
+        Main.eval(commmand)
+
 
 class PathCompatibilityVariables(JuliaName):
     """
@@ -560,11 +635,12 @@ class PathCompatibilityVariables(JuliaName):
         self.decision_variables = decision_variables
         Main.names = names
         Main.name = name
-        forbidden_str=""
+        forbidden_str = ""
         if forbidden_paths is not None:
             forbidden_paths = [x._name for x in forbidden_paths]
             forbidden_str = "forbidden_paths = [" + ",".join(forbidden_paths) + "],"
 
+        fixed_str = ""
         if fixed is not None:
             fixed_str = f"fixed = {fixed._name},"
 
@@ -607,20 +683,6 @@ class ExpectedValue(JuliaName):
         )'''
         Main.eval(commmand)
 
-
-class DecisionStrategy(JuliaName):
-    """
-    Extract values for decision variables from solved decision model.
-    """
-    def __init__(self, decision_variables):
-        """
-        Parameters
-        ----------
-        A decision variables for a solved model
-        """
-        super().__init__()
-        commmand = f'{self._name} = DecisionStrategy({decision_variables._name})'
-        Main.eval(commmand)
 
 
 class StateProbabilities(JuliaName):
@@ -845,7 +907,7 @@ class Paths(JuliaName):
         elif type(states) == JuliaName:
             Main.eval(f'tmp = {states._name}')
 
-        if fixed == None:
+        if fixed is None:
             Main.eval('tmp = paths(tmp)')
         else:
             Main.eval(f'tmp = paths(tmp; fixed={fixed})')
