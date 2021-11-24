@@ -35,22 +35,22 @@ diagram.generate_arcs()
 diagram.set_probabilities("H0", [0.1, 0.9])
 
 # The probability matrix for rest of the health nodes
-health_probs = pdp.ProbabilityMatrix(diagram, "H1")
-health_probs["healthy", "pass", :] = [0.2, 0.8]
-health_probs["healthy", "treat", :] = [0.1, 0.9]
-health_probs["ill", "pass", :] = [0.9, 0.1]
-health_probs["ill", "treat", :] = [0.5, 0.5]
+X_H = diagram.construct_probability_matrix("H1")
+X_H["healthy", "pass", :] = [0.2, 0.8]
+X_H["healthy", "treat", :] = [0.1, 0.9]
+X_H["ill", "pass", :] = [0.9, 0.1]
+X_H["ill", "treat", :] = [0.5, 0.5]
 
 # The probability matrix for the treatment outcomes
-treatment_probs = pdp.ProbabilityMatrix(diagram, "T1")
-treatment_probs["ill", "positive"] = 0.8
-treatment_probs["ill", "negative"] = 0.2
-treatment_probs["healthy", "negative"] = 0.9
-treatment_probs["healthy", "positive"] = 0.1
+X_T = diagram.construct_probability_matrix("T1")
+X_T["ill", "positive"] = 0.8
+X_T["ill", "negative"] = 0.2
+X_T["healthy", "negative"] = 0.9
+X_T["healthy", "positive"] = 0.1
 
 for i in range(N-1):
-    diagram.set_probabilities(f"T{i}", treatment_probs)
-    diagram.set_probabilities(f"H{i+1}", health_probs)
+    diagram.set_probabilities(f"T{i}", X_T)
+    diagram.set_probabilities(f"H{i+1}", X_H)
 
 for i in range(N-1):
     diagram.set_utility(f"C{i}", [-100, 0])
@@ -61,9 +61,9 @@ diagram.generate(positive_path_utility=True)
 
 
 model = pdp.Model()
-z = pdp.DecisionVariables(model, diagram)
-x_s = pdp.PathCompatibilityVariables(model, diagram, z, probability_cut = False)
-EV = pdp.ExpectedValue(model, diagram, x_s)
+z = diagram.decision_variables(model)
+x_s = diagram.path_compatibility_variables(model, z, probability_cut = False)
+EV = diagram.expected_value(model, x_s)
 model.objective(EV, "Max")
 
 model.setup_Gurobi_optimizer(
@@ -71,9 +71,9 @@ model.setup_Gurobi_optimizer(
 )
 model.optimize()
 
-Z = pdp.DecisionStrategy(z)
-S_probabilities = pdp.StateProbabilities(diagram, Z)
-U_distribution = pdp.UtilityDistribution(diagram, Z)
+Z = z.decision_strategy()
+S_probabilities = diagram.state_probabilities(Z)
+U_distribution = diagram.utility_distribution(Z)
 
 S_probabilities.print_decision_strategy()
 

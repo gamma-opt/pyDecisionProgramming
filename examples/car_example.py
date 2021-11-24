@@ -27,56 +27,54 @@ diagram.add_node(value_node)
 
 diagram.generate_arcs()
 
-X_O = pdp.ProbabilityMatrix(diagram, "O")
+X_O = diagram.construct_probability_matrix("O")
 X_O["peach"] = 0.8
 X_O["lemon"] = 0.2
 diagram.set_probabilities("O", X_O)
 
 # You can also get the current matrix and change it
-R_probs = pdp.ProbabilityMatrix(diagram, 'R')
-R_probs["lemon", "no test", :] = [1, 0, 0]
-R_probs["lemon", "test", :] = [0, 1, 0]
-R_probs["peach", "no test", :] = [1, 0, 0]
-R_probs["peach", "test", :] = [0, 0, 1]
-diagram.set_probabilities('R', R_probs)
+X_R = diagram.construct_probability_matrix('R')
+X_R["lemon", "no test", :] = [1, 0, 0]
+X_R["lemon", "test", :] = [0, 1, 0]
+X_R["peach", "no test", :] = [1, 0, 0]
+X_R["peach", "test", :] = [0, 0, 1]
+diagram.set_probabilities('R', X_R)
 
-V1_utilities = pdp.UtilityMatrix(diagram, 'V1')
-V1_utilities["test"] = -25
-V1_utilities["no test"] = 0
-diagram.set_utility('V1', V1_utilities)
+Y_V1 = diagram.construct_utility_matrix('V1')
+Y_V1["test"] = -25
+Y_V1["no test"] = 0
+diagram.set_utility('V1', Y_V1)
 
-V2_utilities = pdp.UtilityMatrix(diagram, 'V2')
-V2_utilities["buy without guarantee"] = 100
-V2_utilities["buy with guarantee"] = 40
-V2_utilities["don't buy"] = 0
-diagram.set_utility('V2', V2_utilities)
+Y_V2 = diagram.construct_utility_matrix('V2')
+Y_V2["buy without guarantee"] = 100
+Y_V2["buy with guarantee"] = 40
+Y_V2["don't buy"] = 0
+diagram.set_utility('V2', Y_V2)
 
-V3_utilities = pdp.UtilityMatrix(diagram, 'V3')
-V3_utilities["lemon", "buy without guarantee"] = -200
-V3_utilities["lemon", "buy with guarantee"] = 0
-V3_utilities["lemon", "don't buy"] = 0
-V3_utilities["peach", :] = [-40, -20, 0]
-diagram.set_utility('V3', V3_utilities)
+Y_V3 = diagram.construct_utility_matrix('V3')
+Y_V3["lemon", "buy without guarantee"] = -200
+Y_V3["lemon", "buy with guarantee"] = 0
+Y_V3["lemon", "don't buy"] = 0
+Y_V3["peach", :] = [-40, -20, 0]
+diagram.set_utility('V3', Y_V3)
 
 diagram.generate()
 
 model = pdp.Model()
-z = pdp.DecisionVariables(model, diagram)
-x_s = pdp.PathCompatibilityVariables(model, diagram, z)
-EV = pdp.ExpectedValue(model, diagram, x_s)
-
+z = diagram.decision_variables(model)
+x_s = diagram.path_compatibility_variables(model, z)
+EV = diagram.expected_value(model, x_s)
 model.objective(EV, "Max")
 
 model.setup_Gurobi_optimizer(
    ("IntFeasTol", 1e-9),
    ("LazyConstraints", 1)
 )
-
 model.optimize()
 
-Z = pdp.DecisionStrategy(z)
-S_probabilities = pdp.StateProbabilities(diagram, Z)
-U_distribution = pdp.UtilityDistribution(diagram, Z)
+Z = z.decision_strategy()
+S_probabilities = diagram.state_probabilities(Z)
+U_distribution = diagram.utility_distribution(Z)
 
 S_probabilities.print_decision_strategy()
 U_distribution.print_distribution()

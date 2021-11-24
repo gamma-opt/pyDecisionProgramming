@@ -133,16 +133,16 @@ diagram.add_node(pdp.ValueNode("HB",  ["H", "TD"]))
 
 diagram.generate_arcs()
 
-X_R0 = pdp.ProbabilityMatrix(diagram, "R0")
+X_R0 = diagram.construct_probability_matrix("R0")
 X_R0[chosen_risk_level] = 1
 diagram.set_probabilities("R0", X_R0)
 
-X_H = pdp.ProbabilityMatrix(diagram, "H")
+X_H = diagram.construct_probability_matrix("H")
 X_H[:, "CHD"] = data.risk_levels.tolist()
 X_H[:, "no CHD"] = (1-data.risk_levels).tolist()
 diagram.set_probabilities("H", X_H)
 
-X_R = pdp.ProbabilityMatrix(diagram, "R1")
+X_R = diagram.construct_probability_matrix("R1")
 for s_R0 in range(n_risk_levels):
     for s_H in range(2):
         for s_T1 in range(3):
@@ -155,7 +155,7 @@ diagram.set_probabilities("R2", X_R)
 
 
 forbidden = 0   # the cost of forbidden test combinations is neglected
-Y_TC = pdp.UtilityMatrix(diagram, "TC")
+Y_TC = diagram.construct_utility_matrix("TC")
 Y_TC["TRS", "TRS"] = forbidden
 Y_TC["TRS", "GRS"] = cost_TRS + cost_GRS
 Y_TC["TRS", "no test"] = cost_TRS
@@ -167,7 +167,7 @@ Y_TC["no test", "GRS"] = cost_GRS
 Y_TC["no test", "no test"] = 0
 diagram.set_utility("TC", Y_TC)
 
-Y_HB = pdp.UtilityMatrix(diagram, "HB")
+Y_HB = diagram.construct_utility_matrix("HB")
 Y_HB["CHD", "treatment"] = utility_CHD_treated
 Y_HB["CHD", "no treatment"] = utility_CHD_nottreated
 Y_HB["no CHD", "treatment"] = utility_noCHD_treated
@@ -177,37 +177,35 @@ diagram.set_utility("HB", Y_HB)
 diagram.generate()
 
 model = pdp.Model()
-z = pdp.DecisionVariables(model, diagram)
+z = diagram.decision_variables(model)
 
-forbidden_tests = pdp.ForbiddenPath(diagram, ["T1", "T2"], [("TRS", "TRS"), ("GRS", "GRS"), ("no test", "TRS"), ("no test", "GRS")])
+forbidden_tests = diagram.forbidden_path(["T1", "T2"], [("TRS", "TRS"), ("GRS", "GRS"), ("no test", "TRS"), ("no test", "GRS")])
 
-fixed_R0 = pdp.FixedPath(diagram, {"R0": chosen_risk_level})
+fixed_R0 = diagram.fixed_path({"R0": chosen_risk_level})
 scale_factor = 10000.0
 
-x_s = pdp.PathCompatibilityVariables(
-    model, diagram, z,
+x_s = diagram.path_compatibility_variables(
+    model, z,
     fixed=fixed_R0,
     forbidden_paths=[forbidden_tests],
     probability_cut=False,
     probability_scale_factor=scale_factor
 )
 
-EV = pdp.ExpectedValue(model, diagram, x_s)
+EV = diagram.expected_value(model, x_s)
 model.objective(EV, "Max")
 
 model.setup_Gurobi_optimizer(
    ("MIPFocus", 3),
    ("MIPGap", 1e-6)
 )
-
 model.optimize()
 
-Z = pdp.DecisionStrategy(z)
-S_probabilities = pdp.StateProbabilities(diagram, Z)
-U_distribution = pdp.UtilityDistribution(diagram, Z)
+Z = z.decision_strategy()
+S_probabilities = diagram.state_probabilities(Z)
+U_distribution = diagram.utility_distribution(Z)
 
 S_probabilities.print_decision_strategy()
-
 S_probabilities.print(["R0", "R1", "R2"])
 
 U_distribution.print_distribution()
