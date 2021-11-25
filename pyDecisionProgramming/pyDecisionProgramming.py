@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 from julia import Julia
 
 # Create an instance of julia without incremental precompilation.
@@ -10,6 +11,19 @@ from julia import Pkg
 from julia import Main
 from julia import DecisionProgramming as jdp
 import uuid
+
+
+# Random number generator on Julia side
+_random_number_generator = None
+
+
+def random_number_generator(seed=None):
+    if _random_number_generator is None:
+        if seed is None:
+            seed = datetime.now()
+        _random_number_generator = JuliaName()
+        Main.eval(f'{_random_number_generator._name} = MersenneTwister({seed})')
+    return _random_number_generator
 
 
 class JuliaMain():
@@ -189,6 +203,72 @@ class InfluenceDiagram(JuliaName):
         Main.eval(f'{self._name} = InfluenceDiagram()')
         self.define_path_utility()
 
+    def build_random(self, n_C, n_D, n_V, m_C, m_D, states, seed=None):
+        '''
+        Generate random decision diagram with n_C chance nodes, n_D
+        decision nodes, and n_V value nodes. Parameter m_C and m_D are the
+        upper bounds for the size of the information set.
+
+        Parameters
+        ----------
+        n_C: Int
+            Number of chance nodes.
+        n_D: Int
+            Number of decision nodes.
+        n_V: Int
+            Number of value nodes.
+        m_C: Int
+            Upper bound for size of information set for chance nodes.
+        m_D: Int
+            Upper bound for size of information set for decision nodes.
+        states: List if integers
+            The number of states for each chance and decision node is
+            randomly chosen from this set of numbers.
+        '''
+        self = super().__init__()
+        rng = random_number_generator(seed)
+        Main.eval(f'''
+            random_diagram!(
+                {rng._name}, {self._name},
+                {n_C}, {n_D}, {n_V}, {m_C}, {m_D},
+                {str(states)}
+            )
+        ''')
+
+    def random_probabilities(self, node, n_inactive=0, seed=None):
+        '''
+        Generate random probabilities for a chance node.
+
+        Parameters
+        ----------
+
+        '''
+        self = super().__init__()
+        rng = random_number_generator(seed)
+        Main.eval(f'''
+            random_probabilities!(
+                {rng._name}, {self._name},
+                {node}; n_inactive={n_inactive}
+            )
+        ''')
+
+    def random_utilities(self, node, low=-1.0, high=1.0, seed=None):
+        '''
+        Generate random probabilities for a chance node.
+
+        Parameters
+        ----------
+
+        '''
+        self = super().__init__()
+        rng = random_number_generator(seed)
+        Main.eval(f'''
+            random_utilities!(
+                {rng._name}, {self._name},
+                {node}; low={low}, high={high}
+            )
+        ''')
+
     def add_node(self, node):
         """
         Parameters
@@ -355,6 +435,41 @@ class InfluenceDiagram(JuliaName):
 
     def fixed_path(self, node_values):
         return FixedPath(self, node_values)
+
+    def lazy_probability_cut(
+        model, path_compatibility_variables
+    ):
+        ''' Add a probability cut to the model as a lazy constraint
+        '''
+        Main.eval(f'''
+            lazy_probability_cut(model, self, path_compatibility_variables)
+        ''')
+
+    def conditional_value_at_risk(
+        model, path_compatibility_variables,
+        alpha, probability_scale_factor
+    ):
+        ''' Create a conditional value-at-risk (CVaR) objective.
+
+        Parameters
+        ----------
+        model: Model
+            JuMP model into which variables are added.
+        x_s: PathCompatibilityVariables
+            Path compatibility variables.
+        alpha: Float64
+            Probability level at which conditional value-at-risk is optimised.
+        probability_scale_factor:Float64
+            Adjusts conditional value at risk model to be compatible with the expected value expression if the probabilities were scaled there.
+        '''
+        Main.eval(f'''
+            conditional_value_at_risk(
+               model, self,
+               path_compatibility_variables,
+               alpha,
+               probability_scale_factor
+            )
+        ''')
 
 
 class Model(JuliaName):
@@ -692,7 +807,6 @@ class ExpectedValue(JuliaName):
         Main.eval(commmand)
 
 
-
 class StateProbabilities(JuliaName):
     """
     Extract state propabilities from a solved model
@@ -759,7 +873,28 @@ class UtilityDistribution(JuliaName):
         Main.eval(f'''print_utility_distribution({self._name})''')
 
     def print_statistics(self):
+        '''Print statistics about utility distribution.'''
         Main.eval(f'''print_statistics({self._name})''')
+
+    def print_risk_measures(self, alpha, format="%f"):
+        '''Print risk measures.'''
+        Main.eval(f'''
+            print_risk_measures(
+                {self._name}, {alpha}; fmt={format}
+            )
+        ''')
+
+    def value_at_risk(self, alpha):
+        Main.eval(f'''
+            value_at_risk({self._name}, {alpha})
+        ''')
+
+    def conditional_value_at_risk(self, alpha):
+        Main.eval(f'''
+            conditional_value_at_risk(
+                {self._name}, {alpha}
+            )
+        ''')
 
 
 class ChanceNode(JuliaName):
@@ -785,6 +920,16 @@ class ChanceNode(JuliaName):
         Main.tmp = jdp.ChanceNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
 
+    def information_set(self, n_I, seed=None):
+        rng = random_number_generator(seed)
+        result = JuliaName()
+        Main.eval(f'''
+            {result._name} = information_set(
+                {rng._name}, {self._name}, {n_I}
+            )
+        ''')
+        return result
+
 
 class DecisionNode(JuliaName):
     """
@@ -808,6 +953,16 @@ class DecisionNode(JuliaName):
         Main.tmp = jdp.DecisionNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
 
+    def information_set(self, n_I, seed=None):
+        rng = random_number_generator(seed)
+        result = JuliaName()
+        Main.eval(f'''
+            {result._name} = information_set(
+                {rng._name}, {self._name}, {n_I}
+            )
+        ''')
+        return result
+
 
 class ValueNode(JuliaName):
     """
@@ -829,8 +984,20 @@ class ValueNode(JuliaName):
 
         super().__init__()
 
+        self.leaves = nodes
+
         Main.tmp = jdp.ValueNode(id, nodes)
         Main.eval(f'{self._name} = tmp')
+
+    def information_set(self, n, seed=None):
+        rng = random_number_generator(seed)
+        result = JuliaName()
+        Main.eval(f'''
+            {result._name} = information_set(
+                {rng._name}, {self.leaves}, {n}
+            )
+        ''')
+        return result
 
 
 class ProbabilityMatrix(JuliaName):
@@ -919,10 +1086,10 @@ class Paths(JuliaName):
             Main.eval('tmp = paths(tmp)')
         else:
             Main.eval(f'tmp = paths(tmp; fixed={fixed})')
-        self.paths = Main.tmp
+        self._name = Main.tmp
 
     def __iter__(self):
-        self._iterator = iter(Main.tmp)
+        self._iterator = iter(self._name)
         return self
 
     def __next__(self):
@@ -930,4 +1097,51 @@ class Paths(JuliaName):
         if path:
             path = [i-1 for i in path]
         return path
+
+
+class CompatiblePaths(JuliaName):
+    def __init__(
+        self, diagram, decision_strategy,
+        fixed=None
+    ):
+        super().__init__()
+
+        if fixed is None:
+            Main.eval('''
+                tmp = CompatiblePaths(
+                    {diagram._name},
+                    {decision_strategy._name}
+                )
+            ''')
+        else:
+            Main.eval(f'''
+                tmp = CompatiblePaths(
+                    {diagram._name},
+                    {decision_strategy._name}; fixed={fixed}
+                )
+            ''')
+        self._name = Main.tmp
+
+    def __iter__(self):
+        self._iterator = iter(self._name)
+        return self
+
+    def __next__(self):
+        path = next(self._iterator)
+        if path:
+            path = [i-1 for i in path]
+        return path
+
+
+class LocalDecisionStrategy(JuliaName):
+    '''
+    Construct decision strategy from variable refs.
+    '''
+    def __init__(self, node, variable_array):
+        super().__init__()
+        Main.eval(f'''{self._name} = LocalDecisionStrategy(
+            {node},
+            {variable_array}
+        )''')
+
 
