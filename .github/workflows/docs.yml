@@ -20,7 +20,7 @@ jobs:
       #- name: setup extension
       - name: sphinx
         run: |
-          cd doc
+          cd docs
           make clean dirhtml
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -28,5 +28,5 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/dirhtml/
+          publish_dir: docs/html/
           force_orphan: true
