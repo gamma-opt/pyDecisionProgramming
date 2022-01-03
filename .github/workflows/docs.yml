@@ -1,0 +1,32 @@
+name: Docs
+on: [push, pull_request]
+jobs:
+  test:
+    name: sphinx build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - 3.8
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: install deps
+        run: |
+          pip install -r requirements.txt
+      #- name: setup extension
+      - name: sphinx
+        run: |
+          cd docs
+          make clean dirhtml #SPHINXOPTS='-W --keep-going'
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        with:
+          publish-branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/dirhtml/
+          force_orphan: true
