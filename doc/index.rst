@@ -9,14 +9,14 @@ PyDecisionProgramming
 A Python interface to DecisionProgramming.jl
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Introduction:
 
    introduction
    quickstart
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Examples:
 
    used-car-buyer
