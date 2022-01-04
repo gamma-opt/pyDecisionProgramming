@@ -7,6 +7,6 @@ setup(
    author='Jarno Rantaharju',
    author_email='jarno.rantaharju@aalto.fi',
    packages=['pyDecisionProgramming'],
-   scripts=['pyDecisionProgramming/setup_julia.py'],
+   scripts=['pyDecisionProgramming/pdp_setup_julia.py'],
    requires=['julia']
 )
