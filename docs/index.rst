@@ -6,14 +6,34 @@
 PyDecisionProgramming
 =====================
 
-A Python interface to DecisionProgramming.jl
+A Python interface to `DecisionProgramming.jl`_.
+Decision Programming is a library for solving *multi-stage* decision problems *under uncertainty*.
+
+For a detailed description of the DecisionProgramming, see it's documentation pages:
+
+1. `Decision Programming`_
+2. `Influence Diagram`_
+3. `Paths`_
+4. `Decision Model`_
+5. `Analyzing Decision Strategies`_
+6. `Computational Complexity`_
+
+
+
+.. _DecisionProgramming.jl: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Decision Programming: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Influence Diagram: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Paths: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Decision Model: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Analyzing Decision Strategies: https://gamma-opt.github.io/DecisionProgramming.jl/
+.. _Computational Complexity: https://gamma-opt.github.io/DecisionProgramming.jl/
 
 .. toctree::
    :maxdepth: 1
-   :caption: Introduction:
+   :caption: Usage:
 
-   introduction
    quickstart
+   introduction
 
 .. toctree::
    :maxdepth: 1

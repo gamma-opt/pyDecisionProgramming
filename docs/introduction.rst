@@ -1,8 +1,8 @@
-PyDecisionProgramming
-=====================
+Usage
+=====
 
-Decision Programming
---------------------
+Usage
+-----
 
 
 
