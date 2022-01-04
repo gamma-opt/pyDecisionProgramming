@@ -200,7 +200,7 @@ class InfluenceDiagram(JuliaName):
 
     def __init__(self):
         super().__init__()
-        Main.eval(f'{self._name} = InfluenceDiagram()')
+        Main.eval(f'{self._name} = Diagram()')
         self.define_path_utility()
 
     def build_random(self, n_C, n_D, n_V, m_C, m_D, states, seed=None):
