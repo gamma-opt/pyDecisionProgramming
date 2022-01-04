@@ -42,4 +42,15 @@ install the DecisionProgramming package in Julia:
   Pkg.add(url="https://github.com/gamma-opt/DecisionProgramming.jl.git")
 
 
+.. note::
+  Importing pyDecisionProgramming can take a while.
+  This is partly because of the way Julia works.
+  In Julia, functions are compiled during runtime,
+  and this requires some special set up.
+
+  The python Julia package comes with an
+  executable called `python-jl`. Using it instead
+  of the standard `python` executable speeds things
+  up a little bit. It has little effect on the
+  actual calculation, though.
 
