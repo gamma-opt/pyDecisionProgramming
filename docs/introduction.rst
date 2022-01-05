@@ -437,7 +437,7 @@ instructions from there.
 
 .. _Gurobi: https://www.gurobi.com/
 
-.. Gurobi academic license page: https://www.gurobi.com/downloads/free-academic-license/#show_instructions
+.. _Gurobi academic license page: https://www.gurobi.com/downloads/free-academic-license/#show_instructions
 
 .. code-block:: Python
 
