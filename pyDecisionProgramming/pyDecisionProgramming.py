@@ -1023,7 +1023,7 @@ class ProbabilityMatrix(JuliaName):
         )''')
 
     def size(self):
-        return Main.eval(f'''size({self.name})''')
+        return Main.eval(f'''size({self._name})''')
 
 
 class UtilityMatrix(JuliaName):
