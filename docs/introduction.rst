@@ -421,12 +421,12 @@ for more information on default path probability
 and utility.
 
 
-Finding the Optimal Path
+Analyzing the Graph
 ........................
 
 Once the diagram is fully constructed, we can
-calculate the utility distribution on possible
-paths and find the optimal path. In the background
+find the optimal path and the utility distribution
+for that strategy. In the background
 we use the JuMP Julia package and the Gurobi
 optimizer. First, we must define a JuMP model.
 
@@ -464,12 +464,33 @@ the model.
   )
   model.optimize()
 
+We can not extract the optimal decision strategy
+and the utility distribution.
+
+.. code-block:: Python
+
   Z = z.decision_strategy()
   S_probabilities = diagram.state_probabilities(Z)
   U_distribution = diagram.utility_distribution(Z)
 
+To print the optimal decision strategy run
+
+.. code-block:: Python
+
   S_probabilities.print_decision_strategy()
+
+For the utility distribution when following that
+strategy:
+
+.. code-block:: Python
+
   U_distribution.print_distribution()
+
+And some statistical properties of the optimal
+utility distribution:
+
+.. code-block:: Python
+
   U_distribution.print_statistics()
 
 
