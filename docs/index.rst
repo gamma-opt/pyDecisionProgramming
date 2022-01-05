@@ -32,8 +32,8 @@ For a detailed description of the DecisionProgramming, see it's documentation pa
    :maxdepth: 1
    :caption: Usage:
 
-   quickstart
-   introduction
+   installation
+   usage
 
 .. toctree::
    :maxdepth: 1
