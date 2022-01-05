@@ -4,9 +4,9 @@ Usage
 .. role:: python(code)
    :language: python
 
-Here we show you how to construct a simple influence
-diagram and create a decision model using
-pyDecisionProgramming.
+Here we show you how to construct a simple
+influence diagram and create a decision model
+using pyDecisionProgramming.
 
 First we import pyDecisionProgramming and activate
 the Julia environment.
