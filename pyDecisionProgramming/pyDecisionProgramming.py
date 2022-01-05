@@ -1022,6 +1022,9 @@ class ProbabilityMatrix(JuliaName):
            "{node}"
         )''')
 
+    def size(self):
+        return Main.eval(f'''size({self.name})''')
+
 
 class UtilityMatrix(JuliaName):
     """
