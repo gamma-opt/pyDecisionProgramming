@@ -37,6 +37,259 @@ to treat the pig with an injection at month
 In this example, we solve the 4 month pig breeding
 problem and thus, declare :math:`N = 4`.
 
+.. code-block:: Python
+
+  import pyDecisionProgramming as pdp
+  pdp.activate()
+  N = 4
+
+In Decision Programming, we start by initialising
+an empty influence diagram. Then we define the
+nodes with their information sets and states and
+add them to the influence diagram.
+
+.. code-block:: Python
+
+  diagram = pdp.InfluenceDiagram()
+
+
+Health at first month
+.....................
+
+As seen in the influence diagram, the node
+:math:`h_1` has no arcs into it making it a root
+node. Therefore, the information set
+:math:`I(h_1)` is empty. The states of this node
+are :math:`ill` and :math:`healthy`.
+
+.. code-block:: Python
+
+  H0 = pdp.ChanceNode("H0", [], ["ill", "healthy"])
+  diagram.add_node(H0)
+
+Health, test results and treatment decisions at subsequent months
+.................................................................
+
+The chance and decision nodes representing the
+health, test results, treatment decisions for the
+following months can be added easily using a for-
+loop. The value node representing the treatment
+costs in each month is also added. Each node is
+given a name, its information set and states.
+Remember that value nodes do not have states.
+Notice that we do not assume the no-forgetting
+principle and thus, the information sets of the
+treatment decisions only contain the previous test
+result
+
+.. code-block:: Python
+
+  for i in range(N-1):
+      # testing result
+      T = pdp.ChanceNode(f"T{i}", [f"H{i}"], ["positive", "negative"])
+      diagram.add_node(T)
+
+      # Decision to treat
+      D = pdp.DecisionNode(f"D{i}", [f"T{i}"], ["treat", "pass"])
+      diagram.add_node(D)
+
+      # Cost of treatment
+      C = pdp.ValueNode(f"C{i}", [f"D{i}"])
+      diagram.add_node(C)
+
+      # Health of next period
+      H = pdp.ChanceNode(f"H{i+1}", [f"H{i}", f"D{i}"], ["ill", "healthy"])
+      diagram.add_node(H)
+
+Market price
+............
+
+The final value node, representing the market
+price, is added. It has the final health node
+:math:`h_N` as its information set.
+
+.. code-block:: Python
+
+  MP = pdp.ValueNode("MP", [f"H{N-1}"])
+  diagram.add_node(MP)
+
+Generate arcs
+.............
+
+Now that all of the nodes have been added to the
+influence diagram, we generate the arcs between
+the nodes. This step automatically orders the
+nodes, gives them indices and reorganises the
+information into the correct form.
+
+
+.. code-block:: Python
+
+  MP = pdp.ValueNode("MP", [f"H{N-1}"])
+  diagram.add_node(MP)
+
+
+Probabilities
+.............
+
+We define probability distributions for all
+chance nodes. For the first health node, the
+probability distribution is defined over its two
+states :math:`ill` and :math:`healthy`. The
+probability that the pig is ill in the first
+month is
+
+.. math::
+
+   \mathbb P(h_1 = ill) = 0.1.
+
+We obtain the complement probabilities for binary
+states by subtracting from one
+
+.. math::
+
+   \mathbb P(h_1 = healthy) = 1 - \mathbb P(h_1 = ill)
+
+In Decision Programming, we add these
+probabilities for node :math:`h_1` as follows.
+Notice, that the probability vector is ordered
+according to the order that the states were given
+in when defining node :math:`h_1`. More
+information on the syntax of adding probabilities
+is found on the `usage page <usage>`_.
+
+.. code-block:: Python
+
+  diagram.set_probabilities("H0", [0.1, 0.9])
+
+The probability distributions for the other
+health nodes are identical. Thus, we define one
+probability matrix and use it for all the
+subsequent months' health nodes. The probability
+that the pig is ill in the subsequent months
+:math:`k=2,...,N` depends on the treatment
+decision and state of health in the previous
+month :math:`k-1`. The nodes :math:`h_{k-1}` and
+:math:`d_{k-1}` are thus in the information set
+:math:`I(h_k)`, meaning that the probability
+distribution of :math:`h_k` is conditional on
+these nodes:
+
+.. math::
+
+   \mathbb P(h_k = ill \mid h_{k-1} = healthy, d_{k-1} = pass) = 0.2\\
+   \mathbb P(h_k = ill \mid h_{k-1} = healthy, d_{k-1} = treat) = 0.1\\
+   \mathbb P(h_k = ill \mid h_{k-1} = ill, d_{k-1} = pass) = 0.9\\
+   \mathbb P(h_k = ill \mid h_{k-1} = ill, d_{k-1} = treat) = 0.5
+
+In Decision Programming, the probability matrix
+is defined in the following way. Notice, that the
+ordering of the information state corresponds to
+the order in which the information set was
+defined when adding the health nodes.
+
+.. code-block:: Python
+
+  X_H = diagram.construct_probability_matrix("H1")
+  X_H["healthy", "pass", :] = [0.2, 0.8]
+  X_H["healthy", "treat", :] = [0.1, 0.9]
+  X_H["ill", "pass", :] = [0.9, 0.1]
+  X_H["ill", "treat", :] = [0.5, 0.5]
+
+
+Next we define the probability matrix for the
+test results. Here again, we note that the
+probability distributions for all test results
+are identical, and thus we only define the
+probability matrix once. For the probabilities
+that the test indicates a pig's health correctly
+at month :math:`k=1,...,N-1`, we have
+
+.. math::
+
+   \mathbb P(t_k = positive \mid h_k = ill) = 0.8\\
+   \mathbb P(t_k = ill \mid h_{k-1} = healthy) = 0.9
+
+In Decision Programming:
+
+.. code-block:: Python
+
+  X_T = diagram.construct_probability_matrix("T1")
+  X_T["ill", "positive"] = 0.8
+  X_T["ill", "negative"] = 0.2
+  X_T["healthy", "negative"] = 0.9
+  X_T["healthy", "positive"] = 0.1
+
+We add the probability matrices into the influence
+diagram using a for-loop.
+
+.. code-block:: Python
+  for i in range(N-1):
+      diagram.set_probabilities(f"T{i}", X_T)
+      diagram.set_probabilities(f"H{i+1}", X_H)
+
+
+Utilities
+.........
+
+The cost incurred by the treatment decision at
+month :math:`k=1,...,N-1` is
+
+.. math::
+
+   Y(d_k = treat) = -100\\
+   Y(d_k = pass) = 0
+
+In Decision Programming the utility values are
+added using utility matrices. Notice that the
+utility values in the matrix are given in the same
+order as the states of node :math:`h_N were defined
+when node :math:`h_N` was added.
+
+.. code-block:: Python
+  for i in range(N-1):
+      diagram.set_utility(f"C{i}", [-100, 0])
+
+The market price of the pig given its health at
+month :math:`N` is
+
+.. math::
+
+   Y(h_N = ill) = 300\\
+   Y(h_N = healthy) = 1000
+
+In Decision Programming:
+
+.. code-block:: Python
+  diagram.set_utility("MP", [300, 1000])
+
+
+Generate influence diagram
+..........................
+
+After adding nodes, generating arcs and defining
+probability and utility values, we generate the
+full influence diagram. By default this function
+uses the default path probabilities and utilities,
+which are defined as the joint probability of all
+chance events in the diagram and the sum of
+utilities in value nodes, respectively. In the
+`Contingent Portfolio Programming <contingent-portfolio-programming>`_
+example, we show
+how to use a user-defined custom path utility
+function.
+
+In the pig breeding problem, when the :math:`N` is
+large some of the path utilities become negative.
+In this case, we choose to use the positive path
+utility `positive path utility`_ transformation,
+which allows us to exclude the probability cut in
+the next section.
+
+.. _Decision Model: https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/
+
+
+
 
 
 .. rubric:: References
