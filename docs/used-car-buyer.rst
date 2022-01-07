@@ -78,6 +78,7 @@ is a root node.
 
 .. code-block:: Python
 
+  import pyDecisionProgramming as pdp
   pdp.activate()
 
   diagram = pdp.InfluenceDiagram()
