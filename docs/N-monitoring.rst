@@ -158,7 +158,58 @@ The probabilities of the report states correspond to the
 load state. We draw the values :math:`x∼U(0,1)` and
 :math:`y∼U(0,1)` from uniform distributions.
 
+.. math::
 
+   \mathcal P(R_k=high \mid L=high) = max\{x, 1-x\}\\
+   \mathcal P(R_k=low \mid L=low) = max\{y, 1-y\}
+
+The probability of a correct report is thus in the range
+[0.5,1]. (This reflects the fact that a probability under
+50% would not even make sense, since we would notice that
+if the test suggests a high load, the load is more likely
+to be low, resulting in that a low report "turns into" a
+high report and vice versa.)
+
+In Decision Programming we add these probabilities by
+declaring probability matrices for nodes :math:`R_k`.
+The probability matrix of a report node :math:`R_k` has
+dimensions (2,2), where the rows correspond to the states
+:math:`high` and :math:`low` of its predecessor node
+:math:`L` and the columns to its own states :math:`high`
+and :math:`low`.
+
+.. code-block:: Python
+
+   for i in range(N):
+       x, y = np.random.random(2)
+       x = np.max([x, 1-x])
+       y = np.max([y, 1-y])
+       X_R = diagram.construct_probability_matrix(f"R{i}")
+       X_R["high", "high"] = x
+       X_R["high", "low"] = 1 - x
+       X_R["low", "low"] = y
+       X_R["low", "high"] = 1 - y
+       diagram.set_probabilities(f"R{i}", X_R)
+
+
+Probability of Failure
+......................
+
+The probability of failure is decreased by fortification
+actions. We draw the values :math:`x∼U(0,1)` and
+:math:`y∼U(0,1)` from uniform distribution.
+
+.. math::
+
+   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\\
+   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}
+
+First we initialise the probability matrix for node
+:math:`F`.
+
+.. code-block:: Python
+
+   X_F = diagram.construct_probability_matrix("F")
 
 
 
