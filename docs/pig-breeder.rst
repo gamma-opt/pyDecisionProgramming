@@ -224,6 +224,7 @@ We add the probability matrices into the influence
 diagram using a for-loop.
 
 .. code-block:: Python
+
   for i in range(N-1):
       diagram.set_probabilities(f"T{i}", X_T)
       diagram.set_probabilities(f"H{i+1}", X_H)
@@ -243,10 +244,11 @@ month :math:`k=1,...,N-1` is
 In Decision Programming the utility values are
 added using utility matrices. Notice that the
 utility values in the matrix are given in the same
-order as the states of node :math:`h_N were defined
+order as the states of node :math:`h_N` were defined
 when node :math:`h_N` was added.
 
 .. code-block:: Python
+
   for i in range(N-1):
       diagram.set_utility(f"C{i}", [-100, 0])
 
@@ -261,6 +263,7 @@ month :math:`N` is
 In Decision Programming:
 
 .. code-block:: Python
+
   diagram.set_utility("MP", [300, 1000])
 
 
@@ -286,10 +289,195 @@ utility `positive path utility`_ transformation,
 which allows us to exclude the probability cut in
 the next section.
 
-.. _Decision Model: https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/
+.. _positive path utility: https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/
 
 
+.. code-block:: Python
 
+  diagram.generate(positive_path_utility=True)
+
+Decision model
+..............
+
+Next we initialise the JuMP model and add the decision
+variables. Then we add the path compatibility variables.
+Since we applied an affine transformation to the utility
+function, making all path utilities positive, the
+probability cut can be excluded from the model. The
+purpose of this is discussed in the `theoretical section`_
+of this documentation.
+
+.. _theoretical section: https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/
+
+.. code-block:: Python
+
+  model = pdp.Model()
+  z = diagram.decision_variables(model)
+  x_s = diagram.path_compatibility_variables(model, z, probability_cut = False)
+
+
+We create the objective function
+
+.. code-block:: Python
+
+  EV = diagram.expected_value(model, x_s)
+  model.objective(EV, "Max")
+
+and set up the solver and solve the problem.
+
+.. code-block:: Python
+
+  model.setup_Gurobi_optimizer(
+     ("IntFeasTol", 1e-9),
+  )
+  model.optimize()
+
+
+Analyzing results
+.................
+
+Once the model is solved, we extract the results. The
+results are the decision strategy, state probabilities and
+utility distribution.
+
+.. code-block:: Python
+
+  Z = z.decision_strategy()
+  S_probabilities = diagram.state_probabilities(Z)
+  U_distribution = diagram.utility_distribution(Z)
+
+
+Decision strategy
+.................
+
+The optimal decision strategy is:
+
+.. code-block::
+
+  In [1]: S_probabilities.print_decision_strategy()
+
+  Out[2]:
+  ┌────────────────┬────────────────┐
+  │ State(s) of T1 │ Decision in D1 │
+  ├────────────────┼────────────────┤
+  │ positive       │ pass           │
+  │ negative       │ pass           │
+  └────────────────┴────────────────┘
+  ┌────────────────┬────────────────┐
+  │ State(s) of T2 │ Decision in D2 │
+  ├────────────────┼────────────────┤
+  │ positive       │ treat          │
+  │ negative       │ pass           │
+  └────────────────┴────────────────┘
+  ┌────────────────┬────────────────┐
+  │ State(s) of T3 │ Decision in D3 │
+  ├────────────────┼────────────────┤
+  │ positive       │ treat          │
+  │ negative       │ pass           │
+  └────────────────┴────────────────┘
+
+The optimal strategy is to not treat the pig in the first
+month regardless of if it is sick or not. In the two
+subsequent months, the pig should be treated if the test
+result is positive.
+
+State probabilities
+...................
+
+The state probabilities for strategy :math:`Z` tell the
+probability of each state in each node, given strategy
+:math:`Z`.
+
+.. code-block::
+
+  In [2]: health_nodes = [f"H{i}" for i in range(N)]
+
+  In [3]: S_probabilities.print(health_nodes)
+
+  Out[2]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │      ill │  healthy │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     H1 │ 0.100000 │ 0.900000 │             │
+  │     H2 │ 0.270000 │ 0.730000 │             │
+  │     H3 │ 0.295300 │ 0.704700 │             │
+  │     H4 │ 0.305167 │ 0.694833 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+  In [4]: test_nodes = [f"T{i}" for i in range(N-1)]
+
+  In [5]: S_probabilities.print(test_nodes)
+
+  Out[5]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │ positive │ negative │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     T1 │ 0.170000 │ 0.830000 │             │
+  │     T2 │ 0.289000 │ 0.711000 │             │
+  │     T3 │ 0.306710 │ 0.693290 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+  In [6]: treatment_nodes = [f"D{i}" for i in range(N-1)]
+
+  In [7]: S_probabilities.print(treatment_nodes)
+
+  Out[7]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │    treat │     pass │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     D1 │ 0.000000 │ 1.000000 │             │
+  │     D2 │ 0.289000 │ 0.711000 │             │
+  │     D3 │ 0.306710 │ 0.693290 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+Utility distribution
+....................
+
+We can also print the utility distribution for the optimal
+strategy. The selling prices for a healthy and an ill pig
+are 1000DKK and 300DKK, respectively, while the cost of
+treatment is 100DKK. We can see that the probability of
+the pig being ill in the end is the sum of three first
+probabilities, approximately 30.5%. This matches the
+probability of state :math:`ill` in the last node
+:math:`h_4` in the state probabilities shown above.
+
+.. code-block::
+
+  In [2]: U_distribution.print_distribution()
+
+  Out[2]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │      ill │  healthy │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     H1 │ 0.100000 │ 0.900000 │             │
+  │     H2 │ 0.270000 │ 0.730000 │             │
+  │     H3 │ 0.295300 │ 0.704700 │             │
+  │     H4 │ 0.305167 │ 0.694833 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+Finally, we print some statistics for the utility
+distribution. The expected value of the utility is 727DKK,
+the same as in [#Lauritzen]_.
+
+.. code-block::
+
+  In [2]: U_distribution.print_statistics()
+
+  Out[2]:
+  ┌──────────┬────────────┐
+  │     Name │ Statistics │
+  │   String │    Float64 │
+  ├──────────┼────────────┤
+  │     Mean │ 726.812100 │
+  │      Std │ 338.460723 │
+  │ Skewness │  -0.811628 │
+  │ Kurtosis │  -1.173465 │
+  └──────────┴────────────┘
 
 
 .. rubric:: References
