@@ -156,7 +156,7 @@ Notice, that the probability vector is ordered
 according to the order that the states were given
 in when defining node :math:`h_1`. More
 information on the syntax of adding probabilities
-is found on the `usage page <usage>`_.
+is found on the `usage page <usage.html>`_.
 
 .. code-block:: Python
 

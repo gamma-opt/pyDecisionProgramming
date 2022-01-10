@@ -180,7 +180,7 @@ thus be defined for all combinations of states in :math:`O`,
 distribution over the states of node :math:`R` for each
 information state in the following way. More information on
 defining probability matrices can be found on the
-`usage page <usage>`_.
+`usage page <usage.html>`_.
 
 .. code-block:: Python
 
@@ -231,7 +231,7 @@ made in node AA. Notice that the utility values for the second
 row are added as a vector, in this case it is important to
 give the utility values in the correct order. The order of the
 columns is determined by the order in which the states are
-given when declaring node AA. See the `usage page <usage>`_
+given when declaring node AA. See the `usage page <usage.html>`_
 for more information on the syntax.
 
 .. code-block:: Python
