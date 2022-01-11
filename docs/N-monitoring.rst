@@ -142,7 +142,7 @@ Load State Probabilities
 
 After generating the arcs, the probabilities and utilities
 can be added. The probability that the load is high,
-:math:`\mathcal P(L=high)`, is drawn from a uniform
+:math:`\mathbb P(L=high)`, is drawn from a uniform
 distribution. For different syntax options for adding
 probabilities and utilities, see the
 `usage page <usage.html>`_.
@@ -163,8 +163,8 @@ load state. We draw the values :math:`x∼U(0,1)` and
 
 .. math::
 
-   \mathcal P(R_k=high \mid L=high) = max\{x, 1-x\}\\
-   \mathcal P(R_k=low \mid L=low) = max\{y, 1-y\}
+   \mathbb P(R_k=high \mid L=high) = max\{x, 1-x\}\\
+   \mathbb P(R_k=low \mid L=low) = max\{y, 1-y\}
 
 The probability of a correct report is thus in the range
 [0.5,1]. (This reflects the fact that a probability under
@@ -204,8 +204,8 @@ actions. We draw the values :math:`x∼U(0,1)` and
 
 .. math::
 
-   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\\
-   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{y,1-y\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}
+   \mathbb P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\\
+   \mathbb P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{y,1-y\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}
 
 First we initialise the probability matrix for node
 :math:`F`.
