@@ -202,7 +202,7 @@ actions. We draw the values :math:`x∼U(0,1)` and
 .. math::
 
    \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\\
-   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}
+   \mathcal P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{y,1-y\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}
 
 First we initialise the probability matrix for node
 :math:`F`.
@@ -212,6 +212,14 @@ First we initialise the probability matrix for node
    X_F = diagram.construct_probability_matrix("F")
 
 
+.. role:: orangetext
+
+This matrix has dimensions (2, :orangetext:`2, 2, 2, 2`, 2)
+because node :math:`L` and nodes :math:`A_k`, which form
+the information set of :math:`F`, all have 2 states and
+node :math:`F` itself also has 2 states. The orange
+colored dimensions correspond to the states of the action
+nodes :math:`A_k`.
 
 
 
