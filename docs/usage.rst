@@ -126,7 +126,7 @@ Each change node needs a probability matrix which
 describes the probability distribution over its
 states given an information state. It holds
 probability values
-:math:`\mathcal P \left(X_j=s_j | X_{I(j)} = {\bf s}_{I(j)} \right)`
+:math:`\mathbb P \left(X_j=s_j | X_{I(j)} = {\bf s}_{I(j)} \right)`
 for all
 :math:`s_j \in S_j` and
 :math:`{\bf s}_{I(j)} \in {\bf S}_{I(j)}`.
@@ -411,7 +411,7 @@ types are declared and added into fields
 :code:`P` and :code:`U`
 respectively. These types define how the path
 probability :math:`p({\bf s})` and path utility
-:math:`\mathcal{U}({\bf s})`
+:math:`\mathbb{U}({\bf s})`
 are defined in the model. By default, the function
 will set them to default path probability and
 default path utility. See the

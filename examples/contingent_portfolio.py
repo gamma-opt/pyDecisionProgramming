@@ -42,6 +42,8 @@ X_CM[2, 2, :] = [1/12, 1/4, 2/3]
 diagram.set_probabilities("CM", X_CM)
 
 diagram.generate(default_utility=False)
+
+
 model = pdp.Model()
 z = pdp.DecisionVariables(model, diagram)
 
