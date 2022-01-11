@@ -1,6 +1,9 @@
 N-Monitoring
 ============
 
+.. role:: python(code)
+   :language: python
+
 Description
 ...........
 
@@ -11,7 +14,7 @@ Influence Diagram
 .................
 
 .. image:: figures/n-month-pig-breeding.svg
-  :alt: The influence diagram of the N-monitoring problem described be
+  :alt: The influence diagram of the N-monitoring problem described below
 
 The influence diagram of the generalized
 :math:`N`-monitoring problem where :math:`N\ge 1` and
@@ -220,6 +223,275 @@ the information set of :math:`F`, all have 2 states and
 node :math:`F` itself also has 2 states. The orange
 colored dimensions correspond to the states of the action
 nodes :math:`A_k`.
+
+To set the probabilities we have to iterate over the
+information states. Here it helps to know that in Decision
+Programming the states of each node are mapped to numbers
+in the back-end. For instance, the load states
+:math:`high` and :math:`low` are referred to as 1 and 2.
+The same applies for the action states :math:`yes` and
+:math:`no`, they are states 1 and 2. The
+:python:`pdp.Paths` class allows us to iterate over the
+subpaths of specific nodes. In these paths, the states are
+referred to by their indices. Using this information, we
+can easily iterate over the information states using the
+:python:`pdp.Paths` class and enter the probability
+values into the probability matrix.
+
+.. code-block:: Python
+
+   x, y = np.random.random(2)
+   for path in pdp.Paths([2]*N):
+       forticications = [fortification(k, a) for k, a in enumerate(path)]
+       denominator = np.exp(b * np.sum(forticications))
+       X_F[(0, *path, 0)] = max(x, 1-x) / denominator
+       X_F[(0, *path, 1)] = 1.0 - max(x, 1-x) / denominator
+       X_F[(1, *path, 0)] = min(y, 1-y) / denominator
+       X_F[(1, *path, 1)] = 1.0 - min(y, 1-y) / denominator
+
+After declaring the probability matrix, we add it to the
+influence diagram.
+
+.. code-block:: Python
+
+   diagram.set_probabilities("F", X_F)
+
+
+Utility
+.......
+
+The utility from the different scenarios of the failure
+state at target :math:`T` are
+
+.. math::
+
+   g(F=failure) = 0\\
+   g(F=success) = 100.
+
+
+Utilities from the action states :math:`A_k` at target
+:math:`T` are
+
+.. math::
+
+   g(A_k=yes) = c_k\\
+   g(A_k=no) = 0.
+
+The total cost is thus
+
+.. math::
+
+   Y(F,A_N,\dots,A_1) = g(F)+(-f(A_N))+\dots+(-f(A_1))
+
+We first declare the utility matrix for node :math:`T`.
+
+.. code-block:: Python
+
+  Y_T = diagram.construct_utility_matrix('T')
+
+
+This matrix has dimensions (2, :orangetext:`2, 2, 2, 2`)
+where the dimensions correspond to the numbers of states
+the nodes in the information set have. Similarly as
+before, the first dimension corresponds to the states of
+node :math:`F` and the other 4 dimensions (in orange)
+correspond to the states of the :math:`A_k` nodes. The
+utilities are set and added similarly to how the
+probabilities were added above.
+
+.. code-block:: Python
+
+  for path in pdp.Paths([2]*N):
+      forticications = [fortification(k, a) for k, a in enumerate(path)]
+      cost = -sum(forticications)
+      Y_T[(0, *path)] = 0 + cost
+      Y_T[(1, *path)] = 100 + cost
+
+  diagram.set_utility('T', Y_T)
+
+Generate Influence Diagram
+..........................
+
+The full influence diagram can now be generated. We use
+the default path probabilities and utilities, which are
+the default setting in this function. In the
+`Contingent Portfolio Programming example <contingent-portfolio-programming.html>`_,
+we show how to use a user-defined custom path utility
+function.
+
+In this particular problem, some of the path utilities are
+negative. In this case, we choose to use the
+`positive path utility`_
+transformation, which translates the path
+utilities to positive values. This allows us to exclude
+the probability cut in the next section.
+
+.. _positive path utility: https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/
+
+.. code-block:: Python
+
+  diagram.generate(positive_path_utility=True)
+
+Decision Model
+..............
+
+We initialise the JuMP model and declare the decision and
+path compatibility variables. Since we applied an affine
+transformation to the utility function, the probability
+cut can be excluded from the model formulation.
+
+.. code-block:: Python
+
+  model = pdp.Model()
+  z = diagram.decision_variables(model)
+  x_s = diagram.path_compatibility_variables(
+      model, z,
+      probability_cut=False
+  )
+
+The expected utility is used as the objective and the
+problem is solved using Gurobi.
+
+.. code-block:: Python
+
+  EV = diagram.expected_value(model, x_s)
+  model.objective(EV, "Max")
+
+  model.setup_Gurobi_optimizer(
+     ("IntFeasTol", 1e-9),
+  )
+  model.optimize()
+
+Analyzing Results
+.................
+
+We obtain the decision strategy, state probabilities and
+utility distribution from the solution.
+
+.. code-block:: Python
+
+  Z = z.decision_strategy()
+  S_probabilities = diagram.state_probabilities(Z)
+  U_distribution = diagram.utility_distribution(Z)
+
+The decision strategy shows us that the optimal strategy
+is to make all four fortifications regardless of the
+reports.
+
+.. code-block::
+
+  In [1]: S_probabilities.print_decision_strategy()
+
+  Out[2]:
+  ┌────────────────┬────────────────┐
+  │ State(s) of R1 │ Decision in A1 │
+  ├────────────────┼────────────────┤
+  │ high           │ yes            │
+  │ low            │ yes            │
+  └────────────────┴────────────────┘
+  ┌────────────────┬────────────────┐
+  │ State(s) of R2 │ Decision in A2 │
+  ├────────────────┼────────────────┤
+  │ high           │ yes            │
+  │ low            │ yes            │
+  └────────────────┴────────────────┘
+  ┌────────────────┬────────────────┐
+  │ State(s) of R3 │ Decision in A3 │
+  ├────────────────┼────────────────┤
+  │ high           │ yes            │
+  │ low            │ yes            │
+  └────────────────┴────────────────┘
+  ┌────────────────┬────────────────┐
+  │ State(s) of R4 │ Decision in A4 │
+  ├────────────────┼────────────────┤
+  │ high           │ yes            │
+  │ low            │ yes            │
+  └────────────────┴────────────────┘
+
+The state probabilities for strategy :math:`Z` are also obtained. These tell the probability of each state in each node, given strategy :math:`Z`.
+
+.. code-block::
+
+  In [2]: S_probabilities.print(["L"])
+
+  Out[2]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │     high │      low │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │      L │ 0.564449 │ 0.435551 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+  In [3]: report_nodes = [f"R{i}" for i in range(N)]
+  In [4]: S_probabilities.print(report_nodes)
+
+  Out[4]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │     high │      low │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     R1 │ 0.515575 │ 0.484425 │             │
+  │     R2 │ 0.442444 │ 0.557556 │             │
+  │     R3 │ 0.543724 │ 0.456276 │             │
+  │     R4 │ 0.552515 │ 0.447485 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+  In [5]: reinforcement_nodes = [f"A{i}" for i in range(N-1)]
+  In [6]: S_probabilities.print(reinforcement_nodes)
+
+  Out[6]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │      yes │       no │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │     A1 │ 1.000000 │ 0.000000 │             │
+  │     A2 │ 1.000000 │ 0.000000 │             │
+  │     A3 │ 1.000000 │ 0.000000 │             │
+  │     A4 │ 1.000000 │ 0.000000 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+  In [7]: S_probabilities.print(["F"])
+
+  Out[7]:
+  ┌────────┬──────────┬──────────┬─────────────┐
+  │   Node │  failure │  success │ Fixed state │
+  │ String │  Float64 │  Float64 │      String │
+  ├────────┼──────────┼──────────┼─────────────┤
+  │      F │ 0.633125 │ 0.366875 │             │
+  └────────┴──────────┴──────────┴─────────────┘
+
+We can also print the utility distribution for the optimal
+strategy and some basic statistics for the distribution.
+
+.. code-block::
+
+  In [8]: U_distribution.print_distribution()
+
+  Out[8]:
+  ┌───────────┬─────────────┐
+  │   Utility │ Probability │
+  │   Float64 │     Float64 │
+  ├───────────┼─────────────┤
+  │ -2.881344 │    0.633125 │
+  │ 97.118656 │    0.366875 │
+  └───────────┴─────────────┘
+
+  In [8]: U_distribution.print_statistics()
+
+  Out[8]:
+  ┌──────────┬────────────┐
+  │     Name │ Statistics │
+  │   String │    Float64 │
+  ├──────────┼────────────┤
+  │     Mean │  33.806192 │
+  │      Std │  48.195210 │
+  │ Skewness │   0.552439 │
+  │ Kurtosis │  -1.694811 │
+  └──────────┴────────────┘
+
+
+
+
 
 
 

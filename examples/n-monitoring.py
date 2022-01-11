@@ -57,8 +57,8 @@ for i in range(N):
     diagram.set_probabilities(f"R{i}", X_R)
 
 X_F = diagram.construct_probability_matrix("F")
-x, y = np.random.random(2)
 
+x, y = np.random.random(2)
 for path in pdp.Paths([2]*N):
     forticications = [fortification(k, a) for k, a in enumerate(path)]
     denominator = np.exp(b * np.sum(forticications))
@@ -87,6 +87,7 @@ x_s = diagram.path_compatibility_variables(
     model, z,
     probability_cut=False
 )
+
 EV = diagram.expected_value(model, x_s)
 model.objective(EV, "Max")
 
