@@ -56,14 +56,14 @@ path through a graph.
 Set up the a Julia environment in the current folder run
 the Python script
 ```
-import pyDecisionProgramming as pd
+import pyDecisionProgramming as pdp
 pdp.setup_project()
 ```
 
 To use this environment in a Python script, use
 
 ```
-import pyDecisionProgramming as pd
+import pyDecisionProgramming as pdp
 pdp.activate()
 ```
 
