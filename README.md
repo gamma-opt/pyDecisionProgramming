@@ -14,29 +14,54 @@ as [JuMP](https://jump.dev/) extension.
 ## Installation
 ### Ubuntu 20.04:
 
-1. Install manual requirements
- * Python3: install using `sudo apt install python3 python3-pip`
- * Julia: Download and follow setup instructions
- * Gurobi: download and follow the setup instructions
+1. Install Julia
 
-2. Install Julia-side dependencies:
-```
-julia setup.jl
-```
+   Download julia at [https://julialang.org/downloads].
+   Follow the instructions at Platform Specific
+   Instructions.
 
-3. Install python dependencies:
-```
-pip3 install -r requirements.txt
-```
+2. Install pyDecisionProgramming:
+
+   ```
+   pip install https://github.com/gamma-opt/pyDecisionProgramming.git
+   ```
+
+3. Install Julia requirements
+
+   After installing the Python package, running the command
+
+   ```
+   pdp_setup_julia.py
+   ```
+
+   should be sufficient to install the required Julia
+   packages. Alternatively, install the DecisionProgramming
+   package in Julia:
+
+   ```
+   using Pkg
+   Pkg.add(url="https://github.com/gamma-opt/DecisionProgramming.jl.git")
+
+   ```
 
 ## Usage
 
-To run REPL use `python-jl` (or `python-jl -m IPython`).
+See the
+[documentation](https://gamma-opt.github.io/pyDecisionProgramming/usage/)
+for details on constructing a graph and finding the optimal
+path through a graph.
 
-Set up the a new project using
+# Environments
+
+Set up the a Julia environment in the current folder run
+the Python script
 ```
 import pyDecisionProgramming as pd
 pd.setup_project()
 ```
+
+To use this environment in a Python script, use
+
+
 
 
