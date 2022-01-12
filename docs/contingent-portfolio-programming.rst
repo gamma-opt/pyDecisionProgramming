@@ -424,7 +424,7 @@ for this strategy is 1.71.
 
   In [1]: S_probabilities.print_decision_strategy()
 
-  Out[2]:
+  Out[1]:
   ┌────────────────┐
   │ Decision in DP │
   ├────────────────┤
@@ -467,7 +467,7 @@ utility distribution.
 
 .. code-block::
 
-  In [1]: U_distribution.print_distribution()
+  In [2]: U_distribution.print_distribution()
 
   Out[2]:
   ┌───────────┬─────────────┐
@@ -481,9 +481,9 @@ utility distribution.
 
 .. code-block::
 
-  In [1]: U_distribution.print_statistics()
+  In [3]: U_distribution.print_statistics()
 
-  Out[2]:
+  Out[3]:
   ┌──────────┬────────────┐
   │     Name │ Statistics │
   │   String │    Float64 │
