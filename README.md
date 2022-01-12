@@ -57,11 +57,14 @@ Set up the a Julia environment in the current folder run
 the Python script
 ```
 import pyDecisionProgramming as pd
-pd.setup_project()
+pdp.setup_project()
 ```
 
 To use this environment in a Python script, use
 
-
+```
+import pyDecisionProgramming as pd
+pdp.activate()
+```
 
 
