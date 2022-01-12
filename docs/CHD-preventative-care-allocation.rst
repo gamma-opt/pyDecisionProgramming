@@ -1,6 +1,9 @@
 CHD preventative care allocation
 ================================
 
+.. role:: python(code)
+   :language: python
+
 Description
 ...........
 
@@ -49,8 +52,45 @@ Influence diagram
 .. image:: figures/CHD_preventative_care.svg
   :alt: The influence diagram of the CHD preventative care problem described below.
 
+The influence diagram representation of the problem is seen
+above. The chance nodes RR represent the patient's risk
+estimate – the prior risk estimate being :math:`R0`. The
+risk estimate nodes :math:`R0`, :math:`R1` and :math:`R2`
+have 101 states :math:`R = \{0\%, 1\%, ..., 100\%\}`, which
+are the discretised risk levels for the risk estimates.
 
+The risk estimate is updated according to the first and
+second testing decisions, which are represented by decision
+nodes :math:`T1` and :math:`T2`. These nodes have states
+:math:`T = \{\text{TRS, GRS, no test}\}`. The health of the
+patient, represented by chance node :math:`H`, also affects
+the update of the risk estimate. In this model, the health
+of the patient indicates whether they will have a CHD event
+in the next ten years or not. Thus, the node has states
+:math:`H = \{\text{CHD, no CHD}\}`. The treatment decision
+is represented by node :math:`TD` and it has states
+:math:`TD = \{\text{treatment, no treatment}\}`.
 
+The prior risk estimate represented by node :math:`R0`
+influences the health node :math:`H`, because in the model
+we make the assumption that the prior risk estimate
+accurately describes the probability of having a CHD event.
+
+The value nodes in the model are :math:`TC` and :math:`HB`.
+Node :math:`TC` represents the testing costs incurred due
+to the testing decisions :math:`T1` and :math:`T2`. Node
+:math:`HB` represents the health benefits achieved. The
+testing costs and health benefits are measured in QALYs.
+These parameter values were evaluated in the study
+[#Hynninen]_.
+
+We begin by declaring the chosen prior risk level and
+reading the conditional probability data for the tests.
+Note that the sample data in this repository is dummy data
+due to distribution restrictions on the real data. We also
+define functions :python:`update_risk_distribution` and
+:math:`state_probabilities`. These functions will be
+discussed in the following sections.
 
 
 
