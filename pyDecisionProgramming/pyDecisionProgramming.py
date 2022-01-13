@@ -1,5 +1,5 @@
 from __future__ import annotations
-from datetime import datetime
+import time
 from julia import Julia
 
 # Create an instance of julia without incremental precompilation.
@@ -18,10 +18,13 @@ _random_number_generator = None
 
 
 def random_number_generator(seed=None):
+    global _random_number_generator
+
     if _random_number_generator is None:
         if seed is None:
-            seed = datetime.now()
+            seed = int(time.time())
         _random_number_generator = JuliaName()
+        Main.eval('using Random')
         Main.eval(f'{_random_number_generator._name} = MersenneTwister({seed})')
     return _random_number_generator
 
@@ -42,7 +45,7 @@ class JuliaMain():
         if Main.eval(f"isdefined(Main, :{name})"):
             return Main.__getattr__(name)
         else:
-            return None
+            raise AttributeError(f'{name} not defined in Julia name space')
 
     def eval(self, command):
         return Main.eval(command)
