@@ -45,4 +45,12 @@ def test_JuliaMain():
     # and it should be fetchable
     assert(pdp.julia.thisisinotdefined == 5)
 
+    # use eval to set something and try to fetch it
+    pdp.julia.eval("anotherthing = 4")
+    assert(pdp.julia.anotherthing == 4)
+
+
+
+
+
 
