@@ -16,6 +16,21 @@ def test_setupProject():
     assert(os.path.exists("Manifest.toml"))
 
 
+def test_activate():
+    '''
+    Check that DecisionProgramming is available after
+    pdp.activate()
+    '''
+    if not os.path.exists("Manifest.toml"):
+        pdp.setupProject()
+
+    pdp.activate()
+
+    # If everything is correct, at least InfluenceDiagram
+    # should be defined
+    assert(pdp.julia.eval("isdefined(Main, :InfluenceDiagram)"))
+
+
 def test_random_number_generator():
     '''
     Check that the random_number_generator() returns a
@@ -49,6 +64,19 @@ def test_JuliaMain():
     pdp.julia.eval("anotherthing = 4")
     assert(pdp.julia.anotherthing == 4)
 
+
+def test_handle_index_syntax():
+    '''
+    Check handle_index_syntax with a few examples
+    '''
+
+    handle = pdp.handle_index_syntax
+
+    assert(handle(1)==2)
+    assert(handle('a')=='"a"')
+    assert(handle(slice(None))==':')
+    assert(handle(("a",1,5,slice(None)))=='"a",2,6,:')
+    assert(handle((slice(None),'a',slice(None),5))==':,"a",:,6')
 
 
 
