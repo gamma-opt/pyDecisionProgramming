@@ -79,6 +79,34 @@ def test_handle_index_syntax():
     assert(handle((slice(None),'a',slice(None),5))==':,"a",:,6')
 
 
+class TestJuliaName():
+    def __init__(self):
+        self.name1 = pdp.JuliaName()
+        self.name2 = pdp.JuliaName()
 
+    def test_init(self):
+        '''
+        Test that a name is initialized
+        '''
+        assert(type(self.name1._name) is str)
+
+        # names should be unique
+        assert(self.name1._name != self.name2._name)
+
+    def test_get_attr(self):
+        '''
+        Check accessing by attribute
+        '''
+        pdp.Main.eval(f'''
+            {self.name1._name} = InfluenceDiagram()
+        ''')
+
+        # This should return a JuliaName
+        u = self.name1.U
+        assert(type(u) is pdp.JuliaName)
+
+        # Try getting an attribute that does not exist
+        with pytest.raises(AttributeError):
+            x = self.name1.doesnotexist
 
 
