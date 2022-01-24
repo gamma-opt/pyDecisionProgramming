@@ -79,34 +79,102 @@ def test_handle_index_syntax():
     assert(handle((slice(None),'a',slice(None),5))==':,"a",:,6')
 
 
-class TestJuliaName():
-    def __init__(self):
-        self.name1 = pdp.JuliaName()
-        self.name2 = pdp.JuliaName()
+@pytest.fixture
+def julianame1():
+    return pdp.JuliaName()
 
-    def test_init(self):
+
+@pytest.fixture
+def julianame2():
+    return pdp.JuliaName()
+
+
+class TestJuliaName():
+    def test_init(self, julianame1, julianame2):
         '''
         Test that a name is initialized
         '''
-        assert(type(self.name1._name) is str)
+        assert(type(julianame1._name) is str)
 
         # names should be unique
-        assert(self.name1._name != self.name2._name)
+        assert(julianame1._name != julianame2._name)
 
-    def test_get_attr(self):
+    def test_getattr(self, julianame1):
         '''
         Check accessing by attribute
         '''
         pdp.Main.eval(f'''
-            {self.name1._name} = InfluenceDiagram()
+            {julianame1._name} = InfluenceDiagram()
         ''')
 
         # This should return a JuliaName
-        u = self.name1.U
-        assert(type(u) is pdp.JuliaName)
+        nodes = julianame1.Nodes
+        assert(type(nodes) is pdp.JuliaName)
 
         # Try getting an attribute that does not exist
         with pytest.raises(AttributeError):
-            x = self.name1.doesnotexist
+            x = julianame1.doesnotexist
 
+    def test_getitem(self, julianame1):
+        '''
+        Check item syntax
+        '''
+        # create and array in Julia and assign it to the name
+        pdp.julia.l = [1, 2, 3, 4]
+        pdp.Main.eval(f'''
+            {julianame1._name} = l
+        ''')
+
+        # This should return JuliaName containing only the number
+        n = julianame1[1]
+        assert(type(n) is pdp.JuliaName)
+        # There is no direct way to fetch the number
+        # directly. Let's check it anyway
+        pdp.julia.n = n
+        assert(pdp.julia.n == 2)
+
+        # Try getting outside the array
+        with pytest.raises(IndexError):
+            x = julianame1[8]
+
+    def test_getslice(self, julianame1):
+        '''
+        Check slicing
+        '''
+        # create and array in Julia and assign it to the name
+        pdp.julia.l = [1, 2, 3, 4]
+        pdp.Main.eval(f'''
+            {julianame1._name} = l
+        ''')
+
+        # This should return JuliaName containing only the number
+        n = julianame1[:]
+        assert(type(n) is pdp.JuliaName)
+        # There is no direct way to fetch the number
+        # directly. Let's check it anyway
+        pdp.julia.n = n
+        assert(pdp.julia.n[0] == 1)
+
+        # Try getting outside the array
+        with pytest.raises(IndexError):
+            x = julianame1[2:56]
+
+    def test_setitem(self, julianame1):
+        '''
+        Check getting at index
+        '''
+        # create and array in Julia and assign it to the name
+        pdp.julia.l = [1, 2, 3, 4]
+        pdp.Main.eval(f'''
+            {julianame1._name} = l
+        ''')
+
+        # set an entry
+        julianame1[1] = 10
+        pdp.julia.n = julianame1
+        assert(pdp.julia.n[1] == 10)
+
+        # Try setting outside the array
+        with pytest.raises(IndexError):
+            julianame1[15] = 5
 
