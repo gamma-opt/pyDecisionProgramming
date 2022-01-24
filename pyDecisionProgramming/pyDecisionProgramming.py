@@ -1,6 +1,7 @@
 from __future__ import annotations
 import time
 from julia import Julia
+from julia.core import JuliaError
 
 # Create an instance of julia without incremental precompilation.
 # This does not seem to affect performance much
@@ -111,7 +112,7 @@ def handle_index_syntax(key):
     elif isinstance(key, int):
         index_string = key+1
     else:
-        raise IndexError('Index not must be string, integer or ":"')
+        raise IndexError('Index must be string, integer or ":"')
 
     return index_string
 
@@ -136,29 +137,41 @@ class JuliaName():
             r = JuliaName()
             Main.eval(f'{r._name} = {self._name}.{name}')
             return r
-        return None
+        raise AttributeError
 
     def __getitem__(self, key):
         r = JuliaName()
         index_string = handle_index_syntax(key)
-        Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        try:
+            Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        except JuliaError as j:
+            raise IndexError(j)
         return r
 
     def __getslice__(self, key):
         r = JuliaName()
         index_string = handle_index_syntax(key)
-        Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        try:
+            Main.eval(f'{r._name} = {self._name}[{index_string}]')
+        except JuliaError as j:
+            raise IndexError(j)
         return r
 
     def __setitem__(self, key, value):
         index_string = handle_index_syntax(key)
-        command = f'{self._name}[{index_string}] = {value}'
-        Main.eval(command)
+        try:
+            command = f'{self._name}[{index_string}] = {value}'
+            Main.eval(command)
+        except JuliaError as j:
+            raise IndexError(j)
 
     def __setslice__(self, key, value):
         index_string = handle_index_syntax(key)
-        command = f'{self._name}[{index_string}] = {value}'
-        Main.eval(command)
+        try:
+            command = f'{self._name}[{index_string}] = {value}'
+            Main.eval(command)
+        except JuliaError as j:
+            raise IndexError(j)
 
 
 class InfluenceDiagram(JuliaName):
