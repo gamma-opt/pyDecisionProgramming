@@ -55,15 +55,33 @@ class JuliaMain():
 julia = JuliaMain()
 
 
+def load_libs():
+    '''
+    Load Julia dependencies
+    '''
+
+    Main.eval('using DecisionProgramming')
+    Main.eval('using Gurobi')
+    Main.eval('using JuMP')
+
+    # Define a PathUtility type on Julia side
+    command = f'''struct PathUtility <: AbstractPathUtility
+            data::Array{{AffExpr}}
+        end
+        Base.getindex(U::PathUtility, i::State) = getindex(U.data, i)
+        Base.getindex(U::PathUtility, I::Vararg{{State,N}}) where N = getindex(U.data, I...)
+        (U::PathUtility)(s::Path) = value.(U[s...])
+    '''
+    Main.eval(command)
+
+
 def activate():
     """ Activate a Julia environment in the working
         directory and load requirements
     """
 
     Pkg.activate(".")
-    Main.eval('using DecisionProgramming')
-    Main.eval('using Gurobi')
-    Main.eval('using JuMP')
+    load_libs()
 
 
 def setupProject():
@@ -79,9 +97,7 @@ def setupProject():
     Pkg.build("Gurobi")
     Pkg.add("JuMP")
 
-    Main.eval('using DecisionProgramming')
-    Main.eval('using Gurobi')
-    Main.eval('using JuMP')
+    load_libs()
 
 
 def handle_index_syntax(key):
@@ -217,7 +233,6 @@ class InfluenceDiagram(JuliaName):
     def __init__(self):
         super().__init__()
         Main.eval(f'{self._name} = InfluenceDiagram()')
-        self.define_path_utility()
 
     def build_random(self, n_C, n_D, n_V, m_C, m_D, states, seed=None):
         '''
@@ -241,7 +256,6 @@ class InfluenceDiagram(JuliaName):
             The number of states for each chance and decision node is
             randomly chosen from this set of numbers.
         '''
-        self = super().__init__()
         rng = random_number_generator(seed)
         Main.eval(f'''
             random_diagram!(
@@ -257,31 +271,34 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
+        node: pdp.ChanceNode
+            Random probabilities will be assigned to this node.
 
+        n_inactive: Int
+            Number
         '''
-        self = super().__init__()
         rng = random_number_generator(seed)
+        print(rng)
         Main.eval(f'''
             random_probabilities!(
                 {rng._name}, {self._name},
-                {node}; n_inactive={n_inactive}
+                {node._name}; n_inactive={n_inactive}
             )
         ''')
 
     def random_utilities(self, node, low=-1.0, high=1.0, seed=None):
         '''
-        Generate random probabilities for a chance node.
+        Generate random utilities for a value node.
 
         Parameters
         ----------
 
         '''
-        self = super().__init__()
         rng = random_number_generator(seed)
         Main.eval(f'''
             random_utilities!(
                 {rng._name}, {self._name},
-                {node}; low={low}, high={high}
+                {node._name}; low={low}, high={high}
             )
         ''')
 
@@ -383,16 +400,6 @@ class InfluenceDiagram(JuliaName):
 
     def index_of(self, name):
         return Main.eval(f'''index_of({self._name}, "{name}")''')-1
-
-    def define_path_utility(self):
-        command = f'''struct PathUtility <: AbstractPathUtility
-                data::Array{{AffExpr}}
-            end
-            Base.getindex(U::PathUtility, i::State) = getindex(U.data, i)
-            Base.getindex(U::PathUtility, I::Vararg{{State,N}}) where N = getindex(U.data, I...)
-            (U::PathUtility)(s::Path) = value.(U[s...])
-        '''
-        Main.eval(command)
 
     def set_path_utilities(self, expressions):
         Main.eval(f'''
