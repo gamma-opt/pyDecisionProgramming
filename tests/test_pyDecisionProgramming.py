@@ -113,23 +113,6 @@ def diagram_simple():
     return diagram
 
 
-@pytest.fixture
-def model_simple(diagram_simple):
-    model = pdp.Model()
-    z = diagram_simple.decision_variables(model)
-    x_s = diagram_simple.path_compatibility_variables(model, z)
-    EV = diagram_simple.expected_value(model, x_s)
-    model.objective(EV, "Max")
-
-    model.setup_Gurobi_optimizer(
-       ("IntFeasTol", 1e-9),
-       ("LazyConstraints", 1)
-    )
-    model.optimize()
-
-    return model
-
-
 class TestJuliaName():
     def test_init(self, julianame1, julianame2):
         '''
@@ -362,8 +345,28 @@ class TestInfluenceDiagram():
         )
         model.optimize()
 
-    def test_decision_strategy(self, diagram_simple, model_simple):
-        pass
+    def test_decision_strategy(self, diagram_simple):
+        model = pdp.Model()
+        z = diagram_simple.decision_variables(model)
+        x_s = diagram_simple.path_compatibility_variables(model, z)
+        EV = diagram_simple.expected_value(model, x_s)
+        model.objective(EV, "Max")
+
+        model.setup_Gurobi_optimizer(
+           ("IntFeasTol", 1e-9),
+           ("LazyConstraints", 1)
+        )
+        model.optimize()
+
+        Z = z.decision_strategy()
+        assert(type(Z) == pdp.DecisionStrategy)
+
+        S_probabilities = diagram_simple.state_probabilities(Z)
+        assert(type(S_probabilities) == pdp.StateProbabilities)
+
+        U_distribution = diagram_simple.utility_distribution(Z)
+        assert(type(U_distribution) == pdp.UtilityDistribution)
+
 
 
 
