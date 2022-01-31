@@ -17,7 +17,6 @@ jobs:
       - name: install deps
         run: |
           pip install -r dev-requirements.txt
-      #- name: setup extension
       - name: sphinx
         run: |
           cd docs
