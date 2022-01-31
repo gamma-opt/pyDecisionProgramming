@@ -52,6 +52,7 @@ class JuliaMain():
         return Main.eval(command)
 
 
+# Expose the Julia runner as pdp.Main
 julia = JuliaMain()
 
 
@@ -164,24 +165,7 @@ class JuliaName():
             raise IndexError(j)
         return r
 
-    def __getslice__(self, key):
-        r = JuliaName()
-        index_string = handle_index_syntax(key)
-        try:
-            Main.eval(f'{r._name} = {self._name}[{index_string}]')
-        except JuliaError as j:
-            raise IndexError(j)
-        return r
-
     def __setitem__(self, key, value):
-        index_string = handle_index_syntax(key)
-        try:
-            command = f'{self._name}[{index_string}] = {value}'
-            Main.eval(command)
-        except JuliaError as j:
-            raise IndexError(j)
-
-    def __setslice__(self, key, value):
         index_string = handle_index_syntax(key)
         try:
             command = f'{self._name}[{index_string}] = {value}'
