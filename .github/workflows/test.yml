@@ -12,10 +12,9 @@ jobs:
           - 3.8
           - 3.9
         julia-version:
-          - 1.6.2
-          - 1.6.1
           - 1.6.0
-        os: [ubuntu-latest]
+          - 1.6.1
+          - 1.6.2
     steps:
       - uses: actions/checkout@v2
       - name: setup julia
