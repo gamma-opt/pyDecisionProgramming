@@ -927,16 +927,6 @@ class ChanceNode(JuliaName):
         Main.tmp = jdp.ChanceNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
 
-    def information_set(self, n_I, seed=None):
-        rng = random_number_generator(seed)
-        result = JuliaName()
-        Main.eval(f'''
-            {result._name} = information_set(
-                {rng._name}, {self._name}, {n_I}
-            )
-        ''')
-        return result
-
 
 class DecisionNode(JuliaName):
     """
@@ -959,16 +949,6 @@ class DecisionNode(JuliaName):
         super().__init__()
         Main.tmp = jdp.DecisionNode(id, nodes, connected_nodes)
         Main.eval(f'{self._name} = tmp')
-
-    def information_set(self, n_I, seed=None):
-        rng = random_number_generator(seed)
-        result = JuliaName()
-        Main.eval(f'''
-            {result._name} = information_set(
-                {rng._name}, {self._name}, {n_I}
-            )
-        ''')
-        return result
 
 
 class ValueNode(JuliaName):
@@ -995,16 +975,6 @@ class ValueNode(JuliaName):
 
         Main.tmp = jdp.ValueNode(id, nodes)
         Main.eval(f'{self._name} = tmp')
-
-    def information_set(self, n, seed=None):
-        rng = random_number_generator(seed)
-        result = JuliaName()
-        Main.eval(f'''
-            {result._name} = information_set(
-                {rng._name}, {self.leaves}, {n}
-            )
-        ''')
-        return result
 
 
 class ProbabilityMatrix(JuliaName):
