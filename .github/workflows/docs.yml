@@ -16,7 +16,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: install deps
         run: |
-          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
       #- name: setup extension
       - name: sphinx
         run: |
