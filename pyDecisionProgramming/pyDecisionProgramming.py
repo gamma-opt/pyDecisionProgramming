@@ -19,6 +19,20 @@ _random_number_generator = None
 
 
 def random_number_generator(seed=None):
+    '''
+    Return a random number generator on the Julia side. MersenneTwister is the
+    only option here.
+
+    Parameters
+    ----------
+    seed : integer
+        A long integer used as a seed when creating the generator
+
+    Returns
+    -------
+    pdp.JuliaName
+        The random number generator wrapped in a JuliaName
+    '''
     global _random_number_generator
 
     if _random_number_generator is None:
@@ -49,6 +63,14 @@ class JuliaMain():
             raise AttributeError(f'{name} not defined in Julia name space')
 
     def eval(self, command):
+        '''
+        Evaluate Julia code
+
+        Parameters
+        -------
+        command: string
+            A string containing Julia code
+        '''
         return Main.eval(command)
 
 
@@ -108,6 +130,11 @@ def handle_index_syntax(key):
     Parameters
     ----------
     key: String, integer, slice or a tuple of these
+
+    Returns
+    -------
+    string
+        The index string in Julia format
     """
     if isinstance(key, tuple):
         indexes = []
@@ -259,7 +286,7 @@ class InfluenceDiagram(JuliaName):
             Random probabilities will be assigned to this node.
 
         n_inactive: Int
-            Number
+            Number of inactive states
         '''
         rng = random_number_generator(seed)
         print(rng)
@@ -276,7 +303,17 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
+        node: pdp.ValueNode
+            Random utilities are generated for this node
 
+        low: float
+            Lower bound for random utilities
+
+        high: float
+            Upper bound for random utilities
+
+        seed: int
+            Seed for the random number generator
         '''
         rng = random_number_generator(seed)
         Main.eval(f'''
@@ -288,6 +325,8 @@ class InfluenceDiagram(JuliaName):
 
     def add_node(self, node):
         """
+        Add a node to the diagram
+
         Parameters
         ----------
         node : ChanceNode, DecisionNode, or ValueNode
@@ -296,14 +335,19 @@ class InfluenceDiagram(JuliaName):
         Main.eval(command)
 
     def generate_arcs(self):
+        '''
+        Generate arc structures using nodes added to influence diagram, by ordering nodes, giving them indices and generating correct values for the vectors Names, I_j, states, S, C, D, V in the influence digram. Abstraction is created and the names of the nodes and states are only used in the user interface from here on.
+        '''
         Main.eval(f'generate_arcs!({self._name})')
 
     def set_probabilities(self, node, matrix):
-        """set_probabilities
+        """
+        Set the probabilities of a ChanceNode
+
         Parameters
         ----------
         node : str
-            The name of a ValueNode. The probability matrix of this node is
+            The name of a ChanceNode. The probability matrix of this node is
             returned.
 
         matrix : ProbabilityMatrix or Numpy array
@@ -323,6 +367,8 @@ class InfluenceDiagram(JuliaName):
 
     def set_utility(self, value, matrix):
         """
+        Set the utilities of a ValueNode
+
         Parameters
         ----------
         node : str
@@ -350,6 +396,9 @@ class InfluenceDiagram(JuliaName):
                  negative_path_utility=False
                  ):
         """
+        Generate the diagram once nodes, probabilities and utilities have been
+        added.
+
         Parameters
         ----------
             default_probability: bool = True
@@ -377,26 +426,101 @@ class InfluenceDiagram(JuliaName):
         )''')
 
     def num_states(self, node):
+        '''
+        Find the number of states a given node has.
+
+        Parameters
+        ----------
+        node: String
+            The name of a node
+
+        Returns
+        -------
+        Integer
+            The number of states the given node has
+        '''
         Main.eval(f'''tmp = num_states(
             {self._name}, "{node}"
         )''')
         return Main.tmp
 
     def index_of(self, name):
+        '''
+        Find index of a given node.
+
+        Parameters
+        ----------
+        node: String
+            The name of a node
+
+        Returns
+        -------
+        Integer
+            The index of the node in the diagram
+        '''
         return Main.eval(f'''index_of({self._name}, "{name}")''')-1
 
     def set_path_utilities(self, expressions):
+        '''
+        Use given expression as the path utilities of the diagram.
+
+        Parameters
+        ----------
+        expressions: ExpressionPathUtilities
+            A set of JuMP expression.
+        '''
         Main.eval(f'''
             {self._name}.U = PathUtility({expressions._name})
         ''')
 
     def construct_probability_matrix(self, node):
+        '''
+        Return a probability matrix with appriate dimensions for a given node
+        and zero values.
+
+        Parameters
+        ----------
+        node: String
+            The name of a ChanceNode.
+
+        Returns
+        -------
+        pdp.ProbabilityMatrix
+            A probabity matrix with zero values.
+        '''
         return ProbabilityMatrix(self, node)
 
     def construct_utility_matrix(self, node):
+        '''
+        Return a utility matrix with appriate dimensions for a given node
+        and values set to negative infinity.
+
+        Parameters
+        ----------
+        node: String
+            The name of a UtilityMatrix.
+
+        Returns
+        -------
+        pdp.UtilityMatrix
+            A utility matrix with values set to negative infinity.
+        '''
         return UtilityMatrix(self, node)
 
     def decision_variables(self, model):
+        '''
+        Construct the decision variables for a given model and this diagram.
+
+        Parameters
+        ----------
+        model: pdp.Model
+            A model constructed for this diagram.
+
+        Returns
+        -------
+        pdp.DecisionVariables
+            The set of decision variables for the model.
+        '''
         return DecisionVariables(model, self)
 
     def path_compatibility_variables(
@@ -409,6 +533,28 @@ class InfluenceDiagram(JuliaName):
         probability_cut=True,
         probability_scale_factor=1.0
     ):
+        '''
+        Construct the path compatibility variables for a given model and this
+        diagram.
+
+        Parameters
+        ----------
+        model: pdp.Model
+            A model constructed for this diagram.
+        decision variables: pdp.DecisionVariables (optional)
+            DecisionVariables constructed for this model.
+        names: Bool (optional)
+        name: String (optional)
+        forbidden_paths: List of pdp.ForbiddenPath variables (optional)
+        fixed: List of pdp.FixedPath variables (optional)
+        probability_cut: Bool (optional)
+        probability_scale_factor: Number (optional)
+
+        Returns
+        -------
+        pdp.PathCompatibilityVariables
+            The set of path compatibility variables for the model.
+        '''
         if decision_variables is None:
             decision_variables = self.decision_variables(model)
         return PathCompatibilityVariables(
@@ -426,27 +572,112 @@ class InfluenceDiagram(JuliaName):
         self, model,
         path_compatibility_variables=None
     ):
+        '''
+        Return the expected value given the optimal decision strategy after
+        optimizing the model.
+
+        Parameters
+        ----------
+        model: pdp.Model
+            A model constructed for this diagram.
+        path_compatibility_variables: pdp.PathCompatibilityVariables (optional)
+            PathCompatibilityVariables generated for this model, usually using
+            diagram.path_compatibility_variables.
+
+        Returns
+        -------
+        pdp.ExpectedValue
+            A pdp.ExpectedValue object describing the expected value for the
+            optimal decision strategy.
+        '''
         x_s = path_compatibility_variables
         if x_s is None:
             x_s = self.path_compatibility_variables(model)
         return ExpectedValue(model, self, path_compatibility_variables)
 
     def state_probabilities(self, decision_strategy):
+        '''
+        Extract the state probabilities as a pdp.StateProbabilities object.
+
+        Parameters
+        ----------
+        decision_strategy: pdp.DecisionStrategy
+            A decision strategy. A decision strategy can be constructed using
+            the pdp.DecisionVariables.decision_strategy method.
+
+        Returns
+        -------
+        pdp.StateProbabilities
+            A pdp.StateProbabilities object containing information about the
+            probabilites of each state given the decision strategy.
+        '''
         return StateProbabilities(self, decision_strategy)
 
     def utility_distribution(self, decision_strategy):
+        '''
+        Extract the utility distribution as a pdp.UtilityDistribution object.
+
+        Parameters
+        ----------
+        decision_strategy: pdp.DecisionStrategy
+            A decision strategy. A decision strategy can be constructed using
+            the pdp.DecisionVariables.decision_strategy method.
+
+        Returns
+        -------
+        pdp.UtilityDistribution
+            Describes the distribution of utilities given the decision strategy.
+        '''
         return UtilityDistribution(self, decision_strategy)
 
     def forbidden_path(self, nodes, values):
+        '''
+        Create a ForbiddenPath object used to describe invalid paths through the
+        diagram.
+
+        Parameters
+        ----------
+        nodes: List of strings
+            List of node names connected by the forbidden paths
+
+        values: List of tuples of strings
+            List of states of the connected nodes that are forbidden
+
+        Returns
+        -------
+        pdp.ForbiddenPath
+            A pdp.ForbiddenPath object.
+        '''
         return ForbiddenPath(self, nodes, values)
 
     def fixed_path(self, node_values):
+        '''
+        Create a fixed path object, used to force ChangeNodes to have given
+        values.
+
+        Parameters
+        ----------
+        node_values: dict
+            Dictionary with node names as keys and the fixed value as the
+            corresponding values.
+
+        Returns
+        -------
+        pdp.FixedPath
+            A pdp.FixedPath object.
+        '''
         return FixedPath(self, node_values)
 
     def lazy_probability_cut(
         model, path_compatibility_variables
     ):
-        ''' Add a probability cut to the model as a lazy constraint
+        '''
+        Add a probability cut to the model as a lazy constraint.
+
+        Parameters
+        ----------
+        path_compatibility_variables: pdp.PathCompatibilityVariables
+            A set of path compatibility variables constructed for this diagram.
         '''
         Main.eval(f'''
             lazy_probability_cut(model, self, path_compatibility_variables)
@@ -555,6 +786,17 @@ class Model(JuliaName):
         Main.eval(f'optimize!({self._name})')
 
     def constraint(self, *args):
+        '''
+        Set a model constraints
+
+        loop: String (optional)
+            Set of loop variables in the JuMP constraint format (see the
+            contingent portfolio analysis page in examples)
+
+        constraint: String
+            The contraints in the JuMP format (see the contingent portfolio
+             analysis page in examples)
+        '''
         argument_text = ",".join(args)
         # Note: ending the command with ;0 to prevent
         # Julia from returning the object. Otherwise
@@ -568,6 +810,20 @@ class Model(JuliaName):
 
 class JuMPExpression(JuliaName):
     def __init__(self, model, *args):
+        '''
+        Construct a JuMP expression.
+
+        model: Model
+            A pyDecisionProgramming Model object
+
+        loop: String (optional)
+            Set of loop variables in the JuMP constraint format (see the
+            contingent portfolio analysis page in examples)
+
+        constraint: String
+            The contraints in the JuMP format (see the contingent portfolio
+             analysis page in examples)
+        '''
         super().__init__()
         argument_text = ",".join(args)
         # Note: ending the command with ;0 to prevent
@@ -577,38 +833,6 @@ class JuMPExpression(JuliaName):
         command = f'''{self._name} = @expression(
             {model._name},
             {argument_text}
-        ); 0'''
-        Main.eval(command)
-
-
-class JuMPObjective(JuliaName):
-    def __init__(self, model, objective, *args):
-        super().__init__()
-        argument_text = ",".join(args)
-        # Note: ending the command with ;0 to prevent
-        # Julia from returning the object. Otherwise
-        # the Python julia library will try to convert
-        # this to a Python object and cause an exception.
-        command = f'''{self._name} = @expression(
-            {model._name}, {objective},
-            {argument_text}
-        ); 0'''
-        Main.eval(command)
-
-
-class JuMPVariable(JuliaName):
-    def __init__(self, model, binary=False):
-        super().__init__()
-        binary_arg = ""
-        if binary:
-            binary_arg = "; binary=true, "
-        # Note: ending the command with ;0 to prevent
-        # Julia from returning the object. Otherwise
-        # the Python julia library will try to convert
-        # this to a Python object and cause an exception.
-        command = f'''{self._name} = @variable(
-            {model._name},
-            {binary_arg}
         ); 0'''
         Main.eval(command)
 
@@ -619,6 +843,19 @@ class JuMPArray(JuliaName):
     using the @constraint syntax.
     '''
     def __init__(self, model, dims, binary=False):
+        '''
+        Construct an array of JuMP expressions.
+
+        model: Model
+            A pyDecisionProgramming Model object
+
+        dims: List of Integers
+            A list corresponding to the size of the array in each of its
+            dimensions.
+
+        binary: Boolean (optional, default False)
+            Wether the variables are boolean.
+        '''
         super().__init__()
         binary_arg = ""
         if binary:
@@ -635,9 +872,22 @@ class JuMPArray(JuliaName):
 
 class ExpressionPathUtilities(JuliaName):
     '''
-    Creates path utilites from an expression.
+    An expression that can be used to set path utilities.
     '''
     def __init__(self, model, diagram, expression, path_name="s"):
+        '''
+        Path utilities as a JuMP expression.
+
+        model: Model
+            A pyDecisionProgramming Model object
+
+        diagram: pdp.InfluenceDiagram
+            The influence diagram the model was constructed with.
+
+        expression: string
+            A JuMP expression that describes the path utilities (see the
+            contingent portfolio analysis page in examples).
+        '''
         super().__init__()
         command = f''' {self._name} =
             [{expression} for {path_name} in paths({diagram._name}.S)]
@@ -680,6 +930,14 @@ class DecisionVariables(JuliaName):
         Main.eval(commmand)
 
     def decision_strategy(self):
+        '''
+        Extract the optimal decision strategy.
+
+        Returns
+        -------
+        pdp.DecisionStrategy
+            The optimal decision strategy wrapped in a Python object.
+        '''
         return DecisionStrategy(self)
 
 
@@ -691,7 +949,7 @@ class DecisionStrategy(JuliaName):
         """
         Parameters
         ----------
-        A decision variables for a solved model
+        Decision variables for a solved model
         """
         super().__init__()
         commmand = f'{self._name} = DecisionStrategy({decision_variables._name})'
@@ -803,7 +1061,6 @@ class ExpectedValue(JuliaName):
         diagram: Diagram
 
         pathcompatibility: PathCompatibilityVariables
-
         """
         super().__init__()
         commmand = f'''{self._name} = expected_value(
@@ -827,6 +1084,15 @@ class StateProbabilities(JuliaName):
         Pretty print state probabilities for a list of nodes
     """
     def __init__(self, diagram, decision_strategy):
+        """
+        Parameters
+        ----------
+        diagram: Diagram
+            An influence diagram
+
+        decision_strategy: pdp.DecisionStrategy
+            A decision strategy created for the diagram.
+        """
         super().__init__()
         self.diagram = diagram
         self.decision_strategy = decision_strategy
@@ -834,12 +1100,18 @@ class StateProbabilities(JuliaName):
         Main.eval(commmand)
 
     def print_decision_strategy(self):
+        '''
+        Print the decision strategy.
+        '''
         Main.eval(f'''print_decision_strategy(
             {self.diagram._name},
             {self.decision_strategy._name},
             {self._name})''')
 
     def print(self, nodes):
+        '''
+        Print the state probabilities.
+        '''
         # Format the nodes list using " instead of '
         node_string = str(nodes).replace("\'", "\"")
         Main.eval(f'''print_state_probabilities(
@@ -868,7 +1140,7 @@ class UtilityDistribution(JuliaName):
             The diagram of a solved model
 
         decision_strategy: DecisionStrategy
-            A decition strategy extracted from a solved model.
+            A decision strategy extracted from a solved model.
         """
         super().__init__()
         self.diagram = diagram
@@ -877,10 +1149,11 @@ class UtilityDistribution(JuliaName):
         Main.eval(commmand)
 
     def print_distribution(self):
+        ''' Print the utility distribution. '''
         Main.eval(f'''print_utility_distribution({self._name})''')
 
     def print_statistics(self):
-        '''Print statistics about utility distribution.'''
+        '''Print statistics about the utility distribution.'''
         Main.eval(f'''print_statistics({self._name})''')
 
     def print_risk_measures(self, alpha, format="%f"):
@@ -892,11 +1165,13 @@ class UtilityDistribution(JuliaName):
         ''')
 
     def value_at_risk(self, alpha):
+        ''' Print the value at risk. '''
         Main.eval(f'''
             value_at_risk({self._name}, {alpha})
         ''')
 
     def conditional_value_at_risk(self, alpha):
+        ''' Print the conditional value at rist '''
         Main.eval(f'''
             conditional_value_at_risk(
                 {self._name}, {alpha}
@@ -1000,6 +1275,7 @@ class ProbabilityMatrix(JuliaName):
         )''')
 
     def size(self):
+        ''' Return the size of the nodes information set. '''
         return Main.eval(f'''size({self._name})''')
 
 
@@ -1027,7 +1303,22 @@ class UtilityMatrix(JuliaName):
 
 
 class ForbiddenPath(JuliaName):
+    """
+    Describes forbidden paths through an influence diagram.
+    """
     def __init__(self, diagram, nodes, states):
+        '''
+        Parameters
+        ----------
+        diagram: An InfluenceDiagram
+            The influence diagram.
+
+        nodes: List of strings
+            List of node names connected by the forbidden paths
+
+        values: List of tuples of strings
+            List of states of the connected nodes that are forbidden
+        '''
         super().__init__()
         node_string = str(nodes).replace("\'", "\"")
         states_string = str(states).replace("\'", "\"")
@@ -1039,7 +1330,20 @@ class ForbiddenPath(JuliaName):
 
 
 class FixedPath(JuliaName):
+    """
+    Describes fixed paths in an influence diagram.
+    """
     def __init__(self, diagram, paths):
+        '''
+        Parameters
+        ----------
+        diagram: An InfluenceDiagram
+            The influence diagram.
+
+        node_values: dict
+            Dictionary with node names as keys and the fixed value as the
+            corresponding values.
+        '''
         super().__init__()
         path_string = "Dict("
         for key, val in paths.items():
@@ -1055,7 +1359,19 @@ class FixedPath(JuliaName):
 
 
 class Paths(JuliaName):
+    """
+    Iterate over paths in lexicographical order.
+    """
     def __init__(self, states, fixed=None):
+        '''
+        Parameters
+        ----------
+        states: List of strings
+            List of paths to connect
+
+        fixed: pdp.FixedPath
+            Describes states that are held fixed.
+        '''
         super().__init__()
         if type(states) == list and type(states[0]) == int:
             Main.eval(f'tmp = States(State.({states}))')
@@ -1080,10 +1396,26 @@ class Paths(JuliaName):
 
 
 class CompatiblePaths(JuliaName):
+    '''
+    Interface for iterating over paths that are compatible and active given
+    influence diagram and decision strategy.
+    '''
     def __init__(
         self, diagram, decision_strategy,
         fixed=None
     ):
+        '''
+        Parameters
+        ----------
+        diagram: pdp.Diagram
+            An influence diagram.
+
+        decision_strategy: pdp.DecisionStrategy
+            A decision strategy for the diagram.
+
+        fixed: pdp.FixedPath
+            Describes states that are held fixed.
+        '''
         super().__init__()
 
         if fixed is None:
@@ -1111,17 +1443,3 @@ class CompatiblePaths(JuliaName):
         if path:
             path = [i-1 for i in path]
         return path
-
-
-class LocalDecisionStrategy(JuliaName):
-    '''
-    Construct decision strategy from variable refs.
-    '''
-    def __init__(self, node, variable_array):
-        super().__init__()
-        Main.eval(f'''{self._name} = LocalDecisionStrategy(
-            {node},
-            {variable_array}
-        )''')
-
-
