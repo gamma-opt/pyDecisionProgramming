@@ -1,6 +1,7 @@
 import pyDecisionProgramming as pdp
 import os
 import pytest
+import numpy as np
 
 
 def test_setupProject():
@@ -81,12 +82,20 @@ def test_handle_index_syntax():
 
 @pytest.fixture
 def julianame1():
-    return pdp.JuliaName()
+    name = pdp.JuliaName()
+    pdp.Main.eval(f'''
+        {name._name} = 1
+    ''')
+    return name
 
 
 @pytest.fixture
 def julianame2():
-    return pdp.JuliaName()
+    name = pdp.JuliaName()
+    pdp.Main.eval(f'''
+        {name._name} = 2
+    ''')
+    return name
 
 
 @pytest.fixture
@@ -122,6 +131,12 @@ class TestJuliaName():
 
         # names should be unique
         assert(julianame1._name != julianame2._name)
+
+    def test_repr(self, julianame1):
+        '''
+        Test that the __repr__ function returns a string
+        '''
+        assert(type(str(julianame1)) is str)
 
     def test_getattr(self, julianame1):
         '''
@@ -160,6 +175,10 @@ class TestJuliaName():
         # Try getting outside the array
         with pytest.raises(IndexError):
             x = julianame1[8]
+
+        # Try getting outside the array
+        with pytest.raises(IndexError):
+            x = julianame1[8,4.0]
 
     def test_getslice(self, julianame1):
         '''
@@ -272,12 +291,21 @@ class TestInfluenceDiagram():
         diagram.add_node(D)
         V = pdp.ValueNode("V", ["D"])
         diagram.add_node(V)
+        V2 = pdp.ValueNode("V2", ["D"])
+        diagram.add_node(V2)
+
         diagram.generate_arcs()
 
+        # try with a UtilityMatrix
         Y_V1 = diagram.construct_utility_matrix("V")
         Y_V1[0] = 1
         Y_V1[1] = 1
         diagram.set_utility("V", Y_V1)
+
+        # Try with a numpy matrix
+        Y_V2 = diagram.construct_utility_matrix("V2")
+        Y_V2 = np.array([1.0, 1.0])
+        diagram.set_utility("V2", Y_V2)
 
     def test_set_probabilities(self):
         '''
@@ -286,11 +314,19 @@ class TestInfluenceDiagram():
         diagram = pdp.InfluenceDiagram()
         O = pdp.ChanceNode("O", [], ["1", "2"])
         diagram.add_node(O)
+        O2 = pdp.ChanceNode("O2", [], ["1", "2"])
+        diagram.add_node(O2)
+
         diagram.generate_arcs()
 
+        # try with a ProbabilityMatrix
         X_C = diagram.construct_probability_matrix("O")
         X_C[0] = 1
         diagram.set_probabilities("O", X_C)
+
+        # Try with a numpy matrix
+        X_C = np.array([1,0])
+        diagram.set_probabilities("O2", X_C)
 
     def test_num_states(self):
         '''
@@ -329,10 +365,8 @@ class TestInfluenceDiagram():
         Test getting path compatibility variable
         '''
         model = pdp.Model()
-        z = diagram_simple.decision_variables(model)
-        assert(type(z) == pdp.DecisionVariables)
 
-        x_s = diagram_simple.path_compatibility_variables(model, z)
+        x_s = diagram_simple.path_compatibility_variables(model)
         assert(type(x_s) == pdp.PathCompatibilityVariables)
 
         EV = diagram_simple.expected_value(model, x_s)
@@ -366,8 +400,4 @@ class TestInfluenceDiagram():
 
         U_distribution = diagram_simple.utility_distribution(Z)
         assert(type(U_distribution) == pdp.UtilityDistribution)
-
-
-
-
 
