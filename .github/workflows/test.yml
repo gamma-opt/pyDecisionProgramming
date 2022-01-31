@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: setup julia
-        uses: actions/setup-julia@latest
+        uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.julia-version }}
       - name: setup python
