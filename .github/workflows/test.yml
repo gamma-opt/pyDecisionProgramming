@@ -16,21 +16,21 @@ jobs:
           - 1.6.1
           - 1.6.0
         os: [ubuntu-latest]
-      steps:
-        - uses: actions/checkout@v2
-        - name: setup julia
-          - uses: julia-actions/setup-julia@latest
-            with:
-              version: ${{ matrix.julia-version }}
-        - name: setup python
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup julia
+        - uses: julia-actions/setup-julia@latest
+          with:
+            version: ${{ matrix.julia-version }}
+      - name: setup python
           uses: actions/setup-python@v2
-            with:
-              python-version: ${{ matrix.python-version }}
-        - name: install python deps
-          run: pip install -r requirements.txt
-        - name: install julia deps
-          run: pdp_setup_julia.py
-        - name: pytest
-          run: |
-            pytest
+          with:
+            python-version: ${{ matrix.python-version }}
+      - name: install python deps
+        run: pip install -r requirements.txt
+      - name: install julia deps
+        run: pdp_setup_julia.py
+      - name: pytest
+        run: |
+          pytest
 
