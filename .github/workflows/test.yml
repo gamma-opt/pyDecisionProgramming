@@ -29,7 +29,7 @@ jobs:
         run: |
           pip install -r dev-requirements.txt
       - name: install julia deps
-        run: pdp_setup_julia.py
+        run: pdp_setup_julia.jl
       - name: pytest
         run: |
           pytest
