@@ -83,7 +83,7 @@ def test_handle_index_syntax():
 @pytest.fixture
 def julianame1():
     name = pdp.JuliaName()
-    pdp.Main.eval(f'''
+    pdp.julia.eval(f'''
         {name._name} = 1
     ''')
     return name
@@ -92,7 +92,7 @@ def julianame1():
 @pytest.fixture
 def julianame2():
     name = pdp.JuliaName()
-    pdp.Main.eval(f'''
+    pdp.julia.eval(f'''
         {name._name} = 2
     ''')
     return name
