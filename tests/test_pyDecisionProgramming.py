@@ -360,6 +360,7 @@ class TestInfluenceDiagram():
         z = diagram_simple.decision_variables(model)
         assert(type(z) == pdp.DecisionVariables)
 
+    @pytest.mark.with_gurobi
     def test_model_build(self, diagram_simple):
         '''
         Test getting path compatibility variable
@@ -379,6 +380,7 @@ class TestInfluenceDiagram():
         )
         model.optimize()
 
+    @pytest.mark.with_gurobi
     def test_decision_strategy(self, diagram_simple):
         model = pdp.Model()
         z = diagram_simple.decision_variables(model)
