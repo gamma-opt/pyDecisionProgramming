@@ -45,6 +45,12 @@ For a detailed description of the DecisionProgramming, see it's documentation pa
    contingent-portfolio-programming
    CHD-preventative-care-allocation
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Reference:
+
+   api/modules
+
 
 
 Indices and tables
