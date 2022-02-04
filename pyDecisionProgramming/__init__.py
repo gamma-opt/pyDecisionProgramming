@@ -1,15 +1,15 @@
-# Import submodules
-import pyDecisionProgramming
 
 # Base features
-from .pyDecisionProgramming import InfluenceDiagram, Model, JuliaName
+from .juliaUtils import JuliaName
+from .Diagram import InfluenceDiagram
+from .JuMP import Model
 
 # Nodes
-from .pyDecisionProgramming import DecisionNode, ChanceNode, ValueNode
+from .Nodes import DecisionNode, ChanceNode, ValueNode
 
 # environment setup functions
-from .pyDecisionProgramming import setupProject, activate
+from .juliaUtils import setupProject, activate
 
 # Interface for setting julia variables
 # and running Julia code
-from .pyDecisionProgramming import julia
+from .juliaUtils import julia

@@ -206,8 +206,8 @@ indicate which applications are selected.
 
 .. code-block:: Python
 
-  x_T = pdp.JuMPArray(model, [n_DP, n_T], binary=True)
-  x_A = pdp.JuMPArray(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+  x_T = pdp.JuMP.Array(model, [n_DP, n_T], binary=True)
+  x_A = pdp.JuMP.Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
   pdp.julia.x_T = x_T
   pdp.julia.x_A = x_A
 
@@ -372,19 +372,19 @@ objective formulation presented in [#Salo]_:
 
 .. code-block:: Python
 
-  pdp.julia.patent_investment_cost = pdp.JuMPExpression(
+  pdp.julia.patent_investment_cost = pdp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}]",
       f"sum(x_T[i, t] * I_t[t] for t in 1:{n_T})"
   )
 
-  pdp.julia.application_investment_cost = pdp.JuMPExpression(
+  pdp.julia.application_investment_cost = pdp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
       f"sum(x_A[i, j, k, a] * I_a[a] for a in 1:{n_A})"
   )
 
-  pdp.julia.application_value = pdp.JuMPExpression(
+  pdp.julia.application_value = pdp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}, l=1:{n_CM}]",
       f"sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:{n_A})"

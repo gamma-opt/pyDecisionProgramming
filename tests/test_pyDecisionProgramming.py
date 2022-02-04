@@ -12,6 +12,9 @@ def test_setupProject():
     if os.path.exists("Manifest.toml"):
         os.remove("Manifest.toml")
 
+    if os.path.exists("Project.toml"):
+        os.remove("Project.toml")
+
     pdp.setupProject()
 
     assert(os.path.exists("Manifest.toml"))
@@ -22,7 +25,7 @@ def test_activate():
     Check that DecisionProgramming is available after
     pdp.activate()
     '''
-    if os.path.exists("Manifest.toml"):
+    if not os.path.exists("Manifest.toml"):
         pdp.setupProject()
 
     pdp.activate()
@@ -38,7 +41,7 @@ def test_random_number_generator():
     JuliaName and that the name is defined.
     '''
 
-    generator = pdp.random_number_generator()
+    generator = pdp.juliaUtils.random_number_generator()
     name = generator._name
 
     assert(pdp.julia.eval(f"isdefined(Main, :{name})"))
@@ -71,7 +74,7 @@ def test_handle_index_syntax():
     Check handle_index_syntax with a few examples
     '''
 
-    handle = pdp.pyDecisionProgramming.handle_index_syntax
+    handle = pdp.juliaUtils.handle_index_syntax
 
     assert(handle(1)==2)
     assert(handle('a')=='"a"')
@@ -358,7 +361,7 @@ class TestInfluenceDiagram():
         '''
         model = pdp.Model()
         z = diagram_simple.decision_variables(model)
-        assert(type(z) == pdp.DecisionVariables)
+        assert(type(z) == pdp.Diagram.DecisionVariables)
 
     @pytest.mark.with_gurobi
     def test_model_build(self, diagram_simple):
@@ -368,10 +371,10 @@ class TestInfluenceDiagram():
         model = pdp.Model()
 
         x_s = diagram_simple.path_compatibility_variables(model)
-        assert(type(x_s) == pdp.pyDecisionProgramming.PathCompatibilityVariables)
+        assert(type(x_s) == pdp.Diagram.PathCompatibilityVariables)
 
         EV = diagram_simple.expected_value(model, x_s)
-        assert(type(EV) == pdp.pyDecisionProgramming.ExpectedValue)
+        assert(type(EV) == pdp.Diagram.ExpectedValue)
 
         model.objective(EV, "Max")
         model.setup_Gurobi_optimizer(
@@ -395,11 +398,11 @@ class TestInfluenceDiagram():
         model.optimize()
 
         Z = z.decision_strategy()
-        assert(type(Z) == pdp.pyDecisionProgramming.DecisionStrategy)
+        assert(type(Z) == pdp.Diagram.DecisionStrategy)
 
         S_probabilities = diagram_simple.state_probabilities(Z)
-        assert(type(S_probabilities) == pdp.pyDecisionProgramming.StateProbabilities)
+        assert(type(S_probabilities) == pdp.Diagram.StateProbabilities)
 
         U_distribution = diagram_simple.utility_distribution(Z)
-        assert(type(U_distribution) == pdp.pyDecisionProgramming.UtilityDistribution)
+        assert(type(U_distribution) == pdp.Diagram.UtilityDistribution)
 

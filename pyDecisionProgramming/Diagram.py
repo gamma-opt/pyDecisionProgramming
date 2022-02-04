@@ -1,206 +1,9 @@
-from __future__ import annotations
-import time
-from julia import Julia
-from julia.core import JuliaError
-
-# Create an instance of julia without incremental precompilation.
-# This does not seem to affect performance much
-base_julia = Julia(compiled_modules=False)
-
-# These must be imported after creating the julia name space
-from julia import Pkg
-from julia import Main
-from julia import DecisionProgramming as jdp
-import uuid
-
-
-# Random number generator on Julia side
-_random_number_generator = None
-
-
-def random_number_generator(seed=None):
-    ''' Return a random number generator on the Julia side. MersenneTwister is the
-    only option here.
-
-    Parameters
-    ----------
-    seed : integer
-        A long integer used as a seed when creating the generator
-
-    Returns
-    -------
-    pdp.JuliaName
-        The random number generator wrapped in a JuliaName
-
-    '''
-    global _random_number_generator
-
-    if _random_number_generator is None:
-        if seed is None:
-            seed = int(time.time())
-        _random_number_generator = JuliaName()
-        Main.eval('using Random')
-        Main.eval(f'{_random_number_generator._name} = MersenneTwister({seed})')
-    return _random_number_generator
-
-
-class JuliaMain():
-    ''' Maps to julia.main from the julia library, unless the setting
-    an object implemented here (inherits JuliaName). JuliaNames are
-    assigned directly.
-
-    '''
-    def __setattr__(self, name, value):
-        if type(value) == JuliaName or JuliaName in type(value).__bases__:
-            Main.eval(f'{name} = {value._name}')
-        else:
-            Main.__setattr__(name, value)
-
-    def __getattr__(self, name):
-        if Main.eval(f"isdefined(Main, :{name})"):
-            return Main.__getattr__(name)
-        else:
-            raise AttributeError(f'{name} not defined in Julia name space')
-
-    def eval(self, command):
-        ''' Evaluate Julia code
-
-        Parameters
-        ----------
-        command: string
-            A string containing Julia code
-
-        '''
-        return Main.eval(command)
-
-
-# Expose the Julia runner as pdp.julia
-julia = JuliaMain()
-
-
-def load_libs():
-    ''' Load Julia dependencies
-
-    '''
-
-    Main.eval('using DecisionProgramming')
-    Main.eval('using Gurobi')
-    Main.eval('using JuMP')
-
-    # Define a PathUtility type on Julia side
-    command = f'''struct PathUtility <: AbstractPathUtility
-            data::Array{{AffExpr}}
-        end
-        Base.getindex(U::PathUtility, i::State) = getindex(U.data, i)
-        Base.getindex(U::PathUtility, I::Vararg{{State,N}}) where N = getindex(U.data, I...)
-        (U::PathUtility)(s::Path) = value.(U[s...])
-    '''
-    Main.eval(command)
-
-
-def activate():
-    """ Activate a Julia environment in the working
-    directory and load requirements
-
-    """
-
-    Pkg.activate(".")
-    load_libs()
-
-
-def setupProject():
-    """ Activate a Julia environment in the working
-    directory and install DecisionProgramming,
-    Gurobi and JuMP
-
-    """
-
-    Pkg.activate(".")
-    github_url = "https://github.com/gamma-opt/DecisionProgramming.jl.git"
-    Pkg.add(url=github_url)
-    Pkg.add("Gurobi")
-    Pkg.build("Gurobi")
-    Pkg.add("JuMP")
-
-    load_libs()
-
-
-def handle_index_syntax(key):
-    """ Turn a key tuple into Julia slicing and indexing syntax
-
-    Parameters
-    ----------
-    key: String, integer, slice or a tuple of these
-
-    Returns
-    -------
-    string
-        The index string in Julia format
-
-    """
-    if isinstance(key, tuple):
-        indexes = []
-        for index in key:
-            if index == slice(None):
-                indexes += ':'
-            elif isinstance(index, str):
-                indexes += [f'"{index}"']
-            elif isinstance(index, int):
-                indexes += [str(index+1)]
-            else:
-                raise IndexError('Index not must be string, integer or ":"')
-        index_string = ','.join(indexes)
-
-    elif key == slice(None):
-        index_string = ':'
-    elif isinstance(key, str):
-        index_string = f'"{key}"'
-    elif isinstance(key, int):
-        index_string = key+1
-    else:
-        raise IndexError('Index must be string, integer or ":"')
-
-    return index_string
-
-
-class JuliaName():
-    ''' Base class for all following Julia objects. Stores the object
-    name in the Julia main name space and defines string
-    representation from Julia.
-
-    '''
-    def __init__(self):
-        self._name = 'pyDP'+uuid.uuid4().hex[:10]
-
-    def __str__(self):
-        return Main.eval(f'repr({self._name})')
-
-    def __repr__(self):
-        return Main.eval(f'repr({self._name})')
-
-    def __getattr__(self, name):
-        if Main.eval(f"isdefined(Main, :{self._name})") and Main.eval(f"hasproperty({self._name}, :{name})"):
-            r = JuliaName()
-            Main.eval(f'{r._name} = {self._name}.{name}')
-            return r
-        raise AttributeError
-
-    def __getitem__(self, key):
-        r = JuliaName()
-        index_string = handle_index_syntax(key)
-        try:
-            Main.eval(f'{r._name} = {self._name}[{index_string}]')
-        except JuliaError as j:
-            raise IndexError(j)
-        return r
-
-    def __setitem__(self, key, value):
-        index_string = handle_index_syntax(key)
-        try:
-            command = f'{self._name}[{index_string}] = {value}'
-            Main.eval(command)
-        except JuliaError as j:
-            raise IndexError(j)
+''' Interface for Jump functionality necessary for optimizing models generated
+from diagrams.
+'''
+from .juliaUtils import JuliaName
+from .juliaUtils import random_number_generator
+from .juliaUtils import julia
 
 
 class InfluenceDiagram(JuliaName):
@@ -214,7 +17,7 @@ class InfluenceDiagram(JuliaName):
 
     def __init__(self):
         super().__init__()
-        Main.eval(f'{self._name} = InfluenceDiagram()')
+        julia.eval(f'{self._name} = InfluenceDiagram()')
 
     def build_random(self, n_C, n_D, n_V, m_C, m_D, states, seed=None):
         ''' Generate random decision diagram with n_C chance nodes, n_D
@@ -239,7 +42,7 @@ class InfluenceDiagram(JuliaName):
 
         '''
         rng = random_number_generator(seed)
-        Main.eval(f'''
+        julia.eval(f'''
             random_diagram!(
                 {rng._name}, {self._name},
                 {n_C}, {n_D}, {n_V}, {m_C}, {m_D},
@@ -261,7 +64,7 @@ class InfluenceDiagram(JuliaName):
         '''
         rng = random_number_generator(seed)
         print(rng)
-        Main.eval(f'''
+        julia.eval(f'''
             random_probabilities!(
                 {rng._name}, {self._name},
                 {node._name}; n_inactive={n_inactive}
@@ -287,7 +90,7 @@ class InfluenceDiagram(JuliaName):
 
         '''
         rng = random_number_generator(seed)
-        Main.eval(f'''
+        julia.eval(f'''
             random_utilities!(
                 {rng._name}, {self._name},
                 {node._name}; low={low}, high={high}
@@ -303,13 +106,13 @@ class InfluenceDiagram(JuliaName):
 
         """
         command = f'add_node!({self._name}, {node._name})'
-        Main.eval(command)
+        julia.eval(command)
 
     def generate_arcs(self):
         ''' Generate arc structures using nodes added to influence diagram, by ordering nodes, giving them indices and generating correct values for the vectors Names, I_j, states, S, C, D, V in the influence digram. Abstraction is created and the names of the nodes and states are only used in the user interface from here on.
 
         '''
-        Main.eval(f'generate_arcs!({self._name})')
+        julia.eval(f'generate_arcs!({self._name})')
 
     def set_probabilities(self, node, matrix):
         """ Set the probabilities of a ChanceNode
@@ -326,15 +129,15 @@ class InfluenceDiagram(JuliaName):
 
         """
         if isinstance(matrix, ProbabilityMatrix):
-            Main.eval(f'''add_probabilities!(
+            julia.eval(f'''add_probabilities!(
                 {self._name},
                 "{node}",
                 {matrix._name})
             ''')
         else:
-            Main.tmp = matrix
-            Main.eval('tmp = convert(Array{Float64}, tmp)')
-            Main.eval(f'add_probabilities!({self._name}, "{node}", tmp)')
+            julia.tmp = matrix
+            julia.eval('tmp = convert(Array{Float64}, tmp)')
+            julia.eval(f'add_probabilities!({self._name}, "{node}", tmp)')
 
     def set_utility(self, value, matrix):
         """ Set the utilities of a ValueNode
@@ -350,15 +153,15 @@ class InfluenceDiagram(JuliaName):
 
         """
         if isinstance(matrix, UtilityMatrix):
-            Main.eval(f'''add_utilities!(
+            julia.eval(f'''add_utilities!(
                 {self._name},
                 "{value}",
                 {matrix._name})
             ''')
         else:
-            Main.tmp = matrix
-            Main.eval('tmp = convert(Array{Float64}, tmp)')
-            Main.eval(f'add_utilities!({self._name}, "{value}", tmp)')
+            julia.tmp = matrix
+            julia.eval('tmp = convert(Array{Float64}, tmp)')
+            julia.eval(f'add_utilities!({self._name}, "{value}", tmp)')
 
     def generate(self,
                  default_probability=True,
@@ -384,11 +187,11 @@ class InfluenceDiagram(JuliaName):
                 Choice to use a negative path utility translation
 
         """
-        Main.default_probability = default_probability
-        Main.default_utility = default_utility
-        Main.positive_path_utility = positive_path_utility
-        Main.negative_path_utility = negative_path_utility
-        Main.eval(f'''generate_diagram!(
+        julia.default_probability = default_probability
+        julia.default_utility = default_utility
+        julia.positive_path_utility = positive_path_utility
+        julia.negative_path_utility = negative_path_utility
+        julia.eval(f'''generate_diagram!(
             {self._name};
             default_probability=default_probability,
             default_utility=default_utility,
@@ -410,10 +213,10 @@ class InfluenceDiagram(JuliaName):
             The number of states the given node has
 
         '''
-        Main.eval(f'''tmp = num_states(
+        julia.eval(f'''tmp = num_states(
             {self._name}, "{node}"
         )''')
-        return Main.tmp
+        return julia.tmp
 
     def index_of(self, name):
         ''' Find index of a given node.
@@ -429,7 +232,7 @@ class InfluenceDiagram(JuliaName):
             The index of the node in the diagram
 
         '''
-        return Main.eval(f'''index_of({self._name}, "{name}")''')-1
+        return julia.eval(f'''index_of({self._name}, "{name}")''')-1
 
     def set_path_utilities(self, expressions):
         ''' Use given expression as the path utilities of the diagram.
@@ -440,7 +243,7 @@ class InfluenceDiagram(JuliaName):
             A set of JuMP expression.
 
         '''
-        Main.eval(f'''
+        julia.eval(f'''
             {self._name}.U = PathUtility({expressions._name})
         ''')
 
@@ -650,7 +453,7 @@ class InfluenceDiagram(JuliaName):
             A set of path compatibility variables constructed for this diagram.
 
         '''
-        Main.eval(f'''
+        julia.eval(f'''
             lazy_probability_cut(model, self, path_compatibility_variables)
         ''')
 
@@ -672,7 +475,7 @@ class InfluenceDiagram(JuliaName):
             Adjusts conditional value at risk model to be compatible with the expected value expression if the probabilities were scaled there.
 
         '''
-        Main.eval(f'''
+        julia.eval(f'''
             conditional_value_at_risk(
                model, self,
                path_compatibility_variables,
@@ -682,169 +485,14 @@ class InfluenceDiagram(JuliaName):
         ''')
 
 
-class Model(JuliaName):
-    """ Wraps a JuMP optimizer model and decision model variables. """
-
-    def __init__(self):
-        super().__init__()
-        self.optimizer_set = False
-        Main.eval(f'{self._name} = Model()')
-
-    def setup_Gurobi_optimizer(self, *constraints):
-        ''' Set Gurobi as the optimizer for this model.
-
-        Parameters
-        ----------
-        constraints -- Tuple
-            Formatted as (constraint_name, constraint_value)
-
-        '''
-
-        command = '''optimizer = optimizer_with_attributes(
-                     () -> Gurobi.Optimizer(Gurobi.Env())'''
-
-        for constraint in constraints:
-            command += f''',
-                         "{constraint[0]}" => {constraint[1]}'''
-
-        command += ')'
-
-        Main.eval(command)
-        Main.eval(f'set_optimizer({self._name}, optimizer)')
-        self.optimizer_set = True
-
-    def objective(self, objective, operator="Max"):
-        """ Set the objective for the optimizer
-
-        Parameters
-        ----------
-        op: "Min" or "Max"
-            Whether to minimize or maximize the objective
-
-        expected_value: ExpectedValue
-            An ExpectedValue object. Describes the objective function.
-
-        """
-        if type(objective) == ExpectedValue:
-            Main.eval(f'''@objective(
-                {self._name}, {operator},
-                {objective._name})
-            ''')
-        elif type(objective) == str:
-            # Note: ending the command with ;0 to prevent
-            # Julia from returning the object. Otherwise
-            # the Python julia library will try to convert
-            # this to a Python object and cause an exception.
-            command = f'''@objective(
-                {self._name},
-                {operator},
-                {objective}
-            ); 0'''
-            Main.eval(command)
-
-    def optimize(self):
-        ''' Run the current optimizer '''
-
-        if not self.optimizer_set:
-            self.setup_Gurobi_optimizer()
-
-        Main.eval(f'optimize!({self._name})')
-
-    def constraint(self, *args):
-        ''' Set a model constraints
-
-        loop: String (optional)
-            Set of loop variables in the JuMP constraint format (see the
-            contingent portfolio analysis page in examples)
-
-        constraint: String
-            The contraints in the JuMP format (see the contingent portfolio
-             analysis page in examples)
-
-        '''
-        argument_text = ",".join(args)
-        # Note: ending the command with ;0 to prevent
-        # Julia from returning the object. Otherwise
-        # the Python julia library will try to convert
-        # this to a Python object and cause an exception.
-        Main.eval(f'''@constraint(
-            {self._name},
-            {argument_text}
-        ); 0''')
-
-
-class JuMPExpression(JuliaName):
-    ''' Builds a JuMP expression from a string or set of strings.
-
-    model: Model
-        A pyDecisionProgramming Model object
-
-    loop: String (optional)
-        Set of loop variables in the JuMP constraint format (see the
-        contingent portfolio analysis page in examples)
-
-    constraint: String
-        The contraints in the JuMP format (see the contingent portfolio
-         analysis page in examples)
-
-    '''
-
-    def __init__(self, model, *args):
-        super().__init__()
-        argument_text = ",".join(args)
-        # Note: ending the command with ;0 to prevent
-        # Julia from returning the object. Otherwise
-        # the Python julia library will try to convert
-        # this to a Python object and cause an exception.
-        command = f'''{self._name} = @expression(
-            {model._name},
-            {argument_text}
-        ); 0'''
-        Main.eval(command)
-
-
-class JuMPArray(JuliaName):
-    ''' An array of JuMP variables. Makes it easier to define contraints
-    using the @constraint syntax.
-
-    Parameters
-    ----------
-
-    model: Model
-        A pyDecisionProgramming Model object
-
-    dims: List of Integers
-        A list corresponding to the size of the array in each of its
-        dimensions.
-
-    binary: Boolean (optional, default False)
-        Wether the variables are boolean.
-
-    '''
-
-    def __init__(self, model, dims, binary=False):
-        super().__init__()
-        binary_arg = ""
-        if binary:
-            binary_arg = "binary=true, "
-        command = f'''
-            tmp = Array{{VariableRef}}(undef, {dims}...)
-            for i in eachindex(tmp)
-                tmp[i] = @variable({model._name}, {binary_arg})
-            end
-            {self._name} = tmp
-        '''
-        Main.eval(command)
-
-
 class ExpressionPathUtilities(JuliaName):
     ''' An expression that can be used to set path utilities.
 
     Parameters
     ----------
 
-    model: Model
-        A pyDecisionProgramming Model object
+    model: pdp.Model
+        A JuMP Model object
 
     diagram: pdp.InfluenceDiagram
         The influence diagram the model was constructed with.
@@ -860,7 +508,7 @@ class ExpressionPathUtilities(JuliaName):
         command = f''' {self._name} =
             [{expression} for {path_name} in paths({diagram._name}.S)]
         '''
-        Main.eval(command)
+        julia.eval(command)
 
 
 class DecisionVariables(JuliaName):
@@ -868,11 +516,11 @@ class DecisionVariables(JuliaName):
 
     Parameters
     ----------
-    model: Model
-        A pyDecisionProgramming Model object
+    model: pdp.Model
+        A JuMP Model object
 
-    diagram: Diagram
-        A pyDecisionProgramming Diagram object
+    diagram: pdp.InfluenceDiagram
+        A DecisionProgramming Diagram object
 
     names: bool
         Use names or have anonymous Jump variables
@@ -885,15 +533,15 @@ class DecisionVariables(JuliaName):
         super().__init__()
         self.diagram = diagram
         self.model = model
-        Main.tmp1 = names
-        Main.tmp2 = name
+        julia.tmp1 = names
+        julia.tmp2 = name
         commmand = f'''{self._name} = DecisionVariables(
             {model._name},
             {diagram._name};
             names=tmp1,
             name=tmp2
         )'''
-        Main.eval(commmand)
+        julia.eval(commmand)
 
     def decision_strategy(self):
         ''' Extract the optimal decision strategy.
@@ -920,7 +568,7 @@ class DecisionStrategy(JuliaName):
     def __init__(self, decision_variables):
         super().__init__()
         commmand = f'{self._name} = DecisionStrategy({decision_variables._name})'
-        Main.eval(commmand)
+        julia.eval(commmand)
 
 
 class PathCompatibilityVariables(JuliaName):
@@ -982,8 +630,8 @@ class PathCompatibilityVariables(JuliaName):
         self.model = model
         self.diagram = diagram
         self.decision_variables = decision_variables
-        Main.names = names
-        Main.name = name
+        julia.names = names
+        julia.name = name
         forbidden_str = ""
         if forbidden_paths is not None:
             forbidden_paths = [x._name for x in forbidden_paths]
@@ -993,8 +641,8 @@ class PathCompatibilityVariables(JuliaName):
         if fixed is not None:
             fixed_str = f"fixed = {fixed._name},"
 
-        Main.probability_cut = probability_cut
-        Main.probability_scale_factor = probability_scale_factor
+        julia.probability_cut = probability_cut
+        julia.probability_scale_factor = probability_scale_factor
         command = f'''{self._name} = PathCompatibilityVariables(
             {model._name},
             {diagram._name},
@@ -1006,7 +654,7 @@ class PathCompatibilityVariables(JuliaName):
             probability_cut = probability_cut,
             probability_scale_factor = probability_scale_factor
         )'''
-        Main.eval(command)
+        julia.eval(command)
 
 
 class ExpectedValue(JuliaName):
@@ -1029,7 +677,7 @@ class ExpectedValue(JuliaName):
             {diagram._name},
             {pathcompatibility._name}
         )'''
-        Main.eval(commmand)
+        julia.eval(commmand)
 
 
 class StateProbabilities(JuliaName):
@@ -1049,11 +697,11 @@ class StateProbabilities(JuliaName):
         self.diagram = diagram
         self.decision_strategy = decision_strategy
         commmand = f'{self._name} = StateProbabilities({diagram._name}, {decision_strategy._name})'
-        Main.eval(commmand)
+        julia.eval(commmand)
 
     def print_decision_strategy(self):
         ''' Print the decision strategy. '''
-        Main.eval(f'''print_decision_strategy(
+        julia.eval(f'''print_decision_strategy(
             {self.diagram._name},
             {self.decision_strategy._name},
             {self._name})''')
@@ -1062,7 +710,7 @@ class StateProbabilities(JuliaName):
         ''' Print the state probabilities. '''
         # Format the nodes list using " instead of '
         node_string = str(nodes).replace("\'", "\"")
-        Main.eval(f'''print_state_probabilities(
+        julia.eval(f'''print_state_probabilities(
             {self.diagram._name},
             {self._name},
             {node_string})''')
@@ -1085,19 +733,19 @@ class UtilityDistribution(JuliaName):
         self.diagram = diagram
         self.decision_strategy = decision_strategy
         commmand = f'{self._name} = UtilityDistribution({diagram._name}, {decision_strategy._name})'
-        Main.eval(commmand)
+        julia.eval(commmand)
 
     def print_distribution(self):
         ''' Print the utility distribution. '''
-        Main.eval(f'''print_utility_distribution({self._name})''')
+        julia.eval(f'''print_utility_distribution({self._name})''')
 
     def print_statistics(self):
         '''Print statistics about the utility distribution.'''
-        Main.eval(f'''print_statistics({self._name})''')
+        julia.eval(f'''print_statistics({self._name})''')
 
     def print_risk_measures(self, alpha, format="%f"):
         '''Print risk measures.'''
-        Main.eval(f'''
+        julia.eval(f'''
             print_risk_measures(
                 {self._name}, {alpha}; fmt={format}
             )
@@ -1105,87 +753,17 @@ class UtilityDistribution(JuliaName):
 
     def value_at_risk(self, alpha):
         ''' Print the value at risk. '''
-        Main.eval(f'''
+        julia.eval(f'''
             value_at_risk({self._name}, {alpha})
         ''')
 
     def conditional_value_at_risk(self, alpha):
         ''' Print the conditional value at rist '''
-        Main.eval(f'''
+        julia.eval(f'''
             conditional_value_at_risk(
                 {self._name}, {alpha}
             )
         ''')
-
-
-class ChanceNode(JuliaName):
-    """ Create a change node that can be added into a Diagram
-
-    Parameters
-    ----------
-    id: str
-        The id of the node
-
-    nodes: list(str)
-        List of nodes connected to this node
-
-    connected_nodes:
-        List of node connected_nodes
-
-    """
-
-    def __init__(self, id, nodes, connected_nodes):
-        super().__init__()
-
-        Main.tmp = jdp.ChanceNode(id, nodes, connected_nodes)
-        Main.eval(f'{self._name} = tmp')
-
-
-class DecisionNode(JuliaName):
-    """ Create a decision node that can be added into a Diagram
-
-    Parameters
-    ----------
-    id: str
-        The id of the node
-
-    nodes: list(str)
-        List of nodes connected to this node
-
-    connected_nodes:
-        List of node connected_nodes
-
-    """
-
-    def __init__(self, id, nodes, connected_nodes):
-        super().__init__()
-        Main.tmp = jdp.DecisionNode(id, nodes, connected_nodes)
-        Main.eval(f'{self._name} = tmp')
-
-
-class ValueNode(JuliaName):
-    """ Create a value node that can be added into a Diagram
-
-    Parameters
-    ----------
-    id: str
-        The id of the node
-
-    nodes: list(str)
-        List of nodes connected to this node
-
-    connected_nodes:
-        List of node connected_nodes
-
-    """
-
-    def __init__(self, id, nodes):
-        super().__init__()
-
-        self.leaves = nodes
-
-        Main.tmp = jdp.ValueNode(id, nodes)
-        Main.eval(f'{self._name} = tmp')
 
 
 class ProbabilityMatrix(JuliaName):
@@ -1205,14 +783,14 @@ class ProbabilityMatrix(JuliaName):
     def __init__(self, diagram, node):
         super().__init__()
         self.diagram = diagram
-        Main.eval(f'''{self._name} = ProbabilityMatrix(
+        julia.eval(f'''{self._name} = ProbabilityMatrix(
            {diagram._name},
            "{node}"
         )''')
 
     def size(self):
         ''' Return the size of the nodes information set. '''
-        return Main.eval(f'''size({self._name})''')
+        return julia.eval(f'''size({self._name})''')
 
 
 class UtilityMatrix(JuliaName):
@@ -1230,7 +808,7 @@ class UtilityMatrix(JuliaName):
     def __init__(self, diagram, node):
         super().__init__()
         self.diagram = diagram
-        Main.eval(f'''{self._name} = UtilityMatrix(
+        julia.eval(f'''{self._name} = UtilityMatrix(
            {diagram._name},
            "{node}"
         )''')
@@ -1256,7 +834,7 @@ class ForbiddenPath(JuliaName):
         super().__init__()
         node_string = str(nodes).replace("\'", "\"")
         states_string = str(states).replace("\'", "\"")
-        Main.eval(f'''{self._name} = ForbiddenPath(
+        julia.eval(f'''{self._name} = ForbiddenPath(
             {diagram._name},
             {node_string},
             {states_string}
@@ -1286,7 +864,7 @@ class FixedPath(JuliaName):
             else:
                 path_string += f'''"{key}" => {val},'''
         path_string += ")"
-        Main.eval(f'''{self._name} = FixedPath(
+        julia.eval(f'''{self._name} = FixedPath(
             {diagram._name},
             {path_string}
         )''')
@@ -1307,15 +885,15 @@ class Paths(JuliaName):
     def __init__(self, states, fixed=None):
         super().__init__()
         if type(states) == list and type(states[0]) == int:
-            Main.eval(f'tmp = States(State.({states}))')
+            julia.eval(f'tmp = States(State.({states}))')
         elif type(states) == JuliaName:
-            Main.eval(f'tmp = {states._name}')
+            julia.eval(f'tmp = {states._name}')
 
         if fixed is None:
-            Main.eval('tmp = paths(tmp)')
+            julia.eval('tmp = paths(tmp)')
         else:
-            Main.eval(f'tmp = paths(tmp; fixed={fixed})')
-        self._name = Main.tmp
+            julia.eval(f'tmp = paths(tmp; fixed={fixed})')
+        self._name = julia.tmp
 
     def __iter__(self):
         self._iterator = iter(self._name)
@@ -1351,20 +929,20 @@ class CompatiblePaths(JuliaName):
         super().__init__()
 
         if fixed is None:
-            Main.eval('''
+            julia.eval('''
                 tmp = CompatiblePaths(
                     {diagram._name},
                     {decision_strategy._name}
                 )
             ''')
         else:
-            Main.eval(f'''
+            julia.eval(f'''
                 tmp = CompatiblePaths(
                     {diagram._name},
                     {decision_strategy._name}; fixed={fixed}
                 )
             ''')
-        self._name = Main.tmp
+        self._name = julia.tmp
 
     def __iter__(self):
         self._iterator = iter(self._name)
@@ -1375,3 +953,5 @@ class CompatiblePaths(JuliaName):
         if path:
             path = [i-1 for i in path]
         return path
+
+
