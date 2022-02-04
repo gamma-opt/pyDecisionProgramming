@@ -71,7 +71,7 @@ def test_handle_index_syntax():
     Check handle_index_syntax with a few examples
     '''
 
-    handle = pdp.handle_index_syntax
+    handle = pdp.pyDecisionProgramming.handle_index_syntax
 
     assert(handle(1)==2)
     assert(handle('a')=='"a"')
@@ -142,7 +142,7 @@ class TestJuliaName():
         '''
         Check accessing by attribute
         '''
-        pdp.Main.eval(f'''
+        pdp.julia.eval(f'''
             {julianame1._name} = InfluenceDiagram()
         ''')
 
@@ -160,7 +160,7 @@ class TestJuliaName():
         '''
         # create and array in Julia and assign it to the name
         pdp.julia.l = [1, 2, 3, 4]
-        pdp.Main.eval(f'''
+        pdp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
@@ -186,7 +186,7 @@ class TestJuliaName():
         '''
         # create and array in Julia and assign it to the name
         pdp.julia.l = [1, 2, 3, 4]
-        pdp.Main.eval(f'''
+        pdp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
@@ -208,7 +208,7 @@ class TestJuliaName():
         '''
         # create and array in Julia and assign it to the name
         pdp.julia.l = [1, 2, 3, 4]
-        pdp.Main.eval(f'''
+        pdp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
@@ -227,7 +227,7 @@ class TestJuliaName():
         '''
         # create and array in Julia and assign it to the name
         pdp.julia.l = [1, 2, 3, 4]
-        pdp.Main.eval(f'''
+        pdp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
@@ -368,10 +368,10 @@ class TestInfluenceDiagram():
         model = pdp.Model()
 
         x_s = diagram_simple.path_compatibility_variables(model)
-        assert(type(x_s) == pdp.PathCompatibilityVariables)
+        assert(type(x_s) == pdp.pyDecisionProgramming.PathCompatibilityVariables)
 
         EV = diagram_simple.expected_value(model, x_s)
-        assert(type(EV) == pdp.ExpectedValue)
+        assert(type(EV) == pdp.pyDecisionProgramming.ExpectedValue)
 
         model.objective(EV, "Max")
         model.setup_Gurobi_optimizer(
@@ -395,11 +395,11 @@ class TestInfluenceDiagram():
         model.optimize()
 
         Z = z.decision_strategy()
-        assert(type(Z) == pdp.DecisionStrategy)
+        assert(type(Z) == pdp.pyDecisionProgramming.DecisionStrategy)
 
         S_probabilities = diagram_simple.state_probabilities(Z)
-        assert(type(S_probabilities) == pdp.StateProbabilities)
+        assert(type(S_probabilities) == pdp.pyDecisionProgramming.StateProbabilities)
 
         U_distribution = diagram_simple.utility_distribution(Z)
-        assert(type(U_distribution) == pdp.UtilityDistribution)
+        assert(type(U_distribution) == pdp.pyDecisionProgramming.UtilityDistribution)
 
