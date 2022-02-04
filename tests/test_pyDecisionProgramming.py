@@ -9,7 +9,7 @@ def test_setupProject():
     Check that the setupProject function creates an
     environment.
     '''
-    if not os.path.exists("Manifest.toml"):
+    if os.path.exists("Manifest.toml"):
         os.remove("Manifest.toml")
 
     pdp.setupProject()
@@ -22,7 +22,7 @@ def test_activate():
     Check that DecisionProgramming is available after
     pdp.activate()
     '''
-    if not os.path.exists("Manifest.toml"):
+    if os.path.exists("Manifest.toml"):
         pdp.setupProject()
 
     pdp.activate()
