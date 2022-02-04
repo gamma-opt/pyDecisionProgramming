@@ -5,7 +5,7 @@ import pyDecisionProgramming
 from .pyDecisionProgramming import InfluenceDiagram, Model, JuliaName
 
 # Nodes
-from .pyDecisionProgramming import DecisionNode, ChanceNode, JuliaName
+from .pyDecisionProgramming import DecisionNode, ChanceNode, ValueNode
 
 # environment setup functions
 from .pyDecisionProgramming import setupProject, activate
