@@ -4,38 +4,12 @@ pyDecisionProgramming package
 Submodules
 ----------
 
-pyDecisionProgramming.Nodes module
-----------------------------------
+.. toctree::
 
-.. automodule:: pyDecisionProgramming.Nodes
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyDecisionProgramming.Diagram module
-------------------------------------
-
-.. automodule:: pyDecisionProgramming.Diagram
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyDecisionProgramming.JuMP module
----------------------------------
-
-.. automodule:: pyDecisionProgramming.JuMP
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyDecisionProgramming.juliaUtils module
----------------------------------------
-
-.. automodule:: pyDecisionProgramming.juliaUtils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   pyDecisionProgramming.Diagram
+   pyDecisionProgramming.JuMP
+   pyDecisionProgramming.Nodes
+   pyDecisionProgramming.juliaUtils
 
 Module contents
 ---------------
