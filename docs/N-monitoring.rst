@@ -231,17 +231,17 @@ in the back-end. For instance, the load states
 :math:`high` and :math:`low` are referred to as 1 and 2.
 The same applies for the action states :math:`yes` and
 :math:`no`, they are states 1 and 2. The
-:python:`pdp.Paths` class allows us to iterate over the
+:python:`pdp.Diagram.Paths` class allows us to iterate over the
 subpaths of specific nodes. In these paths, the states are
 referred to by their indices. Using this information, we
 can easily iterate over the information states using the
-:python:`pdp.Paths` class and enter the probability
+:python:`pdp.Diagram.Paths` class and enter the probability
 values into the probability matrix.
 
 .. code-block:: Python
 
    x, y = np.random.random(2)
-   for path in pdp.Paths([2]*N):
+   for path in pdp.Diagram.Paths([2]*N):
        forticications = [fortification(k, a) for k, a in enumerate(path)]
        denominator = np.exp(b * np.sum(forticications))
        X_F[(0, *path, 0)] = max(x, 1-x) / denominator
@@ -301,7 +301,7 @@ probabilities were added above.
 
 .. code-block:: Python
 
-  for path in pdp.Paths([2]*N):
+  for path in pdp.Diagram.Paths([2]*N):
       forticications = [fortification(k, a) for k, a in enumerate(path)]
       cost = -sum(forticications)
       Y_T[(0, *path)] = 0 + cost

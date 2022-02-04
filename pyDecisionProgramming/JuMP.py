@@ -49,7 +49,7 @@ class Model(JuliaName):
             An ExpectedValue object. Describes the objective function.
 
         """
-        if type(objective) == JuliaName:
+        if type(objective) == ExpectedValue:
             julia.eval(f'''@objective(
                 {self._name}, {operator},
                 {objective._name})
@@ -65,6 +65,9 @@ class Model(JuliaName):
                 {objective}
             ); 0'''
             julia.eval(command)
+        else:
+            raise ValueError("expected a pdp.Diagram.ExpectedValue object"
+            + " or a string")
 
     def optimize(self):
         ''' Run the current optimizer '''

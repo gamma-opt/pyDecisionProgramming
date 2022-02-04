@@ -59,7 +59,7 @@ for i in range(N):
 X_F = diagram.construct_probability_matrix("F")
 
 x, y = np.random.random(2)
-for path in pdp.Paths([2]*N):
+for path in pdp.Diagram.Paths([2]*N):
     forticications = [fortification(k, a) for k, a in enumerate(path)]
     denominator = np.exp(b * np.sum(forticications))
     X_F[(0, *path, 0)] = max(x, 1-x) / denominator
@@ -71,7 +71,7 @@ diagram.set_probabilities("F", X_F)
 
 Y_T = diagram.construct_utility_matrix('T')
 
-for path in pdp.Paths([2]*N):
+for path in pdp.Diagram.Paths([2]*N):
     forticications = [fortification(k, a) for k, a in enumerate(path)]
     cost = -sum(forticications)
     Y_T[(0, *path)] = 0 + cost

@@ -96,7 +96,7 @@ the probability of low competitiveness.
 
 .. code-block:: Python
 
-  X_CT = pdp.ProbabilityMatrix(diagram, "CT")
+  X_CT = diagram.construct_probability_matrix("CT")
   X_CT[0, :] = [1/2, 1/3, 1/6]
   X_CT[1, :] = [1/3, 1/3, 1/3]
   X_CT[2, :] = [1/6, 1/3, 1/2]
@@ -113,7 +113,7 @@ both increase the probability of high market share.
 
 .. code-block:: Python
 
-  X_CM = pdp.ProbabilityMatrix(diagram, "CM")
+  X_CM = diagram.construct_probability_matrix("CM")
   X_CM[0, 0, :] = [2/3, 1/4, 1/12]
   X_CM[0, 1, :] = [1/2, 1/3, 1/6]
   X_CM[0, 2, :] = [1/3, 1/3, 1/3]
@@ -149,7 +149,7 @@ path activation.
 .. code-block:: Python
 
   model = pdp.Model()
-  z = pdp.DecisionVariables(model, diagram)
+  z = diagram.decision_variables(model)
 
 Creating problem specific variables
 ...................................
@@ -417,8 +417,8 @@ for this strategy is 1.71.
 
 .. code-block:: Python
 
-  Z = pdp.DecisionStrategy(z)
-  S_probabilities = pdp.StateProbabilities(diagram, Z)
+  Z = z.decision_strategy()
+  S_probabilities = diagram.state_probabilities(Z)
 
 .. code-block::
 
@@ -450,7 +450,7 @@ utility distribution.
   pdp.julia.CT_i = diagram.index_of("CT") + 1
   pdp.julia.DA_i = diagram.index_of("DA") + 1
   pdp.julia.CM_i = diagram.index_of("CM") + 1
-  path_utilities = pdp.ExpressionPathUtilities(
+  path_utilities = pdp.Diagram.ExpressionPathUtilities(
       model, diagram,
       f'''sum(x_A[s[index_of(diagram, "DP")], s[index_of(diagram, "CT")], s[index_of(diagram, "DA")], a] * (V_A[s[index_of(diagram, "CM")], a] - I_a[a]) for a in 1:{n_A}) -
           sum(x_T[s[index_of(diagram, "DP")], t] * I_t[t] for t in 1:{n_T})
@@ -462,7 +462,7 @@ utility distribution.
 
 .. code-block:: Python
 
-  U_distribution = pdp.UtilityDistribution(diagram, Z)
+  U_distribution = diagram.utility_distribution(Z)
 
 
 .. code-block::
