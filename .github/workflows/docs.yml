@@ -23,6 +23,8 @@ jobs:
       - name: install deps
         run: |
           pip install -r dev-requirements.txt
+      - name: install julia deps
+        run: pdp_setup_julia.jl
       - name: sphinx
         run: |
           cd docs
