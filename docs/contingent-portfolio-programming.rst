@@ -1,6 +1,9 @@
 Contingent Portfolio Programming
 ================================
 
+.. role:: python(code)
+   :language: python
+
 .. warning::
 
   This example discusses adding constraints and decision
