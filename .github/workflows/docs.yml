@@ -8,8 +8,14 @@ jobs:
       matrix:
         python-version:
           - 3.8
+        julia-version:
+          - 1.6.2
     steps:
       - uses: actions/checkout@v2
+      - name: setup julia
+        uses: julia-actions/setup-julia@latest
+        with:
+          version: ${{ matrix.julia-version }}
       - name: setup python
         uses: actions/setup-python@v2
         with:
