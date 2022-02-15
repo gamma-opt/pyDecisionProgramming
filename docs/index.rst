@@ -9,7 +9,7 @@ PyDecisionProgramming
 A Python interface to `DecisionProgramming.jl`_.
 Decision Programming is a library for solving *multi-stage* decision problems *under uncertainty*.
 
-For a detailed description of the DecisionProgramming, see it's documentation pages:
+For a detailed description of the DecisionProgramming, see its documentation pages:
 
 1. `Decision Programming`_
 2. `Influence Diagram`_
