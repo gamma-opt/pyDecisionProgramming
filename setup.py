@@ -12,5 +12,5 @@ setup(
    author_email='jarno.rantaharju@aalto.fi',
    packages=['pyDecisionProgramming'],
    scripts=['scripts/pdp_setup_julia.jl'],
-   requires=requirements
+   install_requires=requirements
 )
