@@ -14,7 +14,7 @@ with open(readme, "r") as readme_file:
     long_description = readme_file.read()
 
 setup(
-   name='pyDecisionProgramming',
+   name='DecisionProgramming',
    version='1.0',
    description='Python interface for DecisionProgramming.jl',
    long_description=long_description,
