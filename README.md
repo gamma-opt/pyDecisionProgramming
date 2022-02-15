@@ -23,7 +23,7 @@ as [JuMP](https://jump.dev/) extension.
 2. Install pyDecisionProgramming:
 
    ```
-   pip install https://github.com/gamma-opt/pyDecisionProgramming.git
+   pip install git+https://github.com/gamma-opt/pyDecisionProgramming.git
    ```
 
 3. Install Julia requirements
