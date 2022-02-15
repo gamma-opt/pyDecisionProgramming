@@ -1,13 +1,15 @@
 from setuptools import setup
-from os.path import join, dirname
+from os import path
 
+package_path = path.abspath(path.dirname(__file__))
+print(package_path)
 # Load requirements from requirements.txt
-requirementstxt = join(dirname(__file__), "requirements.txt")
-with open(requirementstxt, "r") as requirements_file:
+requirements = path.join(package_path, "requirements.txt")
+with open(requirements, "r") as requirements_file:
     requirements = [line.strip() for line in requirements_file if line.strip()]
 
 # Load the README file as the long description
-readme = join(dirname(__file__), "README.md")
+readme = path.join(package_path, "README.md")
 with open(readme, "r") as readme_file:
     long_description = readme_file.read()
 
