@@ -6,7 +6,7 @@ requirements = [line.strip() for line in open(requirementstxt, "r") if line.stri
 
 setup(
    name='pyDecisionProgramming',
-   version='0',
+   version='1.0',
    description='Python interface for DecisionProgramming.jl',
    author='Jarno Rantaharju',
    author_email='jarno.rantaharju@aalto.fi',
