@@ -10,6 +10,7 @@ setup(
    description='Python interface for DecisionProgramming.jl',
    author='Jarno Rantaharju',
    author_email='jarno.rantaharju@aalto.fi',
+   license="MIT",
    packages=['pyDecisionProgramming'],
    scripts=['scripts/pdp_setup_julia.jl'],
    install_requires=requirements
