@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DecisionProgramming.Diagram &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../">Module code</a> &raquo;</li>
+      <li>DecisionProgramming.Diagram</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for DecisionProgramming.Diagram</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39; Interface for Jump functionality necessary for optimizing models generated</span>
+<span class="sd">from diagrams.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">.juliaUtils</span> <span class="kn">import</span> <span class="n">JuliaName</span>
+<span class="kn">from</span> <span class="nn">.juliaUtils</span> <span class="kn">import</span> <span class="n">random_number_generator</span>
+<span class="kn">from</span> <span class="nn">.juliaUtils</span> <span class="kn">import</span> <span class="n">julia</span>
+
+
+<div class="viewcode-block" id="InfluenceDiagram"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram">[docs]</a><span class="k">class</span> <span class="nc">InfluenceDiagram</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Holds information about the influence diagram, including nodes</span>
+<span class="sd">    and possible states.</span>
+
+<span class="sd">    See the latest documentation for the Julia type at</span>
+<span class="sd">    (https://gamma-opt.github.io/DecisionProgramming.jl/dev/api/).</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = InfluenceDiagram()&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InfluenceDiagram.build_random"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.build_random">[docs]</a>    <span class="k">def</span> <span class="nf">build_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_C</span><span class="p">,</span> <span class="n">n_D</span><span class="p">,</span> <span class="n">n_V</span><span class="p">,</span> <span class="n">m_C</span><span class="p">,</span> <span class="n">m_D</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Generate random decision diagram with n_C chance nodes, n_D</span>
+<span class="sd">        decision nodes, and n_V value nodes. Parameter m_C and m_D are the</span>
+<span class="sd">        upper bounds for the size of the information set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_C: Int</span>
+<span class="sd">            Number of chance nodes.</span>
+<span class="sd">        n_D: Int</span>
+<span class="sd">            Number of decision nodes.</span>
+<span class="sd">        n_V: Int</span>
+<span class="sd">            Number of value nodes.</span>
+<span class="sd">        m_C: Int</span>
+<span class="sd">            Upper bound for size of information set for chance nodes.</span>
+<span class="sd">        m_D: Int</span>
+<span class="sd">            Upper bound for size of information set for decision nodes.</span>
+<span class="sd">        states: List if integers</span>
+<span class="sd">            The number of states for each chance and decision node is</span>
+<span class="sd">            randomly chosen from this set of numbers.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">random_number_generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            random_diagram!(</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">n_C</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n_D</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">n_V</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">m_C</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">m_D</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.random_probabilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.random_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">random_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">n_inactive</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Generate random probabilities for a chance node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: dp.ChanceNode</span>
+<span class="sd">            Random probabilities will be assigned to this node.</span>
+
+<span class="sd">        n_inactive: Int</span>
+<span class="sd">            Number of inactive states</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">random_number_generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            random_probabilities!(</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">; n_inactive=</span><span class="si">{</span><span class="n">n_inactive</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.random_utilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.random_utilities">[docs]</a>    <span class="k">def</span> <span class="nf">random_utilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Generate random utilities for a value node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: dp.ValueNode</span>
+<span class="sd">            Random utilities are generated for this node</span>
+
+<span class="sd">        low: float</span>
+<span class="sd">            Lower bound for random utilities</span>
+
+<span class="sd">        high: float</span>
+<span class="sd">            Upper bound for random utilities</span>
+
+<span class="sd">        seed: int</span>
+<span class="sd">            Seed for the random number generator</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">random_number_generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            random_utilities!(</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">; low=</span><span class="si">{</span><span class="n">low</span><span class="si">}</span><span class="s1">, high=</span><span class="si">{</span><span class="n">high</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.add_node"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a node to the diagram</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : ChanceNode, DecisionNode, or ValueNode</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;add_node!(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.generate_arcs"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.generate_arcs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_arcs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Generate arc structures using nodes added to influence diagram, by ordering nodes, giving them indices and generating correct values for the vectors Names, I_j, states, S, C, D, V in the influence digram. Abstraction is created and the names of the nodes and states are only used in the user interface from here on.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;generate_arcs!(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.set_probabilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.set_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">set_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the probabilities of a ChanceNode</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : str</span>
+<span class="sd">            The name of a ChanceNode. The probability matrix of this node is</span>
+<span class="sd">            returned.</span>
+
+<span class="sd">        matrix : ProbabilityMatrix or Numpy array</span>
+<span class="sd">            The probability matrix that replaces the current one. May be a</span>
+<span class="sd">            ProbabilityMarix of a Numpy array.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">ProbabilityMatrix</span><span class="p">):</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;add_probabilities!(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                &quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&quot;,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">matrix</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">matrix</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;tmp = convert(Array</span><span class="si">{Float64}</span><span class="s1">, tmp)&#39;</span><span class="p">)</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;add_probabilities!(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, &quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&quot;, tmp)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.set_utility"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.set_utility">[docs]</a>    <span class="k">def</span> <span class="nf">set_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the utilities of a ValueNode</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : str</span>
+<span class="sd">            The name of a ValueNode. The probability matrix of this node is</span>
+<span class="sd">            returned.</span>
+
+<span class="sd">        matrix : Numpy array</span>
+<span class="sd">            The probability matrix that replaces the current one.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">UtilityMatrix</span><span class="p">):</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;add_utilities!(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                &quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">matrix</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">matrix</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;tmp = convert(Array</span><span class="si">{Float64}</span><span class="s1">, tmp)&#39;</span><span class="p">)</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;add_utilities!(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, &quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;, tmp)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.generate"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">default_probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">default_utility</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">positive_path_utility</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">negative_path_utility</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the diagram once nodes, probabilities and utilities</span>
+<span class="sd">        have been added.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            default_probability: bool = True</span>
+<span class="sd">                Choice to use default path probabilities</span>
+
+<span class="sd">            default_utility: bool = True</span>
+<span class="sd">                Choice to use default path utilities</span>
+
+<span class="sd">            positive_path_utility : bool = False</span>
+<span class="sd">                Choice to use a positive path utility translation</span>
+
+<span class="sd">            negative_path_utility : bool = False</span>
+<span class="sd">                Choice to use a negative path utility translation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">default_probability</span> <span class="o">=</span> <span class="n">default_probability</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">default_utility</span> <span class="o">=</span> <span class="n">default_utility</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">positive_path_utility</span> <span class="o">=</span> <span class="n">positive_path_utility</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">negative_path_utility</span> <span class="o">=</span> <span class="n">negative_path_utility</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;generate_diagram!(</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">;</span>
+<span class="s1">            default_probability=default_probability,</span>
+<span class="s1">            default_utility=default_utility,</span>
+<span class="s1">            positive_path_utility=positive_path_utility,</span>
+<span class="s1">            negative_path_utility=negative_path_utility</span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.num_states"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.num_states">[docs]</a>    <span class="k">def</span> <span class="nf">num_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Find the number of states a given node has.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: String</span>
+<span class="sd">            The name of a node</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Integer</span>
+<span class="sd">            The number of states the given node has</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;tmp = num_states(</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, &quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&quot;</span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">julia</span><span class="o">.</span><span class="n">tmp</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.index_of"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.index_of">[docs]</a>    <span class="k">def</span> <span class="nf">index_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Find index of a given node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: String</span>
+<span class="sd">            The name of a node</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Integer</span>
+<span class="sd">            The index of the node in the diagram</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;index_of(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, &quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;)&#39;&#39;&#39;</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.set_path_utilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.set_path_utilities">[docs]</a>    <span class="k">def</span> <span class="nf">set_path_utilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expressions</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Use given expression as the path utilities of the diagram.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        expressions: ExpressionPathUtilities</span>
+<span class="sd">            A set of JuMP expression.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">.U = PathUtility(</span><span class="si">{</span><span class="n">expressions</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.construct_probability_matrix"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.construct_probability_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">construct_probability_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Return a probability matrix with appriate dimensions for a given node</span>
+<span class="sd">        and zero values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: String</span>
+<span class="sd">            The name of a ChanceNode.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.ProbabilityMatrix</span>
+<span class="sd">            A probabity matrix with zero values.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">ProbabilityMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.construct_utility_matrix"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.construct_utility_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">construct_utility_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Return a utility matrix with appriate dimensions for a given node</span>
+<span class="sd">        and values set to negative infinity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: String</span>
+<span class="sd">            The name of a UtilityMatrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.UtilityMatrix</span>
+<span class="sd">            A utility matrix with values set to negative infinity.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">UtilityMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.decision_variables"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.decision_variables">[docs]</a>    <span class="k">def</span> <span class="nf">decision_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Construct the decision variables for a given model and this diagram.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model: dp.Model</span>
+<span class="sd">            A model constructed for this diagram.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.DecisionVariables</span>
+<span class="sd">            The set of decision variables for the model.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">DecisionVariables</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.path_compatibility_variables"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.path_compatibility_variables">[docs]</a>    <span class="k">def</span> <span class="nf">path_compatibility_variables</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
+        <span class="n">decision_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="n">forbidden_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">probability_cut</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">probability_scale_factor</span><span class="o">=</span><span class="mf">1.0</span>
+    <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Construct the path compatibility variables for a given model and this</span>
+<span class="sd">        diagram.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model: dp.Model</span>
+<span class="sd">            A model constructed for this diagram.</span>
+<span class="sd">        decision variables: dp.DecisionVariables (optional)</span>
+<span class="sd">            DecisionVariables constructed for this model.</span>
+<span class="sd">        names: Bool (optional)</span>
+<span class="sd">        name: String (optional)</span>
+<span class="sd">        forbidden_paths: List of dp.ForbiddenPath variables (optional)</span>
+<span class="sd">        fixed: List of dp.FixedPath variables (optional)</span>
+<span class="sd">        probability_cut: Bool (optional)</span>
+<span class="sd">        probability_scale_factor: Number (optional)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.PathCompatibilityVariables</span>
+<span class="sd">            The set of path compatibility variables for the model.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">decision_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">decision_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PathCompatibilityVariables</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
+            <span class="n">decision_variables</span><span class="p">,</span>
+            <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">forbidden_paths</span><span class="o">=</span><span class="n">forbidden_paths</span><span class="p">,</span>
+            <span class="n">fixed</span><span class="o">=</span><span class="n">fixed</span><span class="p">,</span>
+            <span class="n">probability_cut</span><span class="o">=</span><span class="n">probability_cut</span><span class="p">,</span>
+            <span class="n">probability_scale_factor</span><span class="o">=</span><span class="n">probability_scale_factor</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.expected_value"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.expected_value">[docs]</a>    <span class="k">def</span> <span class="nf">expected_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
+        <span class="n">path_compatibility_variables</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Return the expected value given the optimal decision strategy after</span>
+<span class="sd">        optimizing the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model: dp.Model</span>
+<span class="sd">            A model constructed for this diagram.</span>
+<span class="sd">        path_compatibility_variables: dp.PathCompatibilityVariables (optional)</span>
+<span class="sd">            PathCompatibilityVariables generated for this model, usually using</span>
+<span class="sd">            diagram.path_compatibility_variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.ExpectedValue</span>
+<span class="sd">            A dp.ExpectedValue object describing the expected value for the</span>
+<span class="sd">            optimal decision strategy.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">x_s</span> <span class="o">=</span> <span class="n">path_compatibility_variables</span>
+        <span class="k">if</span> <span class="n">x_s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_compatibility_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ExpectedValue</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">path_compatibility_variables</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.state_probabilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.state_probabilities">[docs]</a>    <span class="k">def</span> <span class="nf">state_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Extract the state probabilities as a dp.StateProbabilities object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        decision_strategy: dp.DecisionStrategy</span>
+<span class="sd">            A decision strategy. A decision strategy can be constructed using</span>
+<span class="sd">            the dp.DecisionVariables.decision_strategy method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.StateProbabilities</span>
+<span class="sd">            A dp.StateProbabilities object containing information about the</span>
+<span class="sd">            probabilites of each state given the decision strategy.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">StateProbabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.utility_distribution"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.utility_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">utility_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Extract the utility distribution as a dp.UtilityDistribution object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        decision_strategy: dp.DecisionStrategy</span>
+<span class="sd">            A decision strategy. A decision strategy can be constructed using</span>
+<span class="sd">            the dp.DecisionVariables.decision_strategy method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.UtilityDistribution</span>
+<span class="sd">            Describes the distribution of utilities given the decision strategy.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">UtilityDistribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.forbidden_path"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.forbidden_path">[docs]</a>    <span class="k">def</span> <span class="nf">forbidden_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Create a ForbiddenPath object used to describe invalid paths through the</span>
+<span class="sd">        diagram.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nodes: List of strings</span>
+<span class="sd">            List of node names connected by the forbidden paths</span>
+
+<span class="sd">        values: List of tuples of strings</span>
+<span class="sd">            List of states of the connected nodes that are forbidden</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.ForbiddenPath</span>
+<span class="sd">            A dp.ForbiddenPath object.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">ForbiddenPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.fixed_path"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.fixed_path">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Create a fixed path object, used to force ChangeNodes to have given</span>
+<span class="sd">        values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node_values: dict</span>
+<span class="sd">            Dictionary with node names as keys and the fixed value as the</span>
+<span class="sd">            corresponding values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.FixedPath</span>
+<span class="sd">            A dp.FixedPath object.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">FixedPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.lazy_probability_cut"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.lazy_probability_cut">[docs]</a>    <span class="k">def</span> <span class="nf">lazy_probability_cut</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">path_compatibility_variables</span>
+    <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Add a probability cut to the model as a lazy constraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path_compatibility_variables: dp.PathCompatibilityVariables</span>
+<span class="sd">            A set of path compatibility variables constructed for this diagram.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            lazy_probability_cut(model, self, path_compatibility_variables)</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfluenceDiagram.conditional_value_at_risk"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.InfluenceDiagram.conditional_value_at_risk">[docs]</a>    <span class="k">def</span> <span class="nf">conditional_value_at_risk</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">path_compatibility_variables</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">,</span> <span class="n">probability_scale_factor</span>
+    <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Create a conditional value-at-risk (CVaR) objective.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model: Model</span>
+<span class="sd">            JuMP model into which variables are added.</span>
+<span class="sd">        x_s: PathCompatibilityVariables</span>
+<span class="sd">            Path compatibility variables.</span>
+<span class="sd">        alpha: Float64</span>
+<span class="sd">            Probability level at which conditional value-at-risk is optimised.</span>
+<span class="sd">        probability_scale_factor:Float64</span>
+<span class="sd">            Adjusts conditional value at risk model to be compatible with the expected value expression if the probabilities were scaled there.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            conditional_value_at_risk(</span>
+<span class="s1">               model, self,</span>
+<span class="s1">               path_compatibility_variables,</span>
+<span class="s1">               alpha,</span>
+<span class="s1">               probability_scale_factor</span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ExpressionPathUtilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.ExpressionPathUtilities">[docs]</a><span class="k">class</span> <span class="nc">ExpressionPathUtilities</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; An expression that can be used to set path utilities.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    model: dp.Model</span>
+<span class="sd">        A JuMP Model object</span>
+
+<span class="sd">    diagram: dp.InfluenceDiagram</span>
+<span class="sd">        The influence diagram the model was constructed with.</span>
+
+<span class="sd">    expression: string</span>
+<span class="sd">        A JuMP expression that describes the path utilities (see the</span>
+<span class="sd">        contingent portfolio analysis page in examples).</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">path_name</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> =</span>
+<span class="s1">            [</span><span class="si">{</span><span class="n">expression</span><span class="si">}</span><span class="s1"> for </span><span class="si">{</span><span class="n">path_name</span><span class="si">}</span><span class="s1"> in paths(</span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">.S)]</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DecisionVariables"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.DecisionVariables">[docs]</a><span class="k">class</span> <span class="nc">DecisionVariables</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create decision variables and constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: dp.Model</span>
+<span class="sd">        A JuMP Model object</span>
+
+<span class="sd">    diagram: dp.InfluenceDiagram</span>
+<span class="sd">        A DecisionProgramming Diagram object</span>
+
+<span class="sd">    names: bool</span>
+<span class="sd">        Use names or have anonymous Jump variables</span>
+
+<span class="sd">    name: str</span>
+<span class="sd">        Prefix for predefined decision variable naming convention</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">tmp1</span> <span class="o">=</span> <span class="n">names</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">tmp2</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">commmand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = DecisionVariables(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">;</span>
+<span class="s1">            names=tmp1,</span>
+<span class="s1">            name=tmp2</span>
+<span class="s1">        )&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">commmand</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DecisionVariables.decision_strategy"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.DecisionVariables.decision_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">decision_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Extract the optimal decision strategy.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dp.DecisionStrategy</span>
+<span class="sd">            The optimal decision strategy wrapped in a Python object.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">DecisionStrategy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DecisionStrategy"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.DecisionStrategy">[docs]</a><span class="k">class</span> <span class="nc">DecisionStrategy</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extract values for decision variables from solved decision model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    decision_variables</span>
+<span class="sd">        Decision variables from a solved model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decision_variables</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">commmand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = DecisionStrategy(</span><span class="si">{</span><span class="n">decision_variables</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">commmand</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PathCompatibilityVariables"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.PathCompatibilityVariables">[docs]</a><span class="k">class</span> <span class="nc">PathCompatibilityVariables</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create path compatibility variables and constraints</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: InfluenceDiagram</span>
+<span class="sd">        An influence diagram.</span>
+
+<span class="sd">    decision_variables: DecisionVariables</span>
+<span class="sd">        A set of decision variables for the diagram</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: Model</span>
+<span class="sd">        JuMP model into which variables are added.</span>
+
+<span class="sd">    diagram: InfluenceDiagram</span>
+<span class="sd">        Influence diagram structure.</span>
+
+<span class="sd">    decision_variables: DecisionVariables</span>
+<span class="sd">        A set of decision variables for the diagram.</span>
+
+<span class="sd">    names: bool</span>
+<span class="sd">        Use names or have JuMP variables be anonymous.</span>
+
+<span class="sd">    name: str</span>
+<span class="sd">        Prefix for predefined decision variable naming convention.</span>
+
+<span class="sd">    forbidden_paths: list of ForbiddenPath objects:</span>
+<span class="sd">        The forbidden subpath structures. Path compatibility variables</span>
+<span class="sd">        will not be generated for paths that include forbidden subpaths.</span>
+
+<span class="sd">    fixed: FixedPath</span>
+<span class="sd">        Path compatibility variable will not be generated for paths which</span>
+<span class="sd">        do not include these fixed subpaths.</span>
+
+<span class="sd">    probability_cut: bool</span>
+<span class="sd">        Includes probability cut constraint in the optimisation model.</span>
+
+<span class="sd">    probability_scale_factor: float</span>
+<span class="sd">        Adjusts conditional value at risk model to be compatible with the</span>
+<span class="sd">        expected value expression if the probabilities were scaled there.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">,</span>
+                 <span class="n">diagram</span><span class="p">,</span>
+                 <span class="n">decision_variables</span><span class="p">,</span>
+                 <span class="n">names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+                 <span class="n">forbidden_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">probability_cut</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">probability_scale_factor</span><span class="o">=</span><span class="mf">1.0</span>
+                 <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decision_variables</span> <span class="o">=</span> <span class="n">decision_variables</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">names</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">forbidden_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">forbidden_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">forbidden_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">_name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">forbidden_paths</span><span class="p">]</span>
+            <span class="n">forbidden_str</span> <span class="o">=</span> <span class="s2">&quot;forbidden_paths = [&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forbidden_paths</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;],&quot;</span>
+
+        <span class="n">fixed_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fixed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fixed_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;fixed = </span><span class="si">{</span><span class="n">fixed</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">,&quot;</span>
+
+        <span class="n">julia</span><span class="o">.</span><span class="n">probability_cut</span> <span class="o">=</span> <span class="n">probability_cut</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">probability_scale_factor</span> <span class="o">=</span> <span class="n">probability_scale_factor</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = PathCompatibilityVariables(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">decision_variables</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">;</span>
+<span class="s1">            names = names,</span>
+<span class="s1">            name = name,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">forbidden_str</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            </span><span class="si">{</span><span class="n">fixed_str</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            probability_cut = probability_cut,</span>
+<span class="s1">            probability_scale_factor = probability_scale_factor</span>
+<span class="s1">        )&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExpectedValue"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.ExpectedValue">[docs]</a><span class="k">class</span> <span class="nc">ExpectedValue</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An expected value object JuMP can minimize on maximize</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model: Model</span>
+
+<span class="sd">    diagram: Diagram</span>
+
+<span class="sd">    pathcompatibility: PathCompatibilityVariables</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">pathcompatibility</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">commmand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = expected_value(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">pathcompatibility</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        )&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">commmand</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StateProbabilities"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.StateProbabilities">[docs]</a><span class="k">class</span> <span class="nc">StateProbabilities</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extract state propabilities from a solved model</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: Diagram</span>
+<span class="sd">        An influence diagram</span>
+
+<span class="sd">    decision_strategy: dp.DecisionStrategy</span>
+<span class="sd">        A decision strategy created for the diagram.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decision_strategy</span> <span class="o">=</span> <span class="n">decision_strategy</span>
+        <span class="n">commmand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = StateProbabilities(</span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">decision_strategy</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">commmand</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StateProbabilities.print_decision_strategy"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.StateProbabilities.print_decision_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">print_decision_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Print the decision strategy. &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;print_decision_strategy(</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">decision_strategy</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StateProbabilities.print"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.StateProbabilities.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Print the state probabilities. &#39;&#39;&#39;</span>
+        <span class="c1"># Format the nodes list using &quot; instead of &#39;</span>
+        <span class="n">node_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;print_state_probabilities(</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">node_string</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UtilityDistribution"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution">[docs]</a><span class="k">class</span> <span class="nc">UtilityDistribution</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extract utility distribution from a solved model</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: Diagram</span>
+<span class="sd">        The diagram of a solved model</span>
+
+<span class="sd">    decision_strategy: DecisionStrategy</span>
+<span class="sd">        A decision strategy extracted from a solved model.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decision_strategy</span> <span class="o">=</span> <span class="n">decision_strategy</span>
+        <span class="n">commmand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = UtilityDistribution(</span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">decision_strategy</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">commmand</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UtilityDistribution.print_distribution"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution.print_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">print_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Print the utility distribution. &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;print_utility_distribution(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilityDistribution.print_statistics"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution.print_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">print_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Print statistics about the utility distribution.&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;print_statistics(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilityDistribution.print_risk_measures"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution.print_risk_measures">[docs]</a>    <span class="k">def</span> <span class="nf">print_risk_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Print risk measures.&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            print_risk_measures(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s1">; fmt=</span><span class="si">{</span><span class="nb">format</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilityDistribution.value_at_risk"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution.value_at_risk">[docs]</a>    <span class="k">def</span> <span class="nf">value_at_risk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Print the value at risk. &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            value_at_risk(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UtilityDistribution.conditional_value_at_risk"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityDistribution.conditional_value_at_risk">[docs]</a>    <span class="k">def</span> <span class="nf">conditional_value_at_risk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Print the conditional value at rist &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            conditional_value_at_risk(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            )</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ProbabilityMatrix"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.ProbabilityMatrix">[docs]</a><span class="k">class</span> <span class="nc">ProbabilityMatrix</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Construct an empty probability matrix for a chance node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: Diagram</span>
+<span class="sd">       The influence diagram that contains the node</span>
+
+<span class="sd">    node : str</span>
+<span class="sd">        The name of a ChanceNode. The probability matrix of this node is</span>
+<span class="sd">        returned.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = ProbabilityMatrix(</span>
+<span class="s1">           </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">           &quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&quot;</span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProbabilityMatrix.size"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.ProbabilityMatrix.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Return the size of the nodes information set. &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;size(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;&#39;&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UtilityMatrix"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.UtilityMatrix">[docs]</a><span class="k">class</span> <span class="nc">UtilityMatrix</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Construct an empty probability matrix for a chance node.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: Diagram</span>
+<span class="sd">       The influence diagram that contains the node</span>
+
+<span class="sd">    node : str</span>
+<span class="sd">        The name of a ChanceNode. The probability matrix of this node is</span>
+<span class="sd">        returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = UtilityMatrix(</span>
+<span class="s1">           </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">           &quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s1">&quot;</span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ForbiddenPath"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.ForbiddenPath">[docs]</a><span class="k">class</span> <span class="nc">ForbiddenPath</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Describes forbidden paths through an influence diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: An InfluenceDiagram</span>
+<span class="sd">        The influence diagram.</span>
+
+<span class="sd">    nodes: List of strings</span>
+<span class="sd">        List of node names connected by the forbidden paths</span>
+
+<span class="sd">    values: List of tuples of strings</span>
+<span class="sd">        List of states of the connected nodes that are forbidden</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">node_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">states_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = ForbiddenPath(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">node_string</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">states_string</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FixedPath"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.FixedPath">[docs]</a><span class="k">class</span> <span class="nc">FixedPath</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Describes fixed paths in an influence diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: An InfluenceDiagram</span>
+<span class="sd">        The influence diagram.</span>
+
+<span class="sd">    node_values: dict</span>
+<span class="sd">        Dictionary with node names as keys and the fixed value as the</span>
+<span class="sd">        corresponding values.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">path_string</span> <span class="o">=</span> <span class="s2">&quot;Dict(&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="n">path_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; =&gt; &quot;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s1">&quot;,&#39;&#39;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">path_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot; =&gt; </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s1">,&#39;&#39;&#39;</span>
+        <span class="n">path_string</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = FixedPath(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">path_string</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        )&#39;&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Paths"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.Paths">[docs]</a><span class="k">class</span> <span class="nc">Paths</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Iterate over paths in lexicographical order.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    states: List of strings</span>
+<span class="sd">        List of paths to connect</span>
+
+<span class="sd">    fixed: dp.FixedPath</span>
+<span class="sd">        Describes states that are held fixed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tmp = States(State.(</span><span class="si">{</span><span class="n">states</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="n">JuliaName</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tmp = </span><span class="si">{</span><span class="n">states</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fixed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;tmp = paths(tmp)&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tmp = paths(tmp; fixed=</span><span class="si">{</span><span class="n">fixed</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">julia</span><span class="o">.</span><span class="n">tmp</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iterator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="CompatiblePaths"><a class="viewcode-back" href="../../../api/DecisionProgramming.Diagram/#DecisionProgramming.Diagram.CompatiblePaths">[docs]</a><span class="k">class</span> <span class="nc">CompatiblePaths</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Interface for iterating over paths that are compatible and active given</span>
+<span class="sd">    influence diagram and decision strategy.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    diagram: dp.Diagram</span>
+<span class="sd">        An influence diagram.</span>
+
+<span class="sd">    decision_strategy: dp.DecisionStrategy</span>
+<span class="sd">        A decision strategy for the diagram.</span>
+
+<span class="sd">    fixed: dp.FixedPath</span>
+<span class="sd">        Describes states that are held fixed.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">decision_strategy</span><span class="p">,</span>
+        <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">fixed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                tmp = CompatiblePaths(</span>
+<span class="s1">                    </span><span class="si">{diagram._name}</span><span class="s1">,</span>
+<span class="s1">                    </span><span class="si">{decision_strategy._name}</span><span class="s1"></span>
+<span class="s1">                )</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                tmp = CompatiblePaths(</span>
+<span class="s1">                    </span><span class="si">{</span><span class="n">diagram</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                    </span><span class="si">{</span><span class="n">decision_strategy</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">; fixed=</span><span class="si">{</span><span class="n">fixed</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">                )</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">julia</span><span class="o">.</span><span class="n">tmp</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iterator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">path</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

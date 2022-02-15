@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pig Breeding &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="N-Monitoring" href="../N-monitoring/" />
+    <link rel="prev" title="Used Car Buyer" href="../used-car-buyer/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pig Breeding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#influence-diagram">Influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#health-at-first-month">Health at first month</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#health-test-results-and-treatment-decisions-at-subsequent-months">Health, test results and treatment decisions at subsequent months</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#market-price">Market price</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-arcs">Generate arcs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probabilities">Probabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-influence-diagram">Generate influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-model">Decision model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-results">Analyzing results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-strategy">Decision strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-probabilities">State probabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-distribution">Utility distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Pig Breeding</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/pig-breeder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pig-breeding">
+<h1>Pig Breeding<a class="headerlink" href="#pig-breeding" title="Permalink to this headline"></a></h1>
+<p>The pig breeding problem as described in <a class="footnote-reference brackets" href="#lauritzen" id="id1">1</a>.</p>
+<blockquote>
+<div><p>A pig breeder is growing pigs for a period of four months and subsequently selling them. During this period the pig may or may not develop a certain disease. If the pig has the disease at the time it must be sold, the pig must be sold for slaughtering, and its expected market price is then 300 DKK (Danish kroner). If it is disease free, its expected market price as a breeding animal is 1000 DKK</p>
+<p>Once a month, a veterinary doctor sees the pig and makes a test for presence of the disease. If the pig is ill, the test will indicate this with probability 0.80, and if the pig is healthy, the test will indicate this with probability 0.90. At each monthly visit, the doctor may or may not treat the pig for the disease by injecting a certain drug. The cost of an injection is 100 DKK.</p>
+<p>A pig has the disease in the first month with probability 0.10. A healthy pig develops the disease in the subsequent month with probability 0.20 without injection, whereas a healthy and treated pig develops the disease with probability 0.10, so the injection has some preventive effect. An untreated pig that is unhealthy will remain so in the subsequent month with probability 0.90, whereas the similar probability is 0.50 for an unhealthy pig that is treated. Thus spontaneous cure is possible, but treatment is beneficial on average.</p>
+</div></blockquote>
+<section id="influence-diagram">
+<h2>Influence diagram<a class="headerlink" href="#influence-diagram" title="Permalink to this headline"></a></h2>
+<img alt="The influence diagram of the simple car buyer example with 3 nodes." src="../_images/n-month-pig-breeding.svg" /><p>The influence diagram for the generalized
+<span class="math notranslate nohighlight">\(N\)</span>-month pig breeding problem. The nodes
+are associated with the following states. <strong>Health
+states</strong> <span class="math notranslate nohighlight">\(h_k=\{ill,healthy\}\)</span> represent the
+health of the pig at month
+<span class="math notranslate nohighlight">\(k=1,...,N\)</span>. <strong>Test states</strong>
+:math:t_k={positive,negative}`
+represent the result from testing the pig at month
+<span class="math notranslate nohighlight">\(k=1,...,N-1\)</span>. <strong>Treatment states</strong>
+<span class="math notranslate nohighlight">\(d_k=\{treat, pass\}\)</span> represent the decision
+to treat the pig with an injection at month
+<span class="math notranslate nohighlight">\(k=1,...,N-1\)</span>.</p>
+<blockquote>
+<div><p>The dashed arcs represent the no-forgetting
+principle. The no-forgetting assumption does not
+hold without them and they are not included in
+the following model. They could be included by
+changing the information sets of nodes.</p>
+</div></blockquote>
+<p>In this example, we solve the 4 month pig breeding
+problem and thus, declare <span class="math notranslate nohighlight">\(N = 4\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">DecisionProgramming</span> <span class="k">as</span> <span class="nn">dp</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>In Decision Programming, we start by initialising
+an empty influence diagram. Then we define the
+nodes with their information sets and states and
+add them to the influence diagram.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">InfluenceDiagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="health-at-first-month">
+<h2>Health at first month<a class="headerlink" href="#health-at-first-month" title="Permalink to this headline"></a></h2>
+<p>As seen in the influence diagram, the node
+<span class="math notranslate nohighlight">\(h_1\)</span> has no arcs into it making it a root
+node. Therefore, the information set
+<span class="math notranslate nohighlight">\(I(h_1)\)</span> is empty. The states of this node
+are <span class="math notranslate nohighlight">\(ill\)</span> and <span class="math notranslate nohighlight">\(healthy\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">H0</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;H0&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;healthy&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">H0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="health-test-results-and-treatment-decisions-at-subsequent-months">
+<h2>Health, test results and treatment decisions at subsequent months<a class="headerlink" href="#health-test-results-and-treatment-decisions-at-subsequent-months" title="Permalink to this headline"></a></h2>
+<p>The chance and decision nodes representing the
+health, test results, treatment decisions for the
+following months can be added easily using a for-
+loop. The value node representing the treatment
+costs in each month is also added. Each node is
+given a name, its information set and states.
+Remember that value nodes do not have states.
+Notice that we do not assume the no-forgetting
+principle and thus, the information sets of the
+treatment decisions only contain the previous test
+result</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># testing result</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;positive&quot;</span><span class="p">,</span> <span class="s2">&quot;negative&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="c1"># Decision to treat</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;T</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;treat&quot;</span><span class="p">,</span> <span class="s2">&quot;pass&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+
+    <span class="c1"># Cost of treatment</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+    <span class="c1"># Health of next period</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;D</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;healthy&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="market-price">
+<h2>Market price<a class="headerlink" href="#market-price" title="Permalink to this headline"></a></h2>
+<p>The final value node, representing the market
+price, is added. It has the final health node
+<span class="math notranslate nohighlight">\(h_N\)</span> as its information set.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">MP</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;MP&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">MP</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-arcs">
+<h2>Generate arcs<a class="headerlink" href="#generate-arcs" title="Permalink to this headline"></a></h2>
+<p>Now that all of the nodes have been added to the
+influence diagram, we generate the arcs between
+the nodes. This step automatically orders the
+nodes, gives them indices and reorganises the
+information into the correct form.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">MP</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;MP&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">MP</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="probabilities">
+<h2>Probabilities<a class="headerlink" href="#probabilities" title="Permalink to this headline"></a></h2>
+<p>We define probability distributions for all
+chance nodes. For the first health node, the
+probability distribution is defined over its two
+states <span class="math notranslate nohighlight">\(ill\)</span> and <span class="math notranslate nohighlight">\(healthy\)</span>. The
+probability that the pig is ill in the first
+month is</p>
+<div class="math notranslate nohighlight">
+\[\mathbb P(h_1 = ill) = 0.1.\]</div>
+<p>We obtain the complement probabilities for binary
+states by subtracting from one</p>
+<div class="math notranslate nohighlight">
+\[\mathbb P(h_1 = healthy) = 1 - \mathbb P(h_1 = ill)\]</div>
+<p>In Decision Programming, we add these
+probabilities for node <span class="math notranslate nohighlight">\(h_1\)</span> as follows.
+Notice, that the probability vector is ordered
+according to the order that the states were given
+in when defining node <span class="math notranslate nohighlight">\(h_1\)</span>. More
+information on the syntax of adding probabilities
+is found on the <a class="reference external" href="usage.html">usage page</a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;H0&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The probability distributions for the other
+health nodes are identical. Thus, we define one
+probability matrix and use it for all the
+subsequent months’ health nodes. The probability
+that the pig is ill in the subsequent months
+<span class="math notranslate nohighlight">\(k=2,...,N\)</span> depends on the treatment
+decision and state of health in the previous
+month <span class="math notranslate nohighlight">\(k-1\)</span>. The nodes <span class="math notranslate nohighlight">\(h_{k-1}\)</span> and
+<span class="math notranslate nohighlight">\(d_{k-1}\)</span> are thus in the information set
+<span class="math notranslate nohighlight">\(I(h_k)\)</span>, meaning that the probability
+distribution of <span class="math notranslate nohighlight">\(h_k\)</span> is conditional on
+these nodes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb P(h_k = ill \mid h_{k-1} = healthy, d_{k-1} = pass) = 0.2\\
+\mathbb P(h_k = ill \mid h_{k-1} = healthy, d_{k-1} = treat) = 0.1\\
+\mathbb P(h_k = ill \mid h_{k-1} = ill, d_{k-1} = pass) = 0.9\\
+\mathbb P(h_k = ill \mid h_{k-1} = ill, d_{k-1} = treat) = 0.5\end{split}\]</div>
+<p>In Decision Programming, the probability matrix
+is defined in the following way. Notice, that the
+ordering of the information state corresponds to
+the order in which the information set was
+defined when adding the health nodes.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_H</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;H1&quot;</span><span class="p">)</span>
+<span class="n">X_H</span><span class="p">[</span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;pass&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+<span class="n">X_H</span><span class="p">[</span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;treat&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+<span class="n">X_H</span><span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;pass&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>
+<span class="n">X_H</span><span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;treat&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Next we define the probability matrix for the
+test results. Here again, we note that the
+probability distributions for all test results
+are identical, and thus we only define the
+probability matrix once. For the probabilities
+that the test indicates a pig’s health correctly
+at month <span class="math notranslate nohighlight">\(k=1,...,N-1\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb P(t_k = positive \mid h_k = ill) = 0.8\\
+\mathbb P(t_k = ill \mid h_{k-1} = healthy) = 0.9\end{split}\]</div>
+<p>In Decision Programming:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_T</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;T1&quot;</span><span class="p">)</span>
+<span class="n">X_T</span><span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;positive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">X_T</span><span class="p">[</span><span class="s2">&quot;ill&quot;</span><span class="p">,</span> <span class="s2">&quot;negative&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">X_T</span><span class="p">[</span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;negative&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">X_T</span><span class="p">[</span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span> <span class="s2">&quot;positive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+<p>We add the probability matrices into the influence
+diagram using a for-loop.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X_T</span><span class="p">)</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X_H</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline"></a></h2>
+<p>The cost incurred by the treatment decision at
+month <span class="math notranslate nohighlight">\(k=1,...,N-1\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Y(d_k = treat) = -100\\
+Y(d_k = pass) = 0\end{split}\]</div>
+<p>In Decision Programming the utility values are
+added using utility matrices. Notice that the
+utility values in the matrix are given in the same
+order as the states of node <span class="math notranslate nohighlight">\(h_N\)</span> were defined
+when node <span class="math notranslate nohighlight">\(h_N\)</span> was added.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The market price of the pig given its health at
+month <span class="math notranslate nohighlight">\(N\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Y(h_N = ill) = 300\\
+Y(h_N = healthy) = 1000\end{split}\]</div>
+<p>In Decision Programming:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s2">&quot;MP&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-influence-diagram">
+<h2>Generate influence diagram<a class="headerlink" href="#generate-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>After adding nodes, generating arcs and defining
+probability and utility values, we generate the
+full influence diagram. By default this function
+uses the default path probabilities and utilities,
+which are defined as the joint probability of all
+chance events in the diagram and the sum of
+utilities in value nodes, respectively. In the
+<a class="reference external" href="contingent-portfolio-programming">Contingent Portfolio Programming</a>
+example, we show
+how to use a user-defined custom path utility
+function.</p>
+<p>In the pig breeding problem, when the <span class="math notranslate nohighlight">\(N\)</span> is
+large some of the path utilities become negative.
+In this case, we choose to use the positive path
+utility <a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/">positive path utility</a> transformation,
+which allows us to exclude the probability cut in
+the next section.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">positive_path_utility</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-model">
+<h2>Decision model<a class="headerlink" href="#decision-model" title="Permalink to this headline"></a></h2>
+<p>Next we initialise the JuMP model and add the decision
+variables. Then we add the path compatibility variables.
+Since we applied an affine transformation to the utility
+function, making all path utilities positive, the
+probability cut can be excluded from the model. The
+purpose of this is discussed in the <a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/">theoretical section</a>
+of this documentation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">x_s</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">path_compatibility_variables</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">probability_cut</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create the objective function</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">EV</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">expected_value</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_s</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">EV</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and set up the solver and solve the problem.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">(</span>
+   <span class="p">(</span><span class="s2">&quot;IntFeasTol&quot;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="analyzing-results">
+<h2>Analyzing results<a class="headerlink" href="#analyzing-results" title="Permalink to this headline"></a></h2>
+<p>Once the model is solved, we extract the results. The
+results are the decision strategy, state probabilities and
+utility distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">decision_strategy</span><span class="p">()</span>
+<span class="n">S_probabilities</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">state_probabilities</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+<span class="n">U_distribution</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">utility_distribution</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-strategy">
+<h2>Decision strategy<a class="headerlink" href="#decision-strategy" title="Permalink to this headline"></a></h2>
+<p>The optimal decision strategy is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [1]: S_probabilities.print_decision_strategy()
+
+Out[2]:
+┌────────────────┬────────────────┐
+│ State(s) of T1 │ Decision in D1 │
+├────────────────┼────────────────┤
+│ positive       │ pass           │
+│ negative       │ pass           │
+└────────────────┴────────────────┘
+┌────────────────┬────────────────┐
+│ State(s) of T2 │ Decision in D2 │
+├────────────────┼────────────────┤
+│ positive       │ treat          │
+│ negative       │ pass           │
+└────────────────┴────────────────┘
+┌────────────────┬────────────────┐
+│ State(s) of T3 │ Decision in D3 │
+├────────────────┼────────────────┤
+│ positive       │ treat          │
+│ negative       │ pass           │
+└────────────────┴────────────────┘
+</pre></div>
+</div>
+<p>The optimal strategy is to not treat the pig in the first
+month regardless of if it is sick or not. In the two
+subsequent months, the pig should be treated if the test
+result is positive.</p>
+</section>
+<section id="state-probabilities">
+<h2>State probabilities<a class="headerlink" href="#state-probabilities" title="Permalink to this headline"></a></h2>
+<p>The state probabilities for strategy <span class="math notranslate nohighlight">\(Z\)</span> tell the
+probability of each state in each node, given strategy
+<span class="math notranslate nohighlight">\(Z\)</span>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: health_nodes = [f&quot;H{i}&quot; for i in range(N)]
+
+In [3]: S_probabilities.print(health_nodes)
+
+Out[2]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │      ill │  healthy │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     H1 │ 0.100000 │ 0.900000 │             │
+│     H2 │ 0.270000 │ 0.730000 │             │
+│     H3 │ 0.295300 │ 0.704700 │             │
+│     H4 │ 0.305167 │ 0.694833 │             │
+└────────┴──────────┴──────────┴─────────────┘
+
+In [4]: test_nodes = [f&quot;T{i}&quot; for i in range(N-1)]
+
+In [5]: S_probabilities.print(test_nodes)
+
+Out[5]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │ positive │ negative │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     T1 │ 0.170000 │ 0.830000 │             │
+│     T2 │ 0.289000 │ 0.711000 │             │
+│     T3 │ 0.306710 │ 0.693290 │             │
+└────────┴──────────┴──────────┴─────────────┘
+
+In [6]: treatment_nodes = [f&quot;D{i}&quot; for i in range(N-1)]
+
+In [7]: S_probabilities.print(treatment_nodes)
+
+Out[7]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │    treat │     pass │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     D1 │ 0.000000 │ 1.000000 │             │
+│     D2 │ 0.289000 │ 0.711000 │             │
+│     D3 │ 0.306710 │ 0.693290 │             │
+└────────┴──────────┴──────────┴─────────────┘
+</pre></div>
+</div>
+</section>
+<section id="utility-distribution">
+<h2>Utility distribution<a class="headerlink" href="#utility-distribution" title="Permalink to this headline"></a></h2>
+<p>We can also print the utility distribution for the optimal
+strategy. The selling prices for a healthy and an ill pig
+are 1000DKK and 300DKK, respectively, while the cost of
+treatment is 100DKK. We can see that the probability of
+the pig being ill in the end is the sum of three first
+probabilities, approximately 30.5%. This matches the
+probability of state <span class="math notranslate nohighlight">\(ill\)</span> in the last node
+<span class="math notranslate nohighlight">\(h_4\)</span> in the state probabilities shown above.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: U_distribution.print_distribution()
+
+Out[2]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │      ill │  healthy │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     H1 │ 0.100000 │ 0.900000 │             │
+│     H2 │ 0.270000 │ 0.730000 │             │
+│     H3 │ 0.295300 │ 0.704700 │             │
+│     H4 │ 0.305167 │ 0.694833 │             │
+└────────┴──────────┴──────────┴─────────────┘
+</pre></div>
+</div>
+<p>Finally, we print some statistics for the utility
+distribution. The expected value of the utility is 727DKK,
+the same as in <a class="footnote-reference brackets" href="#lauritzen" id="id2">1</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: U_distribution.print_statistics()
+
+Out[2]:
+┌──────────┬────────────┐
+│     Name │ Statistics │
+│   String │    Float64 │
+├──────────┼────────────┤
+│     Mean │ 726.812100 │
+│      Std │ 338.460723 │
+│ Skewness │  -0.811628 │
+│ Kurtosis │  -1.173465 │
+└──────────┴────────────┘
+</pre></div>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="lauritzen"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p>Lauritzen, S. L., &amp; Nilsson, D. (2001). Representing and solving decision problems with limited information. Management Science, 47(9), 1235–1251. <a class="reference external" href="https://doi.org/10.1287/mnsc.47.9.1235.9779">https://doi.org/10.1287/mnsc.47.9.1235.9779</a></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../used-car-buyer/" class="btn btn-neutral float-left" title="Used Car Buyer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../N-monitoring/" class="btn btn-neutral float-right" title="N-Monitoring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

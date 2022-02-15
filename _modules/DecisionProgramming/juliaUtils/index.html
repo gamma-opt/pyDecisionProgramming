@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DecisionProgramming.juliaUtils &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../">Module code</a> &raquo;</li>
+      <li>DecisionProgramming.juliaUtils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for DecisionProgramming.juliaUtils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">julia</span> <span class="kn">import</span> <span class="n">Julia</span>
+<span class="kn">from</span> <span class="nn">julia.core</span> <span class="kn">import</span> <span class="n">JuliaError</span>
+
+<span class="c1"># Create an instance of julia without incremental precompilation.</span>
+<span class="c1"># This does not seem to affect performance much</span>
+<span class="n">base_julia</span> <span class="o">=</span> <span class="n">Julia</span><span class="p">(</span><span class="n">compiled_modules</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># These must be imported after creating the julia name space</span>
+<span class="kn">from</span> <span class="nn">julia</span> <span class="kn">import</span> <span class="n">Pkg</span>
+<span class="kn">from</span> <span class="nn">julia</span> <span class="kn">import</span> <span class="n">Main</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+
+<span class="c1"># Random number generator on Julia side</span>
+<span class="n">_random_number_generator</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="random_number_generator"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.random_number_generator">[docs]</a><span class="k">def</span> <span class="nf">random_number_generator</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Return a random number generator on the Julia side. MersenneTwister is the</span>
+<span class="sd">    only option here.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seed : integer</span>
+<span class="sd">        A long integer used as a seed when creating the generator</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dp.JuliaName</span>
+<span class="sd">        The random number generator wrapped in a JuliaName</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">_random_number_generator</span>
+
+    <span class="k">if</span> <span class="n">_random_number_generator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+        <span class="n">_random_number_generator</span> <span class="o">=</span> <span class="n">JuliaName</span><span class="p">()</span>
+        <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;using Random&#39;</span><span class="p">)</span>
+        <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_random_number_generator</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = MersenneTwister(</span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_random_number_generator</span></div>
+
+
+<div class="viewcode-block" id="JuliaMain"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaMain">[docs]</a><span class="k">class</span> <span class="nc">JuliaMain</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Maps to julia.main from the julia library, unless the setting</span>
+<span class="sd">    an object implemented here (inherits JuliaName). JuliaNames are</span>
+<span class="sd">    assigned directly.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">JuliaName</span> <span class="ow">or</span> <span class="n">JuliaName</span> <span class="ow">in</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span>
+            <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Main</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;isdefined(Main, :</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Main</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> not defined in Julia name space&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="JuliaMain.eval"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaMain.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Evaluate Julia code</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        command: string</span>
+<span class="sd">            A string containing Julia code</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Expose the Julia runner as dp.julia</span>
+<span class="n">julia</span> <span class="o">=</span> <span class="n">JuliaMain</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="load_libs"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.load_libs">[docs]</a><span class="k">def</span> <span class="nf">load_libs</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Load Julia dependencies</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;using DecisionProgramming&#39;</span><span class="p">)</span>
+    <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;using Gurobi&#39;</span><span class="p">)</span>
+    <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;using JuMP&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Define a PathUtility type on Julia side</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;struct PathUtility &lt;: AbstractPathUtility</span>
+<span class="s1">            data::Array</span><span class="se">{{</span><span class="s1">AffExpr</span><span class="se">}}</span><span class="s1"></span>
+<span class="s1">        end</span>
+<span class="s1">        Base.getindex(U::PathUtility, i::State) = getindex(U.data, i)</span>
+<span class="s1">        Base.getindex(U::PathUtility, I::Vararg</span><span class="se">{{</span><span class="s1">State,N</span><span class="se">}}</span><span class="s1">) where N = getindex(U.data, I...)</span>
+<span class="s1">        (U::PathUtility)(s::Path) = value.(U[s...])</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+    <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="activate"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.activate">[docs]</a><span class="k">def</span> <span class="nf">activate</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Activate a Julia environment in the working</span>
+<span class="sd">    directory and load requirements</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">load_libs</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="setupProject"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.setupProject">[docs]</a><span class="k">def</span> <span class="nf">setupProject</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Activate a Julia environment in the working</span>
+<span class="sd">    directory and install DecisionProgramming,</span>
+<span class="sd">    Gurobi and JuMP</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">github_url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/gamma-opt/DecisionProgramming.jl.git&quot;</span>
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">github_url</span><span class="p">)</span>
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Gurobi&quot;</span><span class="p">)</span>
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="s2">&quot;Gurobi&quot;</span><span class="p">)</span>
+    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;JuMP&quot;</span><span class="p">)</span>
+
+    <span class="n">load_libs</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="handle_index_syntax"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.handle_index_syntax">[docs]</a><span class="k">def</span> <span class="nf">handle_index_syntax</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Turn a key tuple into Julia slicing and indexing syntax</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key: String, integer, slice or a tuple of these</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string</span>
+<span class="sd">        The index string in Julia format</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">):</span>
+                <span class="n">indexes</span> <span class="o">+=</span> <span class="s1">&#39;:&#39;</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">indexes</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">indexes</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;Index not must be string, integer or &quot;:&quot;&#39;</span><span class="p">)</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="n">key</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;Index must be string, integer or &quot;:&quot;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">index_string</span></div>
+
+
+<div class="viewcode-block" id="JuliaName"><a class="viewcode-back" href="../../../api/DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName">[docs]</a><span class="k">class</span> <span class="nc">JuliaName</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; Base class for all following Julia objects. Stores the object</span>
+<span class="sd">    name in the Julia main name space and defines string</span>
+<span class="sd">    representation from Julia.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;pyDP&#39;</span><span class="o">+</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;repr(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;repr(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;isdefined(Main, :</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hasproperty(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">, :</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">JuliaName</span><span class="p">()</span>
+            <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">JuliaName</span><span class="p">()</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="n">handle_index_syntax</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">index_string</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">JuliaError</span> <span class="k">as</span> <span class="n">j</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">index_string</span> <span class="o">=</span> <span class="n">handle_index_syntax</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">index_string</span><span class="si">}</span><span class="s1">] = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">Main</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">JuliaError</span> <span class="k">as</span> <span class="n">j</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="n">j</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

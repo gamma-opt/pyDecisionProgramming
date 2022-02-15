@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DecisionProgramming.JuMP &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../">Module code</a> &raquo;</li>
+      <li>DecisionProgramming.JuMP</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for DecisionProgramming.JuMP</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39; Interface for Jump functionality necessary for optimizing models generated</span>
+<span class="sd">from diagrams.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">.juliaUtils</span> <span class="kn">import</span> <span class="n">JuliaName</span>
+<span class="kn">from</span> <span class="nn">.juliaUtils</span> <span class="kn">import</span> <span class="n">julia</span>
+<span class="kn">from</span> <span class="nn">.Diagram</span> <span class="kn">import</span> <span class="n">ExpectedValue</span>
+
+
+<div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Wraps a JuMP optimizer model and decision model variables. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_set</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = Model()&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Model.setup_Gurobi_optimizer"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Model.setup_Gurobi_optimizer">[docs]</a>    <span class="k">def</span> <span class="nf">setup_Gurobi_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Set Gurobi as the optimizer for this model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        constraints -- Tuple</span>
+<span class="sd">            Formatted as (constraint_name, constraint_value)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;optimizer = optimizer_with_attributes(</span>
+<span class="s1">                     () -&gt; Gurobi.Optimizer(Gurobi.Env())&#39;&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;,</span>
+<span class="s1">                         &quot;</span><span class="si">{</span><span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&quot; =&gt; </span><span class="si">{</span><span class="n">constraint</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;&#39;&#39;</span>
+
+        <span class="n">command</span> <span class="o">+=</span> <span class="s1">&#39;)&#39;</span>
+
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;set_optimizer(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, optimizer)&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_set</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Model.objective"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Model.objective">[docs]</a>    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">operator</span><span class="o">=</span><span class="s2">&quot;Max&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the objective for the optimizer</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        op: &quot;Min&quot; or &quot;Max&quot;</span>
+<span class="sd">            Whether to minimize or maximize the objective</span>
+
+<span class="sd">        expected_value: ExpectedValue</span>
+<span class="sd">            An ExpectedValue object. Describes the objective function.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">==</span> <span class="n">ExpectedValue</span><span class="p">:</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;@objective(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">objective</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="c1"># Note: ending the command with ;0 to prevent</span>
+            <span class="c1"># Julia from returning the object. Otherwise</span>
+            <span class="c1"># the Python julia library will try to convert</span>
+            <span class="c1"># this to a Python object and cause an exception.</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;@objective(</span>
+<span class="s1">                </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">                </span><span class="si">{</span><span class="n">objective</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">            ); 0&#39;&#39;&#39;</span>
+            <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected a dp.Diagram.ExpectedValue object&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; or a string&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.optimize"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Model.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Run the current optimizer &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_set</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">()</span>
+
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;optimize!(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Model.constraint"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Model.constraint">[docs]</a>    <span class="k">def</span> <span class="nf">constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Set a model constraints</span>
+
+<span class="sd">        loop: String (optional)</span>
+<span class="sd">            Set of loop variables in the JuMP constraint format (see the</span>
+<span class="sd">            contingent portfolio analysis page in examples)</span>
+
+<span class="sd">        constraint: String</span>
+<span class="sd">            The contraints in the JuMP format (see the contingent portfolio</span>
+<span class="sd">             analysis page in examples)</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">argument_text</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="c1"># Note: ending the command with ;0 to prevent</span>
+        <span class="c1"># Julia from returning the object. Otherwise</span>
+        <span class="c1"># the Python julia library will try to convert</span>
+        <span class="c1"># this to a Python object and cause an exception.</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&#39;&#39;@constraint(</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">argument_text</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        ); 0&#39;&#39;&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Expression"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Expression">[docs]</a><span class="k">class</span> <span class="nc">Expression</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Builds a JuMP expression from a string or set of strings.</span>
+
+<span class="sd">    model: dp.Model</span>
+<span class="sd">        A JuMP Model object</span>
+
+<span class="sd">    loop: String (optional)</span>
+<span class="sd">        Set of loop variables in the JuMP constraint format (see the</span>
+<span class="sd">        contingent portfolio analysis page in examples)</span>
+
+<span class="sd">    constraint: String</span>
+<span class="sd">        The contraints in the JuMP format (see the contingent portfolio</span>
+<span class="sd">         analysis page in examples)</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">argument_text</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="c1"># Note: ending the command with ;0 to prevent</span>
+        <span class="c1"># Julia from returning the object. Otherwise</span>
+        <span class="c1"># the Python julia library will try to convert</span>
+        <span class="c1"># this to a Python object and cause an exception.</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = @expression(</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">,</span>
+<span class="s1">            </span><span class="si">{</span><span class="n">argument_text</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        ); 0&#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../../api/DecisionProgramming.JuMP/#DecisionProgramming.JuMP.Array">[docs]</a><span class="k">class</span> <span class="nc">Array</span><span class="p">(</span><span class="n">JuliaName</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; An array of JuMP variables. Makes it easier to define contraints</span>
+<span class="sd">    using the @constraint syntax.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    model: dp.Model</span>
+<span class="sd">        A JuMP Model object</span>
+
+<span class="sd">    dims: List of Integers</span>
+<span class="sd">        A list corresponding to the size of the array in each of its</span>
+<span class="sd">        dimensions.</span>
+
+<span class="sd">    binary: Boolean (optional, default False)</span>
+<span class="sd">        Wether the variables are boolean.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">binary_arg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">binary</span><span class="p">:</span>
+            <span class="n">binary_arg</span> <span class="o">=</span> <span class="s2">&quot;binary=true, &quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            tmp = Array</span><span class="se">{{</span><span class="s1">VariableRef</span><span class="se">}}</span><span class="s1">(undef, </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s1">...)</span>
+<span class="s1">            for i in eachindex(tmp)</span>
+<span class="s1">                tmp[i] = @variable(</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">binary_arg</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">            end</span>
+<span class="s1">            </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s1"> = tmp</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+        <span class="n">julia</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

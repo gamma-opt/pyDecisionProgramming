@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DecisionProgramming.Diagram module &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="DecisionProgramming.JuMP module" href="../DecisionProgramming.JuMP/" />
+    <link rel="prev" title="DecisionProgramming package" href="../DecisionProgramming/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules/">DecisionProgramming API docs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../DecisionProgramming/">DecisionProgramming package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../DecisionProgramming/#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">DecisionProgramming.Diagram module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../DecisionProgramming.JuMP/">DecisionProgramming.JuMP module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../DecisionProgramming.Nodes/">DecisionProgramming.Nodes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../DecisionProgramming.juliaUtils/">DecisionProgramming.juliaUtils module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../DecisionProgramming/#module-DecisionProgramming">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules/">DecisionProgramming API docs</a> &raquo;</li>
+          <li><a href="../DecisionProgramming/">DecisionProgramming package</a> &raquo;</li>
+      <li>DecisionProgramming.Diagram module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/DecisionProgramming.Diagram.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-DecisionProgramming.Diagram">
+<span id="decisionprogramming-diagram-module"></span><h1>DecisionProgramming.Diagram module<a class="headerlink" href="#module-DecisionProgramming.Diagram" title="Permalink to this headline"></a></h1>
+<p>Interface for Jump functionality necessary for optimizing models generated
+from diagrams.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.CompatiblePaths">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">CompatiblePaths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_strategy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#CompatiblePaths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.CompatiblePaths" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Interface for iterating over paths that are compatible and active given
+influence diagram and decision strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: dp.Diagram</strong></dt><dd><p>An influence diagram.</p>
+</dd>
+<dt><strong>decision_strategy: dp.DecisionStrategy</strong></dt><dd><p>A decision strategy for the diagram.</p>
+</dd>
+<dt><strong>fixed: dp.FixedPath</strong></dt><dd><p>Describes states that are held fixed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.DecisionStrategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">DecisionStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#DecisionStrategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.DecisionStrategy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Extract values for decision variables from solved decision model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>decision_variables</strong></dt><dd><p>Decision variables from a solved model</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.DecisionVariables">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">DecisionVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'z'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#DecisionVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.DecisionVariables" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Create decision variables and constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: dp.Model</strong></dt><dd><p>A JuMP Model object</p>
+</dd>
+<dt><strong>diagram: dp.InfluenceDiagram</strong></dt><dd><p>A DecisionProgramming Diagram object</p>
+</dd>
+<dt><strong>names: bool</strong></dt><dd><p>Use names or have anonymous Jump variables</p>
+</dd>
+<dt><strong>name: str</strong></dt><dd><p>Prefix for predefined decision variable naming convention</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.DecisionVariables.decision_strategy">
+<span class="sig-name descname"><span class="pre">decision_strategy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#DecisionVariables.decision_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.DecisionVariables.decision_strategy" title="Permalink to this definition"></a></dt>
+<dd><p>Extract the optimal decision strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>dp.DecisionStrategy</dt><dd><p>The optimal decision strategy wrapped in a Python object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.ExpectedValue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">ExpectedValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathcompatibility</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#ExpectedValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.ExpectedValue" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>An expected value object JuMP can minimize on maximize</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: Model</strong></dt><dd></dd>
+<dt><strong>diagram: Diagram</strong></dt><dd></dd>
+<dt><strong>pathcompatibility: PathCompatibilityVariables</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.ExpressionPathUtilities">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">ExpressionPathUtilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#ExpressionPathUtilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.ExpressionPathUtilities" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>An expression that can be used to set path utilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: dp.Model</strong></dt><dd><p>A JuMP Model object</p>
+</dd>
+<dt><strong>diagram: dp.InfluenceDiagram</strong></dt><dd><p>The influence diagram the model was constructed with.</p>
+</dd>
+<dt><strong>expression: string</strong></dt><dd><p>A JuMP expression that describes the path utilities (see the
+contingent portfolio analysis page in examples).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.FixedPath">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">FixedPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#FixedPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.FixedPath" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Describes fixed paths in an influence diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: An InfluenceDiagram</strong></dt><dd><p>The influence diagram.</p>
+</dd>
+<dt><strong>node_values: dict</strong></dt><dd><p>Dictionary with node names as keys and the fixed value as the
+corresponding values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.ForbiddenPath">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">ForbiddenPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#ForbiddenPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.ForbiddenPath" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Describes forbidden paths through an influence diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: An InfluenceDiagram</strong></dt><dd><p>The influence diagram.</p>
+</dd>
+<dt><strong>nodes: List of strings</strong></dt><dd><p>List of node names connected by the forbidden paths</p>
+</dd>
+<dt><strong>values: List of tuples of strings</strong></dt><dd><p>List of states of the connected nodes that are forbidden</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">InfluenceDiagram</span></span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Holds information about the influence diagram, including nodes
+and possible states.</p>
+<p>See the latest documentation for the Julia type at
+(<a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/dev/api/">https://gamma-opt.github.io/DecisionProgramming.jl/dev/api/</a>).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.add_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add a node to the diagram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">ChanceNode, DecisionNode, or ValueNode</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.build_random">
+<span class="sig-name descname"><span class="pre">build_random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.build_random"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.build_random" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random decision diagram with n_C chance nodes, n_D
+decision nodes, and n_V value nodes. Parameter m_C and m_D are the
+upper bounds for the size of the information set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_C: Int</strong></dt><dd><p>Number of chance nodes.</p>
+</dd>
+<dt><strong>n_D: Int</strong></dt><dd><p>Number of decision nodes.</p>
+</dd>
+<dt><strong>n_V: Int</strong></dt><dd><p>Number of value nodes.</p>
+</dd>
+<dt><strong>m_C: Int</strong></dt><dd><p>Upper bound for size of information set for chance nodes.</p>
+</dd>
+<dt><strong>m_D: Int</strong></dt><dd><p>Upper bound for size of information set for decision nodes.</p>
+</dd>
+<dt><strong>states: List if integers</strong></dt><dd><p>The number of states for each chance and decision node is
+randomly chosen from this set of numbers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.conditional_value_at_risk">
+<span class="sig-name descname"><span class="pre">conditional_value_at_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_compatibility_variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_scale_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.conditional_value_at_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.conditional_value_at_risk" title="Permalink to this definition"></a></dt>
+<dd><p>Create a conditional value-at-risk (CVaR) objective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: Model</strong></dt><dd><p>JuMP model into which variables are added.</p>
+</dd>
+<dt><strong>x_s: PathCompatibilityVariables</strong></dt><dd><p>Path compatibility variables.</p>
+</dd>
+<dt><strong>alpha: Float64</strong></dt><dd><p>Probability level at which conditional value-at-risk is optimised.</p>
+</dd>
+<dt><strong>probability_scale_factor:Float64</strong></dt><dd><p>Adjusts conditional value at risk model to be compatible with the expected value expression if the probabilities were scaled there.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.construct_probability_matrix">
+<span class="sig-name descname"><span class="pre">construct_probability_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.construct_probability_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.construct_probability_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a probability matrix with appriate dimensions for a given node
+and zero values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: String</strong></dt><dd><p>The name of a ChanceNode.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.ProbabilityMatrix</dt><dd><p>A probabity matrix with zero values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.construct_utility_matrix">
+<span class="sig-name descname"><span class="pre">construct_utility_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.construct_utility_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.construct_utility_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a utility matrix with appriate dimensions for a given node
+and values set to negative infinity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: String</strong></dt><dd><p>The name of a UtilityMatrix.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.UtilityMatrix</dt><dd><p>A utility matrix with values set to negative infinity.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.decision_variables">
+<span class="sig-name descname"><span class="pre">decision_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.decision_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.decision_variables" title="Permalink to this definition"></a></dt>
+<dd><p>Construct the decision variables for a given model and this diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: dp.Model</strong></dt><dd><p>A model constructed for this diagram.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.DecisionVariables</dt><dd><p>The set of decision variables for the model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.expected_value">
+<span class="sig-name descname"><span class="pre">expected_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_compatibility_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.expected_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.expected_value" title="Permalink to this definition"></a></dt>
+<dd><p>Return the expected value given the optimal decision strategy after
+optimizing the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: dp.Model</strong></dt><dd><p>A model constructed for this diagram.</p>
+</dd>
+<dt><strong>path_compatibility_variables: dp.PathCompatibilityVariables (optional)</strong></dt><dd><p>PathCompatibilityVariables generated for this model, usually using
+diagram.path_compatibility_variables.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.ExpectedValue</dt><dd><p>A dp.ExpectedValue object describing the expected value for the
+optimal decision strategy.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.fixed_path">
+<span class="sig-name descname"><span class="pre">fixed_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.fixed_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.fixed_path" title="Permalink to this definition"></a></dt>
+<dd><p>Create a fixed path object, used to force ChangeNodes to have given
+values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node_values: dict</strong></dt><dd><p>Dictionary with node names as keys and the fixed value as the
+corresponding values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.FixedPath</dt><dd><p>A dp.FixedPath object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.forbidden_path">
+<span class="sig-name descname"><span class="pre">forbidden_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.forbidden_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.forbidden_path" title="Permalink to this definition"></a></dt>
+<dd><p>Create a ForbiddenPath object used to describe invalid paths through the
+diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>nodes: List of strings</strong></dt><dd><p>List of node names connected by the forbidden paths</p>
+</dd>
+<dt><strong>values: List of tuples of strings</strong></dt><dd><p>List of states of the connected nodes that are forbidden</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.ForbiddenPath</dt><dd><p>A dp.ForbiddenPath object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_utility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_path_utility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_path_utility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the diagram once nodes, probabilities and utilities
+have been added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>default_probability: bool = True</strong></dt><dd><p>Choice to use default path probabilities</p>
+</dd>
+<dt><strong>default_utility: bool = True</strong></dt><dd><p>Choice to use default path utilities</p>
+</dd>
+<dt><strong>positive_path_utility</strong><span class="classifier">bool = False</span></dt><dd><p>Choice to use a positive path utility translation</p>
+</dd>
+<dt><strong>negative_path_utility</strong><span class="classifier">bool = False</span></dt><dd><p>Choice to use a negative path utility translation</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.generate_arcs">
+<span class="sig-name descname"><span class="pre">generate_arcs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.generate_arcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.generate_arcs" title="Permalink to this definition"></a></dt>
+<dd><p>Generate arc structures using nodes added to influence diagram, by ordering nodes, giving them indices and generating correct values for the vectors Names, I_j, states, S, C, D, V in the influence digram. Abstraction is created and the names of the nodes and states are only used in the user interface from here on.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.index_of">
+<span class="sig-name descname"><span class="pre">index_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.index_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.index_of" title="Permalink to this definition"></a></dt>
+<dd><p>Find index of a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: String</strong></dt><dd><p>The name of a node</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Integer</dt><dd><p>The index of the node in the diagram</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.lazy_probability_cut">
+<span class="sig-name descname"><span class="pre">lazy_probability_cut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_compatibility_variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.lazy_probability_cut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.lazy_probability_cut" title="Permalink to this definition"></a></dt>
+<dd><p>Add a probability cut to the model as a lazy constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>path_compatibility_variables: dp.PathCompatibilityVariables</strong></dt><dd><p>A set of path compatibility variables constructed for this diagram.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.num_states">
+<span class="sig-name descname"><span class="pre">num_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.num_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.num_states" title="Permalink to this definition"></a></dt>
+<dd><p>Find the number of states a given node has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: String</strong></dt><dd><p>The name of a node</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Integer</dt><dd><p>The number of states the given node has</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.path_compatibility_variables">
+<span class="sig-name descname"><span class="pre">path_compatibility_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forbidden_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_scale_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.path_compatibility_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.path_compatibility_variables" title="Permalink to this definition"></a></dt>
+<dd><p>Construct the path compatibility variables for a given model and this
+diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: dp.Model</strong></dt><dd><p>A model constructed for this diagram.</p>
+</dd>
+<dt><strong>decision variables: dp.DecisionVariables (optional)</strong></dt><dd><p>DecisionVariables constructed for this model.</p>
+</dd>
+<dt><strong>names: Bool (optional)</strong></dt><dd></dd>
+<dt><strong>name: String (optional)</strong></dt><dd></dd>
+<dt><strong>forbidden_paths: List of dp.ForbiddenPath variables (optional)</strong></dt><dd></dd>
+<dt><strong>fixed: List of dp.FixedPath variables (optional)</strong></dt><dd></dd>
+<dt><strong>probability_cut: Bool (optional)</strong></dt><dd></dd>
+<dt><strong>probability_scale_factor: Number (optional)</strong></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.PathCompatibilityVariables</dt><dd><p>The set of path compatibility variables for the model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.random_probabilities">
+<span class="sig-name descname"><span class="pre">random_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_inactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.random_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.random_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random probabilities for a chance node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: dp.ChanceNode</strong></dt><dd><p>Random probabilities will be assigned to this node.</p>
+</dd>
+<dt><strong>n_inactive: Int</strong></dt><dd><p>Number of inactive states</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.random_utilities">
+<span class="sig-name descname"><span class="pre">random_utilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.random_utilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.random_utilities" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random utilities for a value node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node: dp.ValueNode</strong></dt><dd><p>Random utilities are generated for this node</p>
+</dd>
+<dt><strong>low: float</strong></dt><dd><p>Lower bound for random utilities</p>
+</dd>
+<dt><strong>high: float</strong></dt><dd><p>Upper bound for random utilities</p>
+</dd>
+<dt><strong>seed: int</strong></dt><dd><p>Seed for the random number generator</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.set_path_utilities">
+<span class="sig-name descname"><span class="pre">set_path_utilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.set_path_utilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.set_path_utilities" title="Permalink to this definition"></a></dt>
+<dd><p>Use given expression as the path utilities of the diagram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>expressions: ExpressionPathUtilities</strong></dt><dd><p>A set of JuMP expression.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.set_probabilities">
+<span class="sig-name descname"><span class="pre">set_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.set_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.set_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Set the probabilities of a ChanceNode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">str</span></dt><dd><p>The name of a ChanceNode. The probability matrix of this node is
+returned.</p>
+</dd>
+<dt><strong>matrix</strong><span class="classifier">ProbabilityMatrix or Numpy array</span></dt><dd><p>The probability matrix that replaces the current one. May be a
+ProbabilityMarix of a Numpy array.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.set_utility">
+<span class="sig-name descname"><span class="pre">set_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.set_utility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.set_utility" title="Permalink to this definition"></a></dt>
+<dd><p>Set the utilities of a ValueNode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">str</span></dt><dd><p>The name of a ValueNode. The probability matrix of this node is
+returned.</p>
+</dd>
+<dt><strong>matrix</strong><span class="classifier">Numpy array</span></dt><dd><p>The probability matrix that replaces the current one.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.state_probabilities">
+<span class="sig-name descname"><span class="pre">state_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_strategy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.state_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.state_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Extract the state probabilities as a dp.StateProbabilities object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>decision_strategy: dp.DecisionStrategy</strong></dt><dd><p>A decision strategy. A decision strategy can be constructed using
+the dp.DecisionVariables.decision_strategy method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.StateProbabilities</dt><dd><p>A dp.StateProbabilities object containing information about the
+probabilites of each state given the decision strategy.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.InfluenceDiagram.utility_distribution">
+<span class="sig-name descname"><span class="pre">utility_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_strategy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#InfluenceDiagram.utility_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.InfluenceDiagram.utility_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Extract the utility distribution as a dp.UtilityDistribution object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>decision_strategy: dp.DecisionStrategy</strong></dt><dd><p>A decision strategy. A decision strategy can be constructed using
+the dp.DecisionVariables.decision_strategy method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>dp.UtilityDistribution</dt><dd><p>Describes the distribution of utilities given the decision strategy.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.PathCompatibilityVariables">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">PathCompatibilityVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forbidden_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_scale_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#PathCompatibilityVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.PathCompatibilityVariables" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Create path compatibility variables and constraints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model: Model</strong></dt><dd><p>JuMP model into which variables are added.</p>
+</dd>
+<dt><strong>diagram: InfluenceDiagram</strong></dt><dd><p>Influence diagram structure.</p>
+</dd>
+<dt><strong>decision_variables: DecisionVariables</strong></dt><dd><p>A set of decision variables for the diagram.</p>
+</dd>
+<dt><strong>names: bool</strong></dt><dd><p>Use names or have JuMP variables be anonymous.</p>
+</dd>
+<dt><strong>name: str</strong></dt><dd><p>Prefix for predefined decision variable naming convention.</p>
+</dd>
+<dt><strong>forbidden_paths: list of ForbiddenPath objects:</strong></dt><dd><p>The forbidden subpath structures. Path compatibility variables
+will not be generated for paths that include forbidden subpaths.</p>
+</dd>
+<dt><strong>fixed: FixedPath</strong></dt><dd><p>Path compatibility variable will not be generated for paths which
+do not include these fixed subpaths.</p>
+</dd>
+<dt><strong>probability_cut: bool</strong></dt><dd><p>Includes probability cut constraint in the optimisation model.</p>
+</dd>
+<dt><strong>probability_scale_factor: float</strong></dt><dd><p>Adjusts conditional value at risk model to be compatible with the
+expected value expression if the probabilities were scaled there.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>diagram: InfluenceDiagram</strong></dt><dd><p>An influence diagram.</p>
+</dd>
+<dt><strong>decision_variables: DecisionVariables</strong></dt><dd><p>A set of decision variables for the diagram</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.Paths">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#Paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.Paths" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Iterate over paths in lexicographical order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>states: List of strings</strong></dt><dd><p>List of paths to connect</p>
+</dd>
+<dt><strong>fixed: dp.FixedPath</strong></dt><dd><p>Describes states that are held fixed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.ProbabilityMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">ProbabilityMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#ProbabilityMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.ProbabilityMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Construct an empty probability matrix for a chance node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: Diagram</strong></dt><dd><p>The influence diagram that contains the node</p>
+</dd>
+<dt><strong>node</strong><span class="classifier">str</span></dt><dd><p>The name of a ChanceNode. The probability matrix of this node is
+returned.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.ProbabilityMatrix.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#ProbabilityMatrix.size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.ProbabilityMatrix.size" title="Permalink to this definition"></a></dt>
+<dd><p>Return the size of the nodes information set.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.StateProbabilities">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">StateProbabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_strategy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#StateProbabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.StateProbabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Extract state propabilities from a solved model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: Diagram</strong></dt><dd><p>An influence diagram</p>
+</dd>
+<dt><strong>decision_strategy: dp.DecisionStrategy</strong></dt><dd><p>A decision strategy created for the diagram.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.StateProbabilities.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#StateProbabilities.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.StateProbabilities.print" title="Permalink to this definition"></a></dt>
+<dd><p>Print the state probabilities.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.StateProbabilities.print_decision_strategy">
+<span class="sig-name descname"><span class="pre">print_decision_strategy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#StateProbabilities.print_decision_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.StateProbabilities.print_decision_strategy" title="Permalink to this definition"></a></dt>
+<dd><p>Print the decision strategy.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">UtilityDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_strategy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Extract utility distribution from a solved model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: Diagram</strong></dt><dd><p>The diagram of a solved model</p>
+</dd>
+<dt><strong>decision_strategy: DecisionStrategy</strong></dt><dd><p>A decision strategy extracted from a solved model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution.conditional_value_at_risk">
+<span class="sig-name descname"><span class="pre">conditional_value_at_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution.conditional_value_at_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution.conditional_value_at_risk" title="Permalink to this definition"></a></dt>
+<dd><p>Print the conditional value at rist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution.print_distribution">
+<span class="sig-name descname"><span class="pre">print_distribution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution.print_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution.print_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Print the utility distribution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution.print_risk_measures">
+<span class="sig-name descname"><span class="pre">print_risk_measures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%f'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution.print_risk_measures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution.print_risk_measures" title="Permalink to this definition"></a></dt>
+<dd><p>Print risk measures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution.print_statistics">
+<span class="sig-name descname"><span class="pre">print_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution.print_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution.print_statistics" title="Permalink to this definition"></a></dt>
+<dd><p>Print statistics about the utility distribution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityDistribution.value_at_risk">
+<span class="sig-name descname"><span class="pre">value_at_risk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityDistribution.value_at_risk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityDistribution.value_at_risk" title="Permalink to this definition"></a></dt>
+<dd><p>Print the value at risk.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DecisionProgramming.Diagram.UtilityMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DecisionProgramming.Diagram.</span></span><span class="sig-name descname"><span class="pre">UtilityMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diagram</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/DecisionProgramming/Diagram/#UtilityMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DecisionProgramming.Diagram.UtilityMatrix" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../DecisionProgramming.juliaUtils/#DecisionProgramming.juliaUtils.JuliaName" title="DecisionProgramming.juliaUtils.JuliaName"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionProgramming.juliaUtils.JuliaName</span></code></a></p>
+<p>Construct an empty probability matrix for a chance node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>diagram: Diagram</strong></dt><dd><p>The influence diagram that contains the node</p>
+</dd>
+<dt><strong>node</strong><span class="classifier">str</span></dt><dd><p>The name of a ChanceNode. The probability matrix of this node is
+returned.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../DecisionProgramming/" class="btn btn-neutral float-left" title="DecisionProgramming package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../DecisionProgramming.JuMP/" class="btn btn-neutral float-right" title="DecisionProgramming.JuMP module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

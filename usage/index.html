@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Used Car Buyer" href="../used-car-buyer/" />
+    <link rel="prev" title="Installation" href="../installation/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-nodes">Adding Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probability-matrices">Probability Matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-syntax">Helper Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-matrices">Utility Matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-the-influence-diagram">Generating the influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-the-graph">Analyzing the Graph</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h1>
+<p>Here we show you how to construct a simple
+influence diagram and create a decision model
+using pyDecisionProgramming.</p>
+<p>First we import pyDecisionProgramming and activate
+the Julia environment.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">DecisionProgramming</span> <span class="k">as</span> <span class="nn">dp</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="adding-nodes">
+<h2>Adding Nodes<a class="headerlink" href="#adding-nodes" title="Permalink to this headline"></a></h2>
+<img alt="An influence diagram with 4 nodes." src="../_images/2chance_1decision_1value.svg" /><p>We will create the influence diagram pictures above.
+First we create a new influence diagram.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">InfluenceDiagram</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Next we define each node as a
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">DecisionNode</span></span></code>, a <code class="code python docutils literal notranslate"><span class="name"><span class="pre">ChanceNode</span></span></code> or
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">ValueNode</span></span></code> and add them to the diagram.
+Creating a <code class="code python docutils literal notranslate"><span class="name"><span class="pre">DecisionNode</span></span></code> or a
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">ChanceNode</span></span></code> requires giving it a unique
+name, its information set and its states. If the
+node is a root node, its information set is an
+empty list (<code class="code python docutils literal notranslate"><span class="punctuation"><span class="pre">[]</span></span></code>). The order in which the
+nodes are added does not matter.</p>
+<p>Use the add_node method to add nodes to the diagram.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">D1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">D1</span><span class="p">)</span>
+
+<span class="n">C2</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">C2</span><span class="p">)</span>
+
+<span class="n">C1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">C1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Value nodes only need a name and their information
+set. They do not have a state, since their purpose
+is to map their information state to utility values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">V</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;C2&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once all the nodes have been added, we generate the
+arcs in the diagram. This orders the nodes and
+numbers them such that each nodes predecessors will
+have a smaller number than they do. In effect,
+the change and decision nodes are numbered such
+that <span class="math notranslate nohighlight">\(C \bigcup D = \{ 1, \dots, n\}\)</span>,
+where <span class="math notranslate nohighlight">\(n=|C|+|D|\)</span>. For more details see
+<a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/influence-diagram/">the page on influence diagrams</a> in the
+documentation for DecisionProgramming.jl.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate_arcs</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The fields <code class="code docutils literal notranslate"><span class="pre">Names</span></code>, <code class="code docutils literal notranslate"><span class="pre">I_j</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">States</span></code>, <code class="code docutils literal notranslate"><span class="pre">S</span></code>, <code class="code docutils literal notranslate"><span class="pre">C</span></code>, <code class="code docutils literal notranslate"><span class="pre">D</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">V</span></code> in the influence diagram have been
+defined. The names field holds the names of
+all nodes in the order of they numbers. From
+this we can see that node D1 has been numbered 1,
+node C1 has been numbered 2 and node C2 has been
+numbered 3. The field <code class="code docutils literal notranslate"><span class="pre">I_j</span></code> holds the
+information sets of each node. Notice, that the
+nodes are identified by their numbers. The field
+<code class="code docutils literal notranslate"><span class="pre">States</span></code> holds the names of the states of
+each node and field <code class="code docutils literal notranslate"><span class="pre">S</span></code> holds the number of
+states each node has. Fields <code class="code docutils literal notranslate"><span class="pre">C</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">D</span></code> and <code class="code docutils literal notranslate"><span class="pre">V</span></code> contain
+the chance, decision and value nodes respectively.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">Names</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="p">[</span><span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">I_j</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">Vector</span><span class="p">{</span><span class="n">Int16</span><span class="p">}[[],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">States</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="p">[[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">]]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">S</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">Int16</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">C</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">Int16</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">D</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">Int16</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">V</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">Int16</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="probability-matrices">
+<h2>Probability Matrices<a class="headerlink" href="#probability-matrices" title="Permalink to this headline"></a></h2>
+<p>Each change node needs a probability matrix which
+describes the probability distribution over its
+states given an information state. It holds
+probability values
+<span class="math notranslate nohighlight">\(\mathbb P \left(X_j=s_j | X_{I(j)} = {\bf s}_{I(j)} \right)\)</span>
+for all
+<span class="math notranslate nohighlight">\(s_j \in S_j\)</span> and
+<span class="math notranslate nohighlight">\({\bf s}_{I(j)} \in {\bf S}_{I(j)}\)</span>.</p>
+<p>Thus, the probability matrix of a chance node
+needs to have dimensions that correspond to the
+number of states of the nodes in its information
+set and number of state of the node itself.</p>
+<p>For example, the node C1 in the influence diagram
+above has an empty information set and three
+states <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, and <span class="math notranslate nohighlight">\(z\)</span>.
+Therefore its probability matrix needs dimensions
+<span class="math notranslate nohighlight">\((3,1)\)</span>. If the probabilities of events
+<span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, and <span class="math notranslate nohighlight">\(z\)</span> occuring are
+10%, 30%, and 60%, then the probability matrix
+<span class="math notranslate nohighlight">\(X_{C1}\)</span>
+should be
+<code class="code python docutils literal notranslate"><span class="punctuation"><span class="pre">[</span></span><span class="literal number float"><span class="pre">0.1</span></span><span class="punctuation"><span class="pre">,</span></span> <span class="literal number float"><span class="pre">0.3</span></span><span class="punctuation"><span class="pre">,</span></span> <span class="literal number float"><span class="pre">0.6</span></span><span class="punctuation"><span class="pre">]</span></span></code>. The order
+of the probability values is determined by the
+order in which the states are given when the node
+is added. The states are also stored in this order
+in the States vector.</p>
+<p>In Decision Programming the probability matrix of
+node C1 can be added in the following way. Note,
+that probability matrices can only be added after
+the arcs have been generated.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># How C1 was added:</span>
+<span class="c1"># C1 = dp.ChanceNode(&quot;C1&quot;, [], [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;])</span>
+<span class="c1"># diagram.add_node(C1)</span>
+
+<span class="n">X_C1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">X_C1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">add_probabilities</span></code> function adds the
+probability matrix as a Probabilities structure
+into the influence diagram’s <code class="code docutils literal notranslate"><span class="pre">X</span></code> field.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">X</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">Probabilities</span><span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>As another example, we will add the probability
+matrix of node C2. It has two nodes in its
+information set: C1 and D1. These nodes have 3 and
+2 states, respectively. Node C2 itself has 2
+states. Now, the question is: should the
+dimensions of the probability matrix be
+<span class="math notranslate nohighlight">\(\left(|S_{C1}|, |S_{D1}|, |S_{C2}|\right) = (3,2,2)\)</span>
+or
+<span class="math notranslate nohighlight">\(\left(|S_{D1}|, |S_{C1}|, |S_{C2}|\right) = (2,3,2)\)</span>?
+The answer is that the dimensions should be in
+ascending order of the nodes’ numbers that they
+correspond to. This is also the order that the
+information set is in in the field <span class="math notranslate nohighlight">\(I_j\)</span>. In
+this case the influence diagram looks like this:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">Names</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="p">[</span><span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">I_j</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">Vector</span><span class="p">{</span><span class="n">Int16</span><span class="p">}[[],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">S</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">Int16</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Therefore, the probability matrix of node C2
+should have dimensions
+<span class="math notranslate nohighlight">\(\left(|S_{D1}|, |S_{C1}|, |S_{C2}|\right) = (2,3,2)\)</span>.
+The probability matrix can be added by declaring
+the matrix and then filling in the probability
+values as shown below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> import numpy as np
+ X_C2 = np.zeros([2, 3, 2])
+ X_C2[1, 1, 1] = ...
+ X_C2[1, 1, 2] = ...
+ X_C2[1, 1, 2] = ...
+⋮
+ diagram.add_probabilities(&quot;C2&quot;, X_C2)
+</pre></div>
+</div>
+<p>In order to be able to fill in the probability
+values, it is crucial to understand what the
+matrix indices represent. The indices represent a
+subpath in the influence diagram. The states in
+the path are referred to with their numbers
+instead of with their names. The states of a node
+are numbered according to their positions in the
+vector of states in field <code class="code docutils literal notranslate"><span class="pre">States</span></code>. The
+order of the
+states of each node is seen below. From this, we
+can deduce that for nodes D1, C1, C2 the subpath
+(1,1,1) corresponds to subpath <span class="math notranslate nohighlight">\((a, x, v)\)</span>
+and subpath <span class="math notranslate nohighlight">\((1, 3, 2)\)</span> corresponds to
+subpath <span class="math notranslate nohighlight">\((a, z, w)\)</span>. Therefore, the
+probability value at
+<code class="code docutils literal notranslate"><span class="pre">X_C2[1,</span> <span class="pre">3,</span> <span class="pre">2]</span></code> should be the probability of
+the scenario <span class="math notranslate nohighlight">\((a, z, w)\)</span> occuring.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">States</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="p">[[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+<section id="helper-syntax">
+<h2>Helper Syntax<a class="headerlink" href="#helper-syntax" title="Permalink to this headline"></a></h2>
+<p>Figuring out the dimensions of a probability
+matrix and adding the probability values is
+difficult. Therefore, we have implemented an
+easier syntax.</p>
+<p>A probability matrix can be initialised with the
+correct dimensions using the
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">diagram</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">construct_probability_matrix</span></span></code>
+function. It initiliases the probability matrix
+with zeros.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">X_C2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">X_C2</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">13</span><span class="p">]:</span>
+<span class="p">[</span><span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">;</span> <span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="p">[</span><span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">;</span> <span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">X_C2</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A matrix of type <code class="code docutils literal notranslate"><span class="pre">dp.ProbabilityMatrix</span></code> can
+be filled using the names of the states. The states
+must however be given in the correct order,
+according to the order of the nodes in the
+information set vector <span class="math notranslate nohighlight">\(I_j\)</span>. Notice that if
+we use the colon (:) to indicate several elements
+of the matrix, the probability values have to be
+given in the correct order of the states in
+<code class="code docutils literal notranslate"><span class="pre">States</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_C2</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">X_C2</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">X_C2</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Trying with an incorrect name causes a
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">JuliaError</span></span></code> to be raised.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In[15]: X_C2[&quot;z&quot;, &quot;a&quot;, &quot;v&quot;] = 0.75
+⋮
+JuliaError: Exception &#39;UndefVarError: probability_matrix not defined&#39; occurred while calling julia code:
+pyDP74ca39945e[&quot;z&quot;,&quot;a&quot;,&quot;v&quot;] = 0.75
+</pre></div>
+</div>
+<p>A matrix of type <code class="code docutils literal notranslate"><span class="pre">dp.ProbabilityMatrix</span></code> can
+also be filled using the matrix indices if that is
+more convenient. The following achieves the same
+as what was done above.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_C2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">X_C2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">X_C2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now, the probability matrix <code class="code docutils literal notranslate"><span class="pre">X_C2</span></code> is
+partially filled.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">X_C2</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span>
+<span class="p">[</span><span class="mf">0.3</span> <span class="mf">0.0</span> <span class="mf">0.75</span><span class="p">;</span> <span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="p">[</span><span class="mf">0.7</span> <span class="mf">0.0</span> <span class="mf">0.25</span><span class="p">;</span> <span class="mf">0.0</span> <span class="mf">0.0</span> <span class="mf">0.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The probability matrix can be added to the
+influence diagram once it has been filled with
+probability values. The probability matrix of node
+C2 is added exactly like before, despite
+<code class="code docutils literal notranslate"><span class="pre">X_C2</span></code> now being a matrix of type
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">dp</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">ProbabilityMatrix</span></span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="n">X_C2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="utility-matrices">
+<h2>Utility Matrices<a class="headerlink" href="#utility-matrices" title="Permalink to this headline"></a></h2>
+<p>Each value node maps its information states to
+utility values. In Decision Programming the
+utility values are passed to the influence diagram
+using utility matrices. Utility matrices are very
+similar to probability matrices of chance nodes.
+There are only two important differences. First,
+the utility matrices hold utility values instead
+of probabilities, meaning that they do not need to
+sum to one. Second, since value nodes do not have
+states, the cardinality of a utility matrix
+depends only on the number of states of the nodes
+in the information set.</p>
+<p>As an example, the utility matrix of node V should
+have dimensions (2,1) because its information set
+consists of node C2, which has two states. If
+state <span class="math notranslate nohighlight">\(v\)</span> of node C2 yields a utility of
+-100 and state <span class="math notranslate nohighlight">\(w\)</span> yields utility of 400,
+then the utility matrix of node V can be added in
+the following way. Note, that utility matrices can
+only be added after the arcs have been generated.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">Y_V</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+<span class="n">Y_V</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">Y_V</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The other option is to add the utility matrix
+using the
+<code class="code docutils literal notranslate"><span class="pre">diagram.construct_utility_matrix</span></code>
+function. This is very similar to the
+<code class="code docutils literal notranslate"><span class="pre">diagram.construct_probability_matrix</span></code>
+function. The
+<code class="code docutils literal notranslate"><span class="pre">diagram.construct_utility_matrix</span></code>
+function initialises the values to infinity. Using
+the <code class="code docutils literal notranslate"><span class="pre">diagram.construct_utility_matrix</span></code>
+type’s functionalities, the utility matrix of node
+V could also be added like shown below. This
+achieves the exact same result as we did above
+with the more abstract syntax.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_V</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_utility_matrix</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">)</span>
+<span class="n">Y_V</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+<span class="n">Y_V</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">Y_V</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">diagram.set_utility</span></code> function adds the utility matrix into the influence diagram’s Y field.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">diagram</span><span class="o">.</span><span class="n">Y</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">Utilities</span><span class="p">[[</span><span class="mf">400.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.0</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+<section id="generating-the-influence-diagram">
+<h2>Generating the influence diagram<a class="headerlink" href="#generating-the-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>The final part of modeling an influence diagram
+using the Decision Programming package is
+generating the full influence diagram. This is
+done using the generate_diagram! function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In this function, first, the probability and
+utility matrices in fields <code class="code docutils literal notranslate"><span class="pre">X</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">Y</span></code> are sorted according to the chance and
+value nodes’ indices.</p>
+<p>Second, the path probability and path utility
+types are declared and added into fields
+<code class="code docutils literal notranslate"><span class="pre">P</span></code> and <code class="code docutils literal notranslate"><span class="pre">U</span></code>
+respectively. These types define how the path
+probability <span class="math notranslate nohighlight">\(p({\bf s})\)</span> and path utility
+<span class="math notranslate nohighlight">\(\mathbb{U}({\bf s})\)</span>
+are defined in the model. By default, the function
+will set them to default path probability and
+default path utility. See the
+<a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/influence-diagram/">the page on influence diagrams</a> in the
+documentation for DecisionProgramming.jl
+for more information on default path probability
+and utility.</p>
+</section>
+<section id="analyzing-the-graph">
+<h2>Analyzing the Graph<a class="headerlink" href="#analyzing-the-graph" title="Permalink to this headline"></a></h2>
+<p>Once the diagram is fully constructed, we can
+find the optimal path and the utility distribution
+for that strategy. In the background
+we use the JuMP Julia package and the Gurobi
+optimizer. First, we must define a JuMP model.</p>
+<p>For this section you must have the <a class="reference external" href="https://www.gurobi.com/">Gurobi</a>
+optimizer installed. If you are an academic, check
+the <a class="reference external" href="https://www.gurobi.com/downloads/free-academic-license/#show_instructions">Gurobi academic license page</a> and follow the
+instructions from there.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We then extract the objective function from the
+diagram and use it in the JuMP model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">x_s</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">path_compatibility_variables</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">EV</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">expected_value</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_s</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">EV</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we set up the Gurobi optimizer and optimize
+the model.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">(</span>
+  <span class="p">(</span><span class="s2">&quot;IntFeasTol&quot;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+  <span class="p">(</span><span class="s2">&quot;LazyConstraints&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can not extract the optimal decision strategy
+and the utility distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">decision_strategy</span><span class="p">()</span>
+<span class="n">S_probabilities</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">state_probabilities</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+<span class="n">U_distribution</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">utility_distribution</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To print the optimal decision strategy run</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">S_probabilities</span><span class="o">.</span><span class="n">print_decision_strategy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For the utility distribution when following that
+strategy:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">U_distribution</span><span class="o">.</span><span class="n">print_distribution</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And some statistical properties of the optimal
+utility distribution:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">U_distribution</span><span class="o">.</span><span class="n">print_statistics</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../used-car-buyer/" class="btn btn-neutral float-right" title="Used Car Buyer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

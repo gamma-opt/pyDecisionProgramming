@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Used Car Buyer &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Pig Breeding" href="../pig-breeder/" />
+    <link rel="prev" title="Usage" href="../usage/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Used Car Buyer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#influence-diagram">Influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#car-s-state">Car’s state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stranger-s-offer-decision">Stranger’s offer decision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-s-outcome">Test’s outcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#purchase-decision">Purchase decision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-fee-base-profit-and-repair-costs">Testing fee, base profit and repair costs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-arcs">Generate arcs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probabilities">Probabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-influence-diagram">Generate influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-model">Decision model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-results">Analyzing results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-strategy">Decision strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-distribution">Utility distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Used Car Buyer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/used-car-buyer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="used-car-buyer">
+<h1>Used Car Buyer<a class="headerlink" href="#used-car-buyer" title="Permalink to this headline"></a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<p>To illustrate the basic functionality of Decision
+Programming, we implement a version of the used car
+buyer problem in <a class="footnote-reference brackets" href="#howard" id="id1">1</a>. In this problem, Joe
+is buying a used car. The car’s price is 1000 USD
+(US dollars), and its value is 1100 USD. Joe’s base
+profit on the car is thus 100 USD. However, Joe
+knows that the car is a “lemon”, meaning that it
+has defects in 6 major systems, with a 20%
+probability. With the remaining 80% probability,
+the car is a “peach”, and it has a defect in only
+one of the systems.</p>
+<p>The repair costs for a peach are only 40 USD,
+decreasing Joe’s profit to 60 USD. However, the
+costs for a lemon are 200 USD, resulting in a total
+loss of 100 USD. We can now formulate an influence
+diagram of Joe’s initial problem. We present the
+influence diagram in the figure below. In an
+influence diagram, circle nodes such as <span class="math notranslate nohighlight">\(O\)</span>
+are called <strong>chance nodes</strong>, representing
+uncertainty. Node <span class="math notranslate nohighlight">\(O\)</span> is a chance node
+representing the state of the car, lemon or peach.
+Square nodes such as <span class="math notranslate nohighlight">\(A\)</span> are
+<strong>decision nodes</strong>, representing decisions.
+Node <span class="math notranslate nohighlight">\(A\)</span> represents the decision to buy or
+not to buy the car. The diamond-shaped
+<strong>value node</strong> <span class="math notranslate nohighlight">\(V\)</span> denotes the utility
+calculation in the problem. For Joe, the utility
+function is the expected monetary value. The arrows
+or <strong>arcs</strong> show connections between nodes. The two
+arcs in this diagram point to the value node,
+meaning that the monetary value depends on the
+state of the car and the purchase decision.</p>
+<img alt="The influence diagram of the simple car buyer example with 3 nodes." src="../_images/used-car-buyer-1.svg" /><p>We can easily determine the optimal strategy for this problem. If Joe decides not to buy the car, his profit is zero. If he buys the car, with 20% probability he loses 100 USD and with an 80% probability he profits 60 USD. Therefore, the expected profit for buying the car is 28 USD, which is higher than the zero profit of not buying. Thus, Joe should buy the car.</p>
+<p>We now add two new features to the problem. A stranger approaches Joe and offers to tell Joe whether the car is a lemon or a peach for 25 USD. Additionally, the car dealer offers a guarantee plan which costs 60 USD and covers 50% of the repair costs. Joe notes that this is not a very good deal, and the dealer includes an anti-lemon feature: if the total repair cost exceeds 100 USD, the quarantee will fully cover the repairs.</p>
+</section>
+<section id="influence-diagram">
+<h2>Influence diagram<a class="headerlink" href="#influence-diagram" title="Permalink to this headline"></a></h2>
+<img alt="The more complicated diagram described below." src="../_images/used-car-buyer-1.svg" /><p>We present the new influence diagram above. The
+decision node <span class="math notranslate nohighlight">\(T\)</span> denotes the decision to
+accept or decline the stranger’s offer, and
+<span class="math notranslate nohighlight">\(R\)</span> is the outcome of the test. We introduce
+new value nodes <span class="math notranslate nohighlight">\(V_1\)</span> and <span class="math notranslate nohighlight">\(V_2\)</span>
+to represent the testing costs and the base profit
+from purchasing the car. Additionally, the decision
+node <span class="math notranslate nohighlight">\(A\)</span> now can choose to buy with a
+guarantee.</p>
+<p>We start by defining the influence diagram
+structure. The nodes, as well as their information
+sets and states, are defined in the first block.
+Next, the influence diagram parameters consisting
+of the probabilities and utilities are defined.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">DecisionProgramming</span> <span class="k">as</span> <span class="nn">dp</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">InfluenceDiagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="car-s-state">
+<h2>Car’s state<a class="headerlink" href="#car-s-state" title="Permalink to this headline"></a></h2>
+<p>The chance node <span class="math notranslate nohighlight">\(O\)</span> is defined by its name,
+its information set <span class="math notranslate nohighlight">\(I(O)\)</span> and its states
+<em>lemon</em> and <em>peach</em>. As seen in the influence
+diagram, the information set is empty and the node
+is a root node.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">O</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;peach&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">O</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="stranger-s-offer-decision">
+<h2>Stranger’s offer decision<a class="headerlink" href="#stranger-s-offer-decision" title="Permalink to this headline"></a></h2>
+<p>A decision node is also defined by its name, its information
+set and its states.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;no test&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="test-s-outcome">
+<h2>Test’s outcome<a class="headerlink" href="#test-s-outcome" title="Permalink to this headline"></a></h2>
+<p>The second chance node <span class="math notranslate nohighlight">\(R\)</span> has nodes <span class="math notranslate nohighlight">\(O\)</span> and
+<span class="math notranslate nohighlight">\(T\)</span> in its information set, and three states describing
+the situations of no test being done, and the test declaring
+the car to be a lemon or a peach.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;no test&quot;</span><span class="p">,</span> <span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;peach&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="purchase-decision">
+<h2>Purchase decision<a class="headerlink" href="#purchase-decision" title="Permalink to this headline"></a></h2>
+<p>The purchase decision represented by node <span class="math notranslate nohighlight">\(A\)</span> is added
+as follows.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;buy without guarantee&quot;</span><span class="p">,</span> <span class="s2">&quot;buy with guarantee&quot;</span><span class="p">,</span> <span class="s2">&quot;don&#39;t buy&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-fee-base-profit-and-repair-costs">
+<h2>Testing fee, base profit and repair costs<a class="headerlink" href="#testing-fee-base-profit-and-repair-costs" title="Permalink to this headline"></a></h2>
+<p>Value nodes are defined by only their names and information sets because they do not have states. Instead, value nodes map their information states to utility values which will be added later on.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">V1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;V1&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">V1</span><span class="p">)</span>
+<span class="n">V2</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;V2&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">V2</span><span class="p">)</span>
+<span class="n">V3</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;V3&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">V3</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-arcs">
+<h2>Generate arcs<a class="headerlink" href="#generate-arcs" title="Permalink to this headline"></a></h2>
+<p>Now that all of the nodes have been added to our influence
+diagram we generate the arcs between the nodes. This step
+automatically orders the nodes, gives them indices and
+reorganises the information into the appropriate form in the
+influence diagram structure.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate_arcs</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="probabilities">
+<h2>Probabilities<a class="headerlink" href="#probabilities" title="Permalink to this headline"></a></h2>
+<p>We continue by defining probability distributions for each
+chance node.</p>
+<p>Node <span class="math notranslate nohighlight">\(O\)</span> is a root node and has two states thus, its
+probability distribution is simply defined over the two
+states. We can use the
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">diagram</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">construct_probability_matrix</span></span></code> structure in
+creating the probability matrix easily without having to worry
+about the matrix dimensions. We then set the probability
+values and add the probability matrix to the influence
+diagram.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_O</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;O&quot;</span><span class="p">)</span>
+<span class="n">X_O</span><span class="p">[</span><span class="s2">&quot;peach&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">X_O</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="n">X_O</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Node <span class="math notranslate nohighlight">\(R\)</span> has two nodes in its information set and three
+states. The probabilities <span class="math notranslate nohighlight">\(P(s_j \mid s_{I(j)})\)</span> must
+thus be defined for all combinations of states in <span class="math notranslate nohighlight">\(O\)</span>,
+<span class="math notranslate nohighlight">\(T\)</span> and <span class="math notranslate nohighlight">\(R\)</span>. We declare the probability
+distribution over the states of node <span class="math notranslate nohighlight">\(R\)</span> for each
+information state in the following way. More information on
+defining probability matrices can be found on the
+<a class="reference external" href="usage.html">usage page</a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_R</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">)</span>
+<span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;no test&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;peach&quot;</span><span class="p">,</span> <span class="s2">&quot;no test&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;peach&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="n">X_R</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline"></a></h2>
+<p>We continue by defining the utilities associated with the
+information states of the value nodes. The utilities
+<span class="math notranslate nohighlight">\(Y_j({\bf s}_{I(j)})\)</span> are defined and added similarly to
+the probabilities.</p>
+<p>Value node <span class="math notranslate nohighlight">\(V1\)</span> has only node <span class="math notranslate nohighlight">\(T\)</span> in its
+information set and node <span class="math notranslate nohighlight">\(T\)</span> only has two states.
+Therefore, the utility matrix of node <span class="math notranslate nohighlight">\(V1\)</span> should hold
+utility values corresponding to states <span class="math notranslate nohighlight">\(test\)</span> and
+<span class="math notranslate nohighlight">\(no test\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_V1</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_utility_matrix</span><span class="p">(</span><span class="s1">&#39;V1&#39;</span><span class="p">)</span>
+<span class="n">Y_V1</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">25</span>
+<span class="n">Y_V1</span><span class="p">[</span><span class="s2">&quot;no test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s1">&#39;V1&#39;</span><span class="p">,</span> <span class="n">Y_V1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We then define the utilities associated with the base profit
+of the purchase in different scenarios.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_V2</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_utility_matrix</span><span class="p">(</span><span class="s1">&#39;V2&#39;</span><span class="p">)</span>
+<span class="n">Y_V2</span><span class="p">[</span><span class="s2">&quot;buy without guarantee&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">Y_V2</span><span class="p">[</span><span class="s2">&quot;buy with guarantee&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">Y_V2</span><span class="p">[</span><span class="s2">&quot;don&#39;t buy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s1">&#39;V2&#39;</span><span class="p">,</span> <span class="n">Y_V2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we define the utilities corresponding to the repair
+costs. The rows of the utilities matrix Y_V3 correspond to the
+state of the car, while the columns correspond to the decision
+made in node AA. Notice that the utility values for the second
+row are added as a vector, in this case it is important to
+give the utility values in the correct order. The order of the
+columns is determined by the order in which the states are
+given when declaring node AA. See the <a class="reference external" href="usage.html">usage page</a>
+for more information on the syntax.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_V3</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_utility_matrix</span><span class="p">(</span><span class="s1">&#39;V3&#39;</span><span class="p">)</span>
+<span class="n">Y_V3</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;buy without guarantee&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">200</span>
+<span class="n">Y_V3</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;buy with guarantee&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">Y_V3</span><span class="p">[</span><span class="s2">&quot;lemon&quot;</span><span class="p">,</span> <span class="s2">&quot;don&#39;t buy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">Y_V3</span><span class="p">[</span><span class="s2">&quot;peach&quot;</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s1">&#39;V3&#39;</span><span class="p">,</span> <span class="n">Y_V3</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-influence-diagram">
+<h2>Generate influence diagram<a class="headerlink" href="#generate-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>Finally, generate the full influence diagram before defining
+the decision model. By default this function uses the default
+path probabilities and utilities, which are defined as the
+joint probability of all chance events in the diagram and the
+sum of utilities in value nodes, respectively. In the
+<a class="reference external" href="contingent-portfolio-programming">Contingent Portfolio Programming</a>
+example, we show how to use a user-defined custom path utility
+function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-model">
+<h2>Decision model<a class="headerlink" href="#decision-model" title="Permalink to this headline"></a></h2>
+<p>We then construct the decision model by declaring a JuMP model
+and adding decision variables and path compatibility variables
+to the model. We define the objective function to be the
+expected value.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">x_s</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">path_compatibility_variables</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">EV</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">expected_value</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_s</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">EV</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can perform the optimization using the Gurobi optimizer.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">(</span>
+   <span class="p">(</span><span class="s2">&quot;IntFeasTol&quot;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+   <span class="p">(</span><span class="s2">&quot;LazyConstraints&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="analyzing-results">
+<h2>Analyzing results<a class="headerlink" href="#analyzing-results" title="Permalink to this headline"></a></h2>
+<p>Once the model is solved, we extract the results.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">decision_strategy</span><span class="p">()</span>
+<span class="n">S_probabilities</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">state_probabilities</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+<span class="n">U_distribution</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">utility_distribution</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-strategy">
+<h2>Decision strategy<a class="headerlink" href="#decision-strategy" title="Permalink to this headline"></a></h2>
+<p>We obtain the following optimal decision strategy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [1]: S_probabilities.print_decision_strategy()
+
+Out[2]:
+┌───────────────┐
+│ Decision in T │
+├───────────────┤
+│ test          │
+└───────────────┘
+┌───────────────┬───────────────────────┐
+│ State(s) of R │ Decision in A         │
+├───────────────┼───────────────────────┤
+│ lemon         │ buy with guarantee    │
+│ peach         │ buy without guarantee │
+└───────────────┴───────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="utility-distribution">
+<h2>Utility distribution<a class="headerlink" href="#utility-distribution" title="Permalink to this headline"></a></h2>
+<p>We obtain the following optimal decision strategy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: U_distribution.print_distribution()
+
+Out[2]:
+┌───────────┬─────────────┐
+│   Utility │ Probability │
+│   Float64 │     Float64 │
+├───────────┼─────────────┤
+│ 15.000000 │    0.200000 │
+│ 35.000000 │    0.800000 │
+└───────────┴─────────────┘
+</pre></div>
+</div>
+<p>From the utility distribution, we can see that Joe’s profit
+with this strategy is 15 USD, with a 20% probability (the car
+is a lemon) and 35 USD with an 80% probability (the car is a
+peach).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [3]: U_distribution.print_statistics()
+
+Out[3]:
+┌──────────┬────────────┐
+│     Name │ Statistics │
+│   String │    Float64 │
+├──────────┼────────────┤
+│     Mean │  31.000000 │
+│      Std │   8.000000 │
+│ Skewness │  -1.500000 │
+│ Kurtosis │   0.250000 │
+└──────────┴────────────┘
+</pre></div>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="howard"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Howard, R. A. (1977). The used car buyer. Reading in Decision Analysis, 2nd Ed. Stanford Research Institute, Menlo Park, CA.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../usage/" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../pig-breeder/" class="btn btn-neutral float-right" title="Pig Breeding" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

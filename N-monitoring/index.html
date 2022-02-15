@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N-Monitoring &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Contingent Portfolio Programming" href="../contingent-portfolio-programming/" />
+    <link rel="prev" title="Pig Breeding" href="../pig-breeder/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">N-Monitoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#influence-diagram">Influence Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialising-the-influence-diagram">Initialising the influence diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-nodes">Adding nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-arcs">Generating arcs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load-state-probabilities">Load State Probabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-probabilities">Reporting Probabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#probability-of-failure">Probability of Failure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility">Utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-influence-diagram">Generate Influence Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-model">Decision Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-results">Analyzing Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contingent-portfolio-programming/">Contingent Portfolio Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>N-Monitoring</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/N-monitoring.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="n-monitoring">
+<h1>N-Monitoring<a class="headerlink" href="#n-monitoring" title="Permalink to this headline"></a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<p>The <span class="math notranslate nohighlight">\(N\)</span>-monitoring problem is described in  <a class="footnote-reference brackets" href="#salo" id="id1">1</a>,
+sections 4.1 and 6.1.</p>
+</section>
+<section id="influence-diagram">
+<h2>Influence Diagram<a class="headerlink" href="#influence-diagram" title="Permalink to this headline"></a></h2>
+<img alt="The influence diagram of the N-monitoring problem described below" src="../_images/n-month-pig-breeding.svg" /><p>The influence diagram of the generalized
+<span class="math notranslate nohighlight">\(N\)</span>-monitoring problem where <span class="math notranslate nohighlight">\(N\ge 1\)</span> and
+indices <span class="math notranslate nohighlight">\(k=1,...,N\)</span>. The nodes are associated with
+states as follows. Load state <span class="math notranslate nohighlight">\(L=\{high, low\}\)</span>
+denotes the load on a structure, report states
+<span class="math notranslate nohighlight">\(R_k=\{high, low\}\)</span> report the load state to the
+action states <span class="math notranslate nohighlight">\(A_k=\{yes, no\}\)</span> which represent
+different decisions to fortify the structure. The failure
+state <span class="math notranslate nohighlight">\(F=\{failure, success\}\)</span> represents whether or
+not the (fortified) structure fails under the load
+<span class="math notranslate nohighlight">\(L\)</span>. Finally, the utility at target <span class="math notranslate nohighlight">\(T\)</span> depends
+on the fortification costs and whether F fails.</p>
+<p>We begin by choosing <span class="math notranslate nohighlight">\(N\)</span> and defining our
+fortification cost function. We draw the cost of
+fortification <span class="math notranslate nohighlight">\(c_k∼U(0,1)\)</span> from a uniform
+distribution, and the magnitude of fortification is
+directly proportional to the cost. Fortification is defined
+as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f(A_k = yes) = c_k\\
+f(A_k = no) = 0\end{split}\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">DecisionProgramming</span> <span class="k">as</span> <span class="nn">dp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">c_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mf">0.03</span>
+
+<span class="k">def</span> <span class="nf">fortification</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">c_k</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</section>
+<section id="initialising-the-influence-diagram">
+<h2>Initialising the influence diagram<a class="headerlink" href="#initialising-the-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>We initialise the influence diagram before adding nodes to
+it.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">InfluenceDiagram</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-nodes">
+<h2>Adding nodes<a class="headerlink" href="#adding-nodes" title="Permalink to this headline"></a></h2>
+<p>Add node <span class="math notranslate nohighlight">\(L\)</span> which represents the load on the
+structure. This node is the root node and thus, has an
+empty information set. Its states describe the state of the
+load, they are <span class="math notranslate nohighlight">\(high\)</span> and <span class="math notranslate nohighlight">\(low\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;low&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The report nodes <span class="math notranslate nohighlight">\(R_k\)</span> and action nodes <span class="math notranslate nohighlight">\(A_k\)</span>
+are easily added with a for-loop. The report nodes have
+node <span class="math notranslate nohighlight">\(L\)</span> in their information sets and their states
+are <span class="math notranslate nohighlight">\(high\)</span> and <span class="math notranslate nohighlight">\(low\)</span>. The actions are made
+based on these reports, which is represented by the action
+nodes <span class="math notranslate nohighlight">\(A_k\)</span> having the report nodes <span class="math notranslate nohighlight">\(R_k\)</span> in
+their information sets. The action nodes have states
+<span class="math notranslate nohighlight">\(yes\)</span> and <span class="math notranslate nohighlight">\(no\)</span>, which represents decisions
+whether to fortify the structure or not.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;low&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;R</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">])</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The failure node <span class="math notranslate nohighlight">\(F\)</span> has the load node <span class="math notranslate nohighlight">\(L\)</span> and
+all of the action nodes <span class="math notranslate nohighlight">\(A_k\)</span>
+in its information set. The failure node has states
+<span class="math notranslate nohighlight">\(failure\)</span> and <span class="math notranslate nohighlight">\(success\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span>
+    <span class="s2">&quot;F&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;A</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]],</span>
+    <span class="p">[</span><span class="s2">&quot;failure&quot;</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The value node <span class="math notranslate nohighlight">\(T\)</span> is added as follows.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ValueNode</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;A</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generating-arcs">
+<h2>Generating arcs<a class="headerlink" href="#generating-arcs" title="Permalink to this headline"></a></h2>
+<p>Now that all of the nodes have been added to the influence
+diagram we generate the arcs between the nodes. This step
+automatically orders the nodes, gives them indices and
+reorganises the information into the appropriate form.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate_arcs</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="load-state-probabilities">
+<h2>Load State Probabilities<a class="headerlink" href="#load-state-probabilities" title="Permalink to this headline"></a></h2>
+<p>After generating the arcs, the probabilities and utilities
+can be added. The probability that the load is high,
+<span class="math notranslate nohighlight">\(\mathbb P(L=high)\)</span>, is drawn from a uniform
+distribution. For different syntax options for adding
+probabilities and utilities, see the
+<a class="reference external" href="usage.html">usage page</a>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+<span class="n">X_L</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">-</span><span class="n">r</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="n">X_L</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="reporting-probabilities">
+<h2>Reporting Probabilities<a class="headerlink" href="#reporting-probabilities" title="Permalink to this headline"></a></h2>
+<p>The probabilities of the report states correspond to the
+load state. We draw the values <span class="math notranslate nohighlight">\(x∼U(0,1)\)</span> and
+<span class="math notranslate nohighlight">\(y∼U(0,1)\)</span> from uniform distributions.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb P(R_k=high \mid L=high) = max\{x, 1-x\}\\
+\mathbb P(R_k=low \mid L=low) = max\{y, 1-y\}\end{split}\]</div>
+<p>The probability of a correct report is thus in the range
+[0.5,1]. (This reflects the fact that a probability under
+50% would not even make sense, since we would notice that
+if the test suggests a high load, the load is more likely
+to be low, resulting in that a low report “turns into” a
+high report and vice versa.)</p>
+<p>In Decision Programming we add these probabilities by
+declaring probability matrices for nodes <span class="math notranslate nohighlight">\(R_k\)</span>.
+The probability matrix of a report node <span class="math notranslate nohighlight">\(R_k\)</span> has
+dimensions (2,2), where the rows correspond to the states
+<span class="math notranslate nohighlight">\(high\)</span> and <span class="math notranslate nohighlight">\(low\)</span> of its predecessor node
+<span class="math notranslate nohighlight">\(L\)</span> and the columns to its own states <span class="math notranslate nohighlight">\(high\)</span>
+and <span class="math notranslate nohighlight">\(low\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">])</span>
+    <span class="n">X_R</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">x</span>
+    <span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">X_R</span><span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">X_R</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="probability-of-failure">
+<h2>Probability of Failure<a class="headerlink" href="#probability-of-failure" title="Permalink to this headline"></a></h2>
+<p>The probability of failure is decreased by fortification
+actions. We draw the values <span class="math notranslate nohighlight">\(x∼U(0,1)\)</span> and
+<span class="math notranslate nohighlight">\(y∼U(0,1)\)</span> from uniform distribution.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{x,1-x\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\\
+\mathbb P(F=failure \mid A_N,\dots,A_1,L=high) = \frac{\max\{y,1-y\}}{exp\left( b\sum_{k=1,\dots,N}f(A_k) \right)}\end{split}\]</div>
+<p>First we initialise the probability matrix for node
+<span class="math notranslate nohighlight">\(F\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_F</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This matrix has dimensions (2, <span class="orangetext">2, 2, 2, 2</span>, 2)
+because node <span class="math notranslate nohighlight">\(L\)</span> and nodes <span class="math notranslate nohighlight">\(A_k\)</span>, which form
+the information set of <span class="math notranslate nohighlight">\(F\)</span>, all have 2 states and
+node <span class="math notranslate nohighlight">\(F\)</span> itself also has 2 states. The orange
+colored dimensions correspond to the states of the action
+nodes <span class="math notranslate nohighlight">\(A_k\)</span>.</p>
+<p>To set the probabilities we have to iterate over the
+information states. Here it helps to know that in Decision
+Programming the states of each node are mapped to numbers
+in the back-end. For instance, the load states
+<span class="math notranslate nohighlight">\(high\)</span> and <span class="math notranslate nohighlight">\(low\)</span> are referred to as 1 and 2.
+The same applies for the action states <span class="math notranslate nohighlight">\(yes\)</span> and
+<span class="math notranslate nohighlight">\(no\)</span>, they are states 1 and 2. The
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">dp</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">Diagram</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">Paths</span></span></code> class allows us to iterate over the
+subpaths of specific nodes. In these paths, the states are
+referred to by their indices. Using this information, we
+can easily iterate over the information states using the
+<code class="code python docutils literal notranslate"><span class="name"><span class="pre">dp</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">Diagram</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">Paths</span></span></code> class and enter the probability
+values into the probability matrix.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">dp</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">Paths</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">forticications</span> <span class="o">=</span> <span class="p">[</span><span class="n">fortification</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">path</span><span class="p">)]</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">forticications</span><span class="p">))</span>
+    <span class="n">X_F</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+    <span class="n">X_F</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+    <span class="n">X_F</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+    <span class="n">X_F</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+</pre></div>
+</div>
+<p>After declaring the probability matrix, we add it to the
+influence diagram.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="n">X_F</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="utility">
+<h2>Utility<a class="headerlink" href="#utility" title="Permalink to this headline"></a></h2>
+<p>The utility from the different scenarios of the failure
+state at target <span class="math notranslate nohighlight">\(T\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}g(F=failure) = 0\\
+g(F=success) = 100.\end{split}\]</div>
+<p>Utilities from the action states <span class="math notranslate nohighlight">\(A_k\)</span> at target
+<span class="math notranslate nohighlight">\(T\)</span> are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}g(A_k=yes) = c_k\\
+g(A_k=no) = 0.\end{split}\]</div>
+<p>The total cost is thus</p>
+<div class="math notranslate nohighlight">
+\[Y(F,A_N,\dots,A_1) = g(F)+(-f(A_N))+\dots+(-f(A_1))\]</div>
+<p>We first declare the utility matrix for node <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Y_T</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_utility_matrix</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This matrix has dimensions (2, <span class="orangetext">2, 2, 2, 2</span>)
+where the dimensions correspond to the numbers of states
+the nodes in the information set have. Similarly as
+before, the first dimension corresponds to the states of
+node <span class="math notranslate nohighlight">\(F\)</span> and the other 4 dimensions (in orange)
+correspond to the states of the <span class="math notranslate nohighlight">\(A_k\)</span> nodes. The
+utilities are set and added similarly to how the
+probabilities were added above.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">dp</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">Paths</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">forticications</span> <span class="o">=</span> <span class="p">[</span><span class="n">fortification</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">path</span><span class="p">)]</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">forticications</span><span class="p">)</span>
+    <span class="n">Y_T</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">+</span> <span class="n">cost</span>
+    <span class="n">Y_T</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">cost</span>
+
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_utility</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="n">Y_T</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-influence-diagram">
+<h2>Generate Influence Diagram<a class="headerlink" href="#generate-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>The full influence diagram can now be generated. We use
+the default path probabilities and utilities, which are
+the default setting in this function. In the
+<a class="reference external" href="contingent-portfolio-programming.html">Contingent Portfolio Programming example</a>,
+we show how to use a user-defined custom path utility
+function.</p>
+<p>In this particular problem, some of the path utilities are
+negative. In this case, we choose to use the
+<a class="reference external" href="https://gamma-opt.github.io/DecisionProgramming.jl/stable/decision-programming/decision-model/">positive path utility</a>
+transformation, which translates the path
+utilities to positive values. This allows us to exclude
+the probability cut in the next section.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">positive_path_utility</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-model">
+<h2>Decision Model<a class="headerlink" href="#decision-model" title="Permalink to this headline"></a></h2>
+<p>We initialise the JuMP model and declare the decision and
+path compatibility variables. Since we applied an affine
+transformation to the utility function, the probability
+cut can be excluded from the model formulation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">x_s</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">path_compatibility_variables</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span>
+    <span class="n">probability_cut</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The expected utility is used as the objective and the
+problem is solved using Gurobi.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">EV</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">expected_value</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_s</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">EV</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">(</span>
+   <span class="p">(</span><span class="s2">&quot;IntFeasTol&quot;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="analyzing-results">
+<h2>Analyzing Results<a class="headerlink" href="#analyzing-results" title="Permalink to this headline"></a></h2>
+<p>We obtain the decision strategy, state probabilities and
+utility distribution from the solution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">decision_strategy</span><span class="p">()</span>
+<span class="n">S_probabilities</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">state_probabilities</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+<span class="n">U_distribution</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">utility_distribution</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The decision strategy shows us that the optimal strategy
+is to make all four fortifications regardless of the
+reports.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [1]: S_probabilities.print_decision_strategy()
+
+Out[2]:
+┌────────────────┬────────────────┐
+│ State(s) of R1 │ Decision in A1 │
+├────────────────┼────────────────┤
+│ high           │ yes            │
+│ low            │ yes            │
+└────────────────┴────────────────┘
+┌────────────────┬────────────────┐
+│ State(s) of R2 │ Decision in A2 │
+├────────────────┼────────────────┤
+│ high           │ yes            │
+│ low            │ yes            │
+└────────────────┴────────────────┘
+┌────────────────┬────────────────┐
+│ State(s) of R3 │ Decision in A3 │
+├────────────────┼────────────────┤
+│ high           │ yes            │
+│ low            │ yes            │
+└────────────────┴────────────────┘
+┌────────────────┬────────────────┐
+│ State(s) of R4 │ Decision in A4 │
+├────────────────┼────────────────┤
+│ high           │ yes            │
+│ low            │ yes            │
+└────────────────┴────────────────┘
+</pre></div>
+</div>
+<p>The state probabilities for strategy <span class="math notranslate nohighlight">\(Z\)</span> are also obtained. These tell the probability of each state in each node, given strategy <span class="math notranslate nohighlight">\(Z\)</span>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: S_probabilities.print([&quot;L&quot;])
+
+Out[2]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │     high │      low │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│      L │ 0.564449 │ 0.435551 │             │
+└────────┴──────────┴──────────┴─────────────┘
+
+In [3]: report_nodes = [f&quot;R{i}&quot; for i in range(N)]
+In [4]: S_probabilities.print(report_nodes)
+
+Out[4]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │     high │      low │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     R1 │ 0.515575 │ 0.484425 │             │
+│     R2 │ 0.442444 │ 0.557556 │             │
+│     R3 │ 0.543724 │ 0.456276 │             │
+│     R4 │ 0.552515 │ 0.447485 │             │
+└────────┴──────────┴──────────┴─────────────┘
+
+In [5]: reinforcement_nodes = [f&quot;A{i}&quot; for i in range(N-1)]
+In [6]: S_probabilities.print(reinforcement_nodes)
+
+Out[6]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │      yes │       no │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│     A1 │ 1.000000 │ 0.000000 │             │
+│     A2 │ 1.000000 │ 0.000000 │             │
+│     A3 │ 1.000000 │ 0.000000 │             │
+│     A4 │ 1.000000 │ 0.000000 │             │
+└────────┴──────────┴──────────┴─────────────┘
+
+In [7]: S_probabilities.print([&quot;F&quot;])
+
+Out[7]:
+┌────────┬──────────┬──────────┬─────────────┐
+│   Node │  failure │  success │ Fixed state │
+│ String │  Float64 │  Float64 │      String │
+├────────┼──────────┼──────────┼─────────────┤
+│      F │ 0.633125 │ 0.366875 │             │
+└────────┴──────────┴──────────┴─────────────┘
+</pre></div>
+</div>
+<p>We can also print the utility distribution for the optimal
+strategy and some basic statistics for the distribution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [8]: U_distribution.print_distribution()
+
+Out[8]:
+┌───────────┬─────────────┐
+│   Utility │ Probability │
+│   Float64 │     Float64 │
+├───────────┼─────────────┤
+│ -2.881344 │    0.633125 │
+│ 97.118656 │    0.366875 │
+└───────────┴─────────────┘
+
+In [8]: U_distribution.print_statistics()
+
+Out[8]:
+┌──────────┬────────────┐
+│     Name │ Statistics │
+│   String │    Float64 │
+├──────────┼────────────┤
+│     Mean │  33.806192 │
+│      Std │  48.195210 │
+│ Skewness │   0.552439 │
+│ Kurtosis │  -1.694811 │
+└──────────┴────────────┘
+</pre></div>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="salo"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Salo, A., Andelmin, J., &amp; Oliveira, F. (2019). Decision Programming for Multi-Stage Optimization under Uncertainty, 1–35. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1910.09196">http://arxiv.org/abs/1910.09196</a></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../pig-breeder/" class="btn btn-neutral float-left" title="Pig Breeding" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contingent-portfolio-programming/" class="btn btn-neutral float-right" title="Contingent Portfolio Programming" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>

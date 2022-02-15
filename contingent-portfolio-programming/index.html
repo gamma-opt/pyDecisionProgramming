@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contingent Portfolio Programming &mdash; pyDecisionProgramming 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="CHD preventative care allocation" href="../CHD-preventative-care-allocation/" />
+    <link rel="prev" title="N-Monitoring" href="../N-monitoring/" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../" class="icon icon-home"> pyDecisionProgramming
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search/" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../used-car-buyer/">Used Car Buyer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pig-breeder/">Pig Breeding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../N-monitoring/">N-Monitoring</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contingent Portfolio Programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#influence-diagram-projects">Influence Diagram: Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#technical-competitiveness-probability">Technical competitiveness probability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#market-share-probability">Market share probability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-the-influence-diagram">Generating the Influence Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decision-model-portfolio-selection">Decision Model: Portfolio Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-problem-specific-variables">Creating problem specific variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-problem-specific-constraints">Creating problem specific constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#objective-function">Objective function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solving-the-model">Solving the Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-results">Analyzing results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../CHD-preventative-care-allocation/">CHD preventative care allocation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules/">DecisionProgramming API docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../">pyDecisionProgramming</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../" class="icon icon-home"></a> &raquo;</li>
+      <li>Contingent Portfolio Programming</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contingent-portfolio-programming.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contingent-portfolio-programming">
+<h1>Contingent Portfolio Programming<a class="headerlink" href="#contingent-portfolio-programming" title="Permalink to this headline"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This example discusses adding constraints and decision
+variables to the Decision Programming formulation, as
+well as custom path utility calculation. Because of this,
+it is quite advanced compared to the earlier ones.</p>
+</div>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<p><a class="footnote-reference brackets" href="#salo" id="id1">1</a>, section 4.2:</p>
+<blockquote>
+<div><p>For instance, assume that the first-stage decisions
+specify which technology development projects will be
+started to generate patent-based intellectual property
+<span class="math notranslate nohighlight">\((P)\)</span> for a platform. This intellectual property
+contributes subject to some uncertainties to the
+technical competitiveness <span class="math notranslate nohighlight">\((T)\)</span> of the platform. In
+the second stage, it is possible to carry out application
+<span class="math notranslate nohighlight">\((A)\)</span> development projects which, when completed,
+yield cash flows that depend on the market share of the
+platform. This market share <span class="math notranslate nohighlight">\((M)\)</span> depends on the
+competitiveness of the platform and the number of
+developed applications. The aim is to maximize the cash
+flows from application projects less the cost of
+technology and application development projects.</p>
+</div></blockquote>
+</section>
+<section id="influence-diagram-projects">
+<h2>Influence Diagram: Projects<a class="headerlink" href="#influence-diagram-projects" title="Permalink to this headline"></a></h2>
+<img alt="The influence diagram of the contingent portfolio portfolio problem described below." src="../_images/contingent-portfolio-programming.svg" /><p>The influence diagram of the contingent portfolio
+programming (CPP) problem.</p>
+<p>There are <span class="math notranslate nohighlight">\(n_T\)</span> technology development projects and
+<span class="math notranslate nohighlight">\(n_A\)</span> application development projects.</p>
+<p>Decision states to develop patents</p>
+<div class="math notranslate nohighlight">
+\[d_i^P \in D_i^P = \left \{ [q_1^P,q_2^P), [q_2^P,q_3^P)  \dots, [q_{|D^P|}^P,q_{|D^P|+1}^P) \right \}.\]</div>
+<p>Chance states of technical competitiveness
+<span class="math notranslate nohighlight">\(c_j^T \in C_j^T\)</span>.</p>
+<p>Decision states to develop applications</p>
+<div class="math notranslate nohighlight">
+\[d_k^A \in D^A = \left \{ [q_1^A,q_2^A), [q_2^A,q_3^A)  \dots, [q_{|D^A|}^A,q_{|D^A|+1}^A) \right \}.\]</div>
+<p>Chance states of market size <span class="math notranslate nohighlight">\(c_j^M \in C_j^M\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">DecisionProgramming</span> <span class="k">as</span> <span class="nn">dp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+
+<span class="n">diagram</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">InfluenceDiagram</span><span class="p">()</span>
+
+<span class="n">DP</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="s2">&quot;DP&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;0-3 patents&quot;</span><span class="p">,</span> <span class="s2">&quot;3-6 patents&quot;</span><span class="p">,</span> <span class="s2">&quot;6-9 patents&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">DP</span><span class="p">)</span>
+
+<span class="n">CT</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;CT&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;DP&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">CT</span><span class="p">)</span>
+
+<span class="n">DA</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">DecisionNode</span><span class="p">(</span><span class="s2">&quot;DA&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;DP&quot;</span><span class="p">,</span> <span class="s2">&quot;CT&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;0-5 applications&quot;</span><span class="p">,</span> <span class="s2">&quot;5-10 applications&quot;</span><span class="p">,</span> <span class="s2">&quot;10-15 applications&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">DA</span><span class="p">)</span>
+
+<span class="n">CM</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">ChanceNode</span><span class="p">(</span><span class="s2">&quot;CM&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;CT&quot;</span><span class="p">,</span> <span class="s2">&quot;DA&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">])</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">CM</span><span class="p">)</span>
+
+<span class="n">diagram</span><span class="o">.</span><span class="n">generate_arcs</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="technical-competitiveness-probability">
+<h2>Technical competitiveness probability<a class="headerlink" href="#technical-competitiveness-probability" title="Permalink to this headline"></a></h2>
+<p>Probability of technical competitiveness <span class="math notranslate nohighlight">\(c^T_j\)</span>
+given the range
+<span class="math notranslate nohighlight">\(d_i^P:\mathbb P(c_j^T\mid d_i^P) \in [0,1]\)</span>.
+A high number of patents increases probability of high
+competitiveness and a low number correspondingly increases
+the probability of low competitiveness.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_CT</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;CT&quot;</span><span class="p">)</span>
+<span class="n">X_CT</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">X_CT</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">X_CT</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;CT&quot;</span><span class="p">,</span> <span class="n">X_CT</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="market-share-probability">
+<h2>Market share probability<a class="headerlink" href="#market-share-probability" title="Permalink to this headline"></a></h2>
+<p>Probability of market share <span class="math notranslate nohighlight">\(c^M_l\)</span> given the
+technical competitiveness <span class="math notranslate nohighlight">\(c^T_j\)</span> and range
+<span class="math notranslate nohighlight">\(d_k^A:\mathbb P(c_l^M\mid d_j^T, d_k^A) \in [0,1]\)</span>.
+Higher competitiveness and number of application projects
+both increase the probability of high market share.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_CM</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">construct_probability_matrix</span><span class="p">(</span><span class="s2">&quot;CM&quot;</span><span class="p">)</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">X_CM</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_probabilities</span><span class="p">(</span><span class="s2">&quot;CM&quot;</span><span class="p">,</span> <span class="n">X_CM</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generating-the-influence-diagram">
+<h2>Generating the Influence Diagram<a class="headerlink" href="#generating-the-influence-diagram" title="Permalink to this headline"></a></h2>
+<p>We are going to be using a custom objective function, and
+don’t need the default path utilities for that.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">diagram</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">default_utility</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="decision-model-portfolio-selection">
+<h2>Decision Model: Portfolio Selection<a class="headerlink" href="#decision-model-portfolio-selection" title="Permalink to this headline"></a></h2>
+<p>We create the decision variables
+<span class="math notranslate nohighlight">\(z(s_j\mid s_{I(j)})\)</span>  and notice that the
+activation of paths that are compatible with the decision
+strategy is handled by the problem specific variables and
+constraints together with the custom objective function,
+eliminating the need for separate variables representing
+path activation.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">decision_variables</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-problem-specific-variables">
+<h2>Creating problem specific variables<a class="headerlink" href="#creating-problem-specific-variables" title="Permalink to this headline"></a></h2>
+<p>In pyDecisionProgramming problems specific constraints
+are defined as strings. The syntax is closer to Julia than
+Python. First, it is convenient to define the variables
+we will need in <code class="code python docutils literal notranslate"><span class="name"><span class="pre">dp</span></span><span class="operator"><span class="pre">.</span></span><span class="name"><span class="pre">julia</span></span></code>. These will be
+available when defining the constraints.</p>
+<p>We recommend reading section 4.2. in <a class="footnote-reference brackets" href="#salo" id="id2">1</a> for
+motivation and details of the formulation.</p>
+<p>Technology project <span class="math notranslate nohighlight">\(t\)</span> costs
+<span class="math notranslate nohighlight">\(I_t\in \mathbb R^+\)</span> and generates
+<span class="math notranslate nohighlight">\(O_t\in \mathbb N\)</span> patents.</p>
+<p>Application project <span class="math notranslate nohighlight">\(a\)</span> costs
+<span class="math notranslate nohighlight">\(I_a\in \mathbb R^+\)</span> and generates
+<span class="math notranslate nohighlight">\(O_a\in \mathbb N\)</span> applications. If completed,
+provides cash flow <span class="math notranslate nohighlight">\(V(a\mid c_l^M)\in\mathbb R^+\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n_T</span> <span class="o">=</span> <span class="mi">5</span>               <span class="c1"># number of technology projects</span>
+<span class="n">n_A</span> <span class="o">=</span> <span class="mi">5</span>               <span class="c1"># number of application projects</span>
+
+<span class="c1"># Here we set stuff in Julia name space directly</span>
+<span class="n">I_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_T</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>   <span class="c1"># costs of technology projects</span>
+<span class="n">O_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n_T</span><span class="p">)</span>   <span class="c1"># number of patents for each tech project</span>
+<span class="n">I_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_T</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>     <span class="c1"># costs of application projects</span>
+<span class="n">O_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">n_T</span><span class="p">)</span>   <span class="c1"># number of applications for each appl. project</span>
+
+<span class="c1"># Set the names in dp.julia to use them when setting constraints</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">I_t</span> <span class="o">=</span> <span class="n">I_t</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">O_t</span> <span class="o">=</span> <span class="n">O_t</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">I_a</span> <span class="o">=</span> <span class="n">I_a</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">O_a</span> <span class="o">=</span> <span class="n">O_a</span>
+
+<span class="n">V_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n_CM</span><span class="p">,</span> <span class="n">n_A</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span>  <span class="c1"># Value of an application</span>
+<span class="n">V_A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.5</span>           <span class="c1"># Low market share: less value</span>
+<span class="n">V_A</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="mf">0.5</span>            <span class="c1"># High market share: more value</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">V_A</span> <span class="o">=</span> <span class="n">V_A</span>
+</pre></div>
+</div>
+<p>Decision variables <span class="math notranslate nohighlight">\(x^T(t)\in \{ 0,1 \}\)</span> indicate
+which technologies are selected.</p>
+<p>Decision variables
+<span class="math notranslate nohighlight">\(x^A(a\mid d_i^P, c_j^T)\in \{0,1\}\)</span>
+indicate which applications are selected.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x_T</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">JuMP</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">n_DP</span><span class="p">,</span> <span class="n">n_T</span><span class="p">],</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x_A</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">JuMP</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="n">n_DP</span><span class="p">,</span> <span class="n">n_CT</span><span class="p">,</span> <span class="n">n_DA</span><span class="p">,</span> <span class="n">n_A</span><span class="p">],</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">x_T</span> <span class="o">=</span> <span class="n">x_T</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">x_A</span> <span class="o">=</span> <span class="n">x_A</span>
+</pre></div>
+</div>
+<p>Number of patents
+<span class="math notranslate nohighlight">\(x^T(t)=\sum_ix_i^T(t)z(d_i^P)\)</span>.</p>
+<p>Number of applications
+<span class="math notranslate nohighlight">\(x^A(a\mid d_i^P,x_j^T)=\sum_kx_k^A(a\mid d_i^P,c_j^T)z(d_k^A\mid d_i^P,x_j^T)\)</span>.</p>
+<p>Helpful variables:</p>
+<p>Large constant <span class="math notranslate nohighlight">\(M\)</span> (e.g.
+<span class="math notranslate nohighlight">\(\frac 32 \max\{\sum_tO_t,\sum_aO_a\}\)</span>).</p>
+<p>Small constant <span class="math notranslate nohighlight">\(\epsilon = \frac 12 \min\{O_t,O_a\}\)</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="mi">20</span>                        <span class="c1"># a large constant</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">O_t</span><span class="p">,</span> <span class="n">O_a</span><span class="p">])</span>  <span class="c1"># a helper variable, allows using ≤ instead of &lt; in constraints (28b) and (29b)</span>
+</pre></div>
+</div>
+<p>Limits <span class="math notranslate nohighlight">\(q_i^P\)</span> and <span class="math notranslate nohighlight">\(q_k^A\)</span> of the intervals</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">q_P</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>          <span class="c1"># limits of the technology intervals</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">q_A</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>        <span class="c1"># limits of the application intervals</span>
+</pre></div>
+</div>
+<p>Shorthand for the decision variables <span class="math notranslate nohighlight">\(z\)</span></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">z_dP</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">z_dA</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The diagram itself</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">diagram</span> <span class="o">=</span> <span class="n">diagram</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-problem-specific-constraints">
+<h2>Creating problem specific constraints<a class="headerlink" href="#creating-problem-specific-constraints" title="Permalink to this headline"></a></h2>
+<div class="math notranslate nohighlight">
+\[\sum_t x_i^T(t) \le z(d_i^P)n_T, \forall i\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_T[i,t] for t in 1:</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s2">) &lt;= z_dP[i]*</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[\sum_a x_k^A(a\mid d_i^P,c_j^T) \le z(d_i^P) n_A \forall i,j,k\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_A[i,j,k,a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">) &lt;= z_dP[i]*</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[\sum_a x_k^A(a\mid d_i^P,c_j^T) \le z(d_k^A\mid d_i^P,c_j^T)n_A, \forall i,j,k\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_A[i,j,k,a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">) &lt;= z_dA[i,j,k]*</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[q_i^P-(1-z(d_i^P))M \le \sum_t x_i^T(t)O_t \le q_{i+1}^P + (1-z(d_i^P))M-\epsilon, \forall i\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;q_P[i] - (1 - z_dP[i])*M &lt;= sum(x_T[i,t]*O_t[t] for t in 1:</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_T[i,t]*O_t[t] for t in 1:</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s2">) &lt;= q_P[i+1] + (1 - z_dP[i])*M - eps&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[q_k^A-(q-z(d_k^A\mid d_i^A,c_j^T))M \le \sum_a x_k^A(a\mid d_i^P, c_j^T) O_a \le q_{k+1}^A+(1-z(d_k^A\mid d_i^P,c_j^T))M-\epsilon, \forall i,j,k\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;q_A[k] - (1 - z_dA[i,j,k])*M &lt;= sum(x_A[i,j,k,a]*O_a[a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_A[i,j,k,a]*O_a[a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">) &lt;= q_A[k+1] + (1 - z_dA[i,j,k])*M - eps&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We can also model dependencies between the technology and
+application projects, e.g. application project <span class="math notranslate nohighlight">\(a\)</span>
+can be completed only if technology project <span class="math notranslate nohighlight">\(t\)</span> has
+been completed. This is done by adding constraints</p>
+<div class="math notranslate nohighlight">
+\[x_k^A(a\mid d_i^P,c_j^T)\le x_i^T(t), \forall i,j,k\]</div>
+<p>As an example, we state that application projects 1 and 2
+require technology project 1, and application project 2
+also requires technology project 2.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;x_A[i,j,k,1] &lt;= x_T[i,1]&quot;</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;x_A[i,j,k,2] &lt;= x_T[i,1]&quot;</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;x_A[i,j,k,2] &lt;= x_T[i,2]&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[x_i^T(t) \in \{0,1\}, \forall i\]</div>
+<div class="math notranslate nohighlight">
+\[x_k^A(a\mid d_i^P,c_j^T) \in \{0,1\}, \forall i,j,k\]</div>
+</section>
+<section id="objective-function">
+<h2>Objective function<a class="headerlink" href="#objective-function" title="Permalink to this headline"></a></h2>
+<p>The path utility can be calculated as
+<span class="math notranslate nohighlight">\(\mathcal U(s) \sum_a x_k^A(a\mid d_i^P,c_j^T)(V(a\mid c_l^M)-I_a) - \sum_tx_i^T(t)I_t\)</span></p>
+<p>However, using the expected value objective would lead to
+a quadratic objective function as the path utility
+formulation now contains decision variables. In order to
+keep the problem completely linear, we can use the
+objective formulation presented in <a class="footnote-reference brackets" href="#salo" id="id3">1</a>:</p>
+<div class="math notranslate nohighlight">
+\[\sum_i\left\{ \sum_{i,j,k} p(c_j^T\mid d_i^P) p(c_l^M\mid c_j^T,d_k^A) \left [ \sum_a x_k^A(a\mid d_i^P,c_j^T)(V(a\mid c_l^M)-I_a) -\sum_t x_i^T(t)I_t \right ] \right\}\]</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">patent_investment_cost</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">JuMP</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_T[i, t] * I_t[t] for t in 1:</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">application_investment_cost</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">JuMP</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_A[i, j, k, a] * I_a[a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">application_value</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">JuMP</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;[i=1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2">, j=1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k=1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">, l=1:</span><span class="si">{</span><span class="n">n_CM</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;sum( sum( diagram.P(convert.(State, (i,j,k,l))) * (application_value[i,j,k,l] - application_investment_cost[i,j,k]) for j in 1:</span><span class="si">{</span><span class="n">n_CT</span><span class="si">}</span><span class="s2">, k in 1:</span><span class="si">{</span><span class="n">n_DA</span><span class="si">}</span><span class="s2">, l in 1:</span><span class="si">{</span><span class="n">n_CM</span><span class="si">}</span><span class="s2"> ) - patent_investment_cost[i] for i in 1:</span><span class="si">{</span><span class="n">n_DP</span><span class="si">}</span><span class="s2"> )&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="solving-the-model">
+<h2>Solving the Model<a class="headerlink" href="#solving-the-model" title="Permalink to this headline"></a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">setup_Gurobi_optimizer</span><span class="p">(</span>
+   <span class="p">(</span><span class="s2">&quot;IntFeasTol&quot;</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+   <span class="p">(</span><span class="s2">&quot;LazyConstraints&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="analyzing-results">
+<h2>Analyzing results<a class="headerlink" href="#analyzing-results" title="Permalink to this headline"></a></h2>
+<p>The optimal decision strategy and the utility distribution
+are printed. The strategy is to make 6-9 patents (state 3
+in node 1) and 10-15 applications. The expected utility
+for this strategy is 1.71.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">decision_strategy</span><span class="p">()</span>
+<span class="n">S_probabilities</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">state_probabilities</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [1]: S_probabilities.print_decision_strategy()
+
+Out[1]:
+┌────────────────┐
+│ Decision in DP │
+├────────────────┤
+│ 6-9 patents    │
+└────────────────┘
+┌─────────────────────┬────────────────────┐
+│ State(s) of DP, CT  │ Decision in DA     │
+├─────────────────────┼────────────────────┤
+│ 6-9 patents, low    │ 10-15 applications │
+│ 6-9 patents, medium │ 10-15 applications │
+│ 6-9 patents, high   │ 10-15 applications │
+└─────────────────────┴────────────────────┘
+</pre></div>
+</div>
+<p>We use a custom path utility function to obtain the
+utility distribution.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note that indexing in Julia starts from 1, so we</span>
+<span class="c1"># must add 1 to each index</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">DP_i</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">index_of</span><span class="p">(</span><span class="s2">&quot;DP&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">CT_i</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">index_of</span><span class="p">(</span><span class="s2">&quot;CT&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">DA_i</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">index_of</span><span class="p">(</span><span class="s2">&quot;DA&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">julia</span><span class="o">.</span><span class="n">CM_i</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">index_of</span><span class="p">(</span><span class="s2">&quot;CM&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">path_utilities</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">ExpressionPathUtilities</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s1">&#39;&#39;&#39;sum(x_A[s[index_of(diagram, &quot;DP&quot;)], s[index_of(diagram, &quot;CT&quot;)], s[index_of(diagram, &quot;DA&quot;)], a] * (V_A[s[index_of(diagram, &quot;CM&quot;)], a] - I_a[a]) for a in 1:</span><span class="si">{</span><span class="n">n_A</span><span class="si">}</span><span class="s1">) -</span>
+<span class="s1">        sum(x_T[s[index_of(diagram, &quot;DP&quot;)], t] * I_t[t] for t in 1:</span><span class="si">{</span><span class="n">n_T</span><span class="si">}</span><span class="s1">)</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">,</span>
+    <span class="n">path_name</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+<span class="p">)</span>
+
+<span class="n">diagram</span><span class="o">.</span><span class="n">set_path_utilities</span><span class="p">(</span><span class="n">path_utilities</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">U_distribution</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">utility_distribution</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [2]: U_distribution.print_distribution()
+
+Out[2]:
+┌───────────┬─────────────┐
+│   Utility │ Probability │
+│   Float64 │     Float64 │
+├───────────┼─────────────┤
+│ -1.243076 │    0.152778 │
+│  0.605287 │    0.291667 │
+│  3.110470 │    0.555556 │
+└───────────┴─────────────┘
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In [3]: U_distribution.print_statistics()
+
+Out[3]:
+┌──────────┬────────────┐
+│     Name │ Statistics │
+│   String │    Float64 │
+├──────────┼────────────┤
+│     Mean │   1.714666 │
+│      Std │   1.666694 │
+│ Skewness │  -0.613535 │
+│ Kurtosis │  -1.154244 │
+└──────────┴────────────┘
+</pre></div>
+</div>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="salo"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>,<a href="#id3">3</a>)</span></dt>
+<dd><p>Salo, A., Andelmin, J., &amp; Oliveira, F. (2019). Decision Programming for Multi-Stage Optimization under Uncertainty, 1–35. Retrieved from <a class="reference external" href="http://arxiv.org/abs/1910.09196">http://arxiv.org/abs/1910.09196</a></p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../N-monitoring/" class="btn btn-neutral float-left" title="N-Monitoring" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../CHD-preventative-care-allocation/" class="btn btn-neutral float-right" title="CHD preventative care allocation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jarno Rantaharju.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    .orangetext{
+      color: orange
+    }
+  </style>
+
+
+</body>
+</html>
