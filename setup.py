@@ -16,9 +16,20 @@ setup(
    version='1.0',
    description='Python interface for DecisionProgramming.jl',
    long_description=long_description,
+   long_description_content_type="text/markdown",
+   url="https://github.com/gamma-opt/pyDecisionProgramming",
+   project_urls={
+        "Bug Tracker": "https://github.com/gamma-opt/pyDecisionProgramming/issues",
+        "Documentation": "https://gamma-opt.github.io/pyDecisionProgramming",
+    },
    author='Jarno Rantaharju',
    author_email='jarno.rantaharju@aalto.fi',
    license="MIT",
+   classifiers=[
+      "Programming Language :: Python :: 3",
+      "License :: OSI Approved :: MIT License",
+      "Operating System :: OS Independent",
+   ],
    packages=['pyDecisionProgramming'],
    scripts=['scripts/pdp_setup_julia.jl'],
    install_requires=requirements
