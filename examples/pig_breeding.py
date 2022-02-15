@@ -1,33 +1,33 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 
-# pdp.setupProject()
-pdp.activate()
+# dp.setupProject()
+dp.activate()
 N = 4
 
-diagram = pdp.InfluenceDiagram()
+diagram = dp.InfluenceDiagram()
 
-health_outcomes = pdp.ChanceNode("H0", [], ["ill", "healthy"])
+health_outcomes = dp.ChanceNode("H0", [], ["ill", "healthy"])
 diagram.add_node(health_outcomes)
 
 for i in range(N-1):
     # testing result
-    test_outcomes = pdp.ChanceNode(f"T{i}", [f"H{i}"], ["positive", "negative"])
+    test_outcomes = dp.ChanceNode(f"T{i}", [f"H{i}"], ["positive", "negative"])
     diagram.add_node(test_outcomes)
 
     # Decision to treat
-    treatment_decision = pdp.DecisionNode(f"D{i}", [f"T{i}"], ["treat", "pass"])
+    treatment_decision = dp.DecisionNode(f"D{i}", [f"T{i}"], ["treat", "pass"])
     diagram.add_node(treatment_decision)
 
     # Cost of treatment
-    treatment_cost = pdp.ValueNode(f"C{i}", [f"D{i}"])
+    treatment_cost = dp.ValueNode(f"C{i}", [f"D{i}"])
     diagram.add_node(treatment_cost)
 
     # Health of next period
-    test_outcomes = pdp.ChanceNode(f"H{i+1}", [f"H{i}", f"D{i}"], ["ill", "healthy"])
+    test_outcomes = dp.ChanceNode(f"H{i+1}", [f"H{i}", f"D{i}"], ["ill", "healthy"])
     diagram.add_node(test_outcomes)
 
 # Final market price
-treatment_cost = pdp.ValueNode("MP", [f"H{N-1}"])
+treatment_cost = dp.ValueNode("MP", [f"H{N-1}"])
 diagram.add_node(treatment_cost)
 
 diagram.generate_arcs()
@@ -60,7 +60,7 @@ diagram.set_utility("MP", [300, 1000])
 diagram.generate(positive_path_utility=True)
 
 
-model = pdp.Model()
+model = dp.Model()
 z = diagram.decision_variables(model)
 x_s = diagram.path_compatibility_variables(model, z, probability_cut = False)
 EV = diagram.expected_value(model, x_s)

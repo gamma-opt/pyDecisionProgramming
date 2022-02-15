@@ -1,24 +1,24 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 import numpy as np
 
-# pdp.setupProject()
-pdp.activate()
+# dp.setupProject()
+dp.activate()
 
 np.random.seed(42)
 
 
-diagram = pdp.InfluenceDiagram()
+diagram = dp.InfluenceDiagram()
 
-decision_node = pdp.DecisionNode("DP", [], ["0-3 patents", "3-6 patents", "6-9 patents"])
+decision_node = dp.DecisionNode("DP", [], ["0-3 patents", "3-6 patents", "6-9 patents"])
 diagram.add_node(decision_node)
 
-outcome_node = pdp.ChanceNode("CT", ["DP"], ["low", "medium", "high"])
+outcome_node = dp.ChanceNode("CT", ["DP"], ["low", "medium", "high"])
 diagram.add_node(outcome_node)
 
-decision_node = pdp.DecisionNode("DA", ["DP", "CT"], ["0-5 applications", "5-10 applications", "10-15 applications"])
+decision_node = dp.DecisionNode("DA", ["DP", "CT"], ["0-5 applications", "5-10 applications", "10-15 applications"])
 diagram.add_node(decision_node)
 
-outcome_node = pdp.ChanceNode("CM", ["CT", "DA"], ["low", "medium", "high"])
+outcome_node = dp.ChanceNode("CM", ["CT", "DA"], ["low", "medium", "high"])
 diagram.add_node(outcome_node)
 
 diagram.generate_arcs()
@@ -44,7 +44,7 @@ diagram.set_probabilities("CM", X_CM)
 diagram.generate(default_utility=False)
 
 
-model = pdp.Model()
+model = dp.Model()
 z = diagram.decision_variables(model)
 
 n_DP = diagram.num_states("DP")
@@ -62,33 +62,33 @@ I_a = np.random.random(n_T)*2     # costs of application projects
 O_a = np.random.randint(2, 5, n_T)   # number of applications for each appl. project
 
 # Set the names in julia to use them when setting constraints
-pdp.julia.I_t = I_t
-pdp.julia.O_t = O_t
-pdp.julia.I_a = I_a
-pdp.julia.O_a = O_a
+dp.julia.I_t = I_t
+dp.julia.O_t = O_t
+dp.julia.I_a = I_a
+dp.julia.O_a = O_a
 
 V_A = np.random.random((n_CM, n_A)) + 0.5  # Value of an application
 V_A[0, :] += -0.5           # Low market share: less value
 V_A[2, :] += 0.5            # High market share: more value
 
-pdp.julia.V_A = V_A
+dp.julia.V_A = V_A
 
 
-x_T = pdp.JuMP.Array(model, [n_DP, n_T], binary=True)
-x_A = pdp.JuMP.Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
-pdp.julia.x_T = x_T
-pdp.julia.x_A = x_A
+x_T = dp.JuMP.Array(model, [n_DP, n_T], binary=True)
+x_A = dp.JuMP.Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+dp.julia.x_T = x_T
+dp.julia.x_A = x_A
 
 
-pdp.julia.M = 20                      # a large constant
-pdp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
+dp.julia.M = 20                      # a large constant
+dp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
 
-pdp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
-pdp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
+dp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
+dp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
 
-pdp.julia.diagram = diagram
-pdp.julia.z_dP = z.z[0]
-pdp.julia.z_dA = z.z[1]
+dp.julia.diagram = diagram
+dp.julia.z_dP = z.z[0]
+dp.julia.z_dA = z.z[1]
 
 model.constraint(
     f"[i=1:{n_DP}]",
@@ -134,19 +134,19 @@ model.constraint(
 )
 
 
-pdp.julia.patent_investment_cost = pdp.JuMP.Expression(
+dp.julia.patent_investment_cost = dp.JuMP.Expression(
     model,
     f"[i=1:{n_DP}]",
     f"sum(x_T[i, t] * I_t[t] for t in 1:{n_T})"
 )
 
-pdp.julia.application_investment_cost = pdp.JuMP.Expression(
+dp.julia.application_investment_cost = dp.JuMP.Expression(
     model,
     f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
     f"sum(x_A[i, j, k, a] * I_a[a] for a in 1:{n_A})"
 )
 
-pdp.julia.application_value = pdp.JuMP.Expression(
+dp.julia.application_value = dp.JuMP.Expression(
     model,
     f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}, l=1:{n_CM}]",
     f"sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:{n_A})"
@@ -170,11 +170,11 @@ S_probabilities.print_decision_strategy()
 # We save the integer indeces of the nodes into Julia namespace.
 # Note that indexing in Julia starts from 1, so we must add 1 to
 # each index
-pdp.julia.DP_i = diagram.index_of("DP") + 1
-pdp.julia.CT_i = diagram.index_of("CT") + 1
-pdp.julia.DA_i = diagram.index_of("DA") + 1
-pdp.julia.CM_i = diagram.index_of("CM") + 1
-path_utilities = pdp.Diagram.ExpressionPathUtilities(
+dp.julia.DP_i = diagram.index_of("DP") + 1
+dp.julia.CT_i = diagram.index_of("CT") + 1
+dp.julia.DA_i = diagram.index_of("DA") + 1
+dp.julia.CM_i = diagram.index_of("CM") + 1
+path_utilities = dp.Diagram.ExpressionPathUtilities(
     model, diagram,
     f'''sum(x_A[s[index_of(diagram, "DP")], s[index_of(diagram, "CT")], s[index_of(diagram, "DA")], a] * (V_A[s[index_of(diagram, "CM")], a] - I_a[a]) for a in 1:{n_A}) -
         sum(x_T[s[index_of(diagram, "DP")], t] * I_t[t] for t in 1:{n_T})

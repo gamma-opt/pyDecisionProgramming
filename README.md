@@ -23,7 +23,7 @@ as [JuMP](https://jump.dev/) extension.
 2. Install pyDecisionProgramming:
 
    ```
-   pip install git+https://github.com/gamma-opt/pyDecisionProgramming.git
+   pip install DecisionProgramming
    ```
 
 3. Install Julia requirements
@@ -56,15 +56,15 @@ path through a graph.
 Set up the a Julia environment in the current folder run
 the Python script
 ```
-import pyDecisionProgramming as pdp
-pdp.setup_project()
+import DecisionProgramming as dp
+dp.setup_project()
 ```
 
 To use this environment in a Python script, use
 
 ```
-import pyDecisionProgramming as pdp
-pdp.activate()
+import DecisionProgramming as dp
+dp.activate()
 ```
 
 

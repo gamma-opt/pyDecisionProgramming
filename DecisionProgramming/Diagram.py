@@ -55,7 +55,7 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        node: pdp.ChanceNode
+        node: dp.ChanceNode
             Random probabilities will be assigned to this node.
 
         n_inactive: Int
@@ -76,7 +76,7 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        node: pdp.ValueNode
+        node: dp.ValueNode
             Random utilities are generated for this node
 
         low: float
@@ -258,7 +258,7 @@ class InfluenceDiagram(JuliaName):
 
         Returns
         -------
-        pdp.ProbabilityMatrix
+        dp.ProbabilityMatrix
             A probabity matrix with zero values.
 
         '''
@@ -275,7 +275,7 @@ class InfluenceDiagram(JuliaName):
 
         Returns
         -------
-        pdp.UtilityMatrix
+        dp.UtilityMatrix
             A utility matrix with values set to negative infinity.
 
         '''
@@ -286,12 +286,12 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        model: pdp.Model
+        model: dp.Model
             A model constructed for this diagram.
 
         Returns
         -------
-        pdp.DecisionVariables
+        dp.DecisionVariables
             The set of decision variables for the model.
 
         '''
@@ -312,20 +312,20 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        model: pdp.Model
+        model: dp.Model
             A model constructed for this diagram.
-        decision variables: pdp.DecisionVariables (optional)
+        decision variables: dp.DecisionVariables (optional)
             DecisionVariables constructed for this model.
         names: Bool (optional)
         name: String (optional)
-        forbidden_paths: List of pdp.ForbiddenPath variables (optional)
-        fixed: List of pdp.FixedPath variables (optional)
+        forbidden_paths: List of dp.ForbiddenPath variables (optional)
+        fixed: List of dp.FixedPath variables (optional)
         probability_cut: Bool (optional)
         probability_scale_factor: Number (optional)
 
         Returns
         -------
-        pdp.PathCompatibilityVariables
+        dp.PathCompatibilityVariables
             The set of path compatibility variables for the model.
 
         '''
@@ -351,16 +351,16 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        model: pdp.Model
+        model: dp.Model
             A model constructed for this diagram.
-        path_compatibility_variables: pdp.PathCompatibilityVariables (optional)
+        path_compatibility_variables: dp.PathCompatibilityVariables (optional)
             PathCompatibilityVariables generated for this model, usually using
             diagram.path_compatibility_variables.
 
         Returns
         -------
-        pdp.ExpectedValue
-            A pdp.ExpectedValue object describing the expected value for the
+        dp.ExpectedValue
+            A dp.ExpectedValue object describing the expected value for the
             optimal decision strategy.
 
         '''
@@ -370,35 +370,35 @@ class InfluenceDiagram(JuliaName):
         return ExpectedValue(model, self, path_compatibility_variables)
 
     def state_probabilities(self, decision_strategy):
-        ''' Extract the state probabilities as a pdp.StateProbabilities object.
+        ''' Extract the state probabilities as a dp.StateProbabilities object.
 
         Parameters
         ----------
-        decision_strategy: pdp.DecisionStrategy
+        decision_strategy: dp.DecisionStrategy
             A decision strategy. A decision strategy can be constructed using
-            the pdp.DecisionVariables.decision_strategy method.
+            the dp.DecisionVariables.decision_strategy method.
 
         Returns
         -------
-        pdp.StateProbabilities
-            A pdp.StateProbabilities object containing information about the
+        dp.StateProbabilities
+            A dp.StateProbabilities object containing information about the
             probabilites of each state given the decision strategy.
 
         '''
         return StateProbabilities(self, decision_strategy)
 
     def utility_distribution(self, decision_strategy):
-        ''' Extract the utility distribution as a pdp.UtilityDistribution object.
+        ''' Extract the utility distribution as a dp.UtilityDistribution object.
 
         Parameters
         ----------
-        decision_strategy: pdp.DecisionStrategy
+        decision_strategy: dp.DecisionStrategy
             A decision strategy. A decision strategy can be constructed using
-            the pdp.DecisionVariables.decision_strategy method.
+            the dp.DecisionVariables.decision_strategy method.
 
         Returns
         -------
-        pdp.UtilityDistribution
+        dp.UtilityDistribution
             Describes the distribution of utilities given the decision strategy.
 
         '''
@@ -418,8 +418,8 @@ class InfluenceDiagram(JuliaName):
 
         Returns
         -------
-        pdp.ForbiddenPath
-            A pdp.ForbiddenPath object.
+        dp.ForbiddenPath
+            A dp.ForbiddenPath object.
 
         '''
         return ForbiddenPath(self, nodes, values)
@@ -436,8 +436,8 @@ class InfluenceDiagram(JuliaName):
 
         Returns
         -------
-        pdp.FixedPath
-            A pdp.FixedPath object.
+        dp.FixedPath
+            A dp.FixedPath object.
 
         '''
         return FixedPath(self, node_values)
@@ -449,7 +449,7 @@ class InfluenceDiagram(JuliaName):
 
         Parameters
         ----------
-        path_compatibility_variables: pdp.PathCompatibilityVariables
+        path_compatibility_variables: dp.PathCompatibilityVariables
             A set of path compatibility variables constructed for this diagram.
 
         '''
@@ -491,10 +491,10 @@ class ExpressionPathUtilities(JuliaName):
     Parameters
     ----------
 
-    model: pdp.Model
+    model: dp.Model
         A JuMP Model object
 
-    diagram: pdp.InfluenceDiagram
+    diagram: dp.InfluenceDiagram
         The influence diagram the model was constructed with.
 
     expression: string
@@ -516,10 +516,10 @@ class DecisionVariables(JuliaName):
 
     Parameters
     ----------
-    model: pdp.Model
+    model: dp.Model
         A JuMP Model object
 
-    diagram: pdp.InfluenceDiagram
+    diagram: dp.InfluenceDiagram
         A DecisionProgramming Diagram object
 
     names: bool
@@ -548,7 +548,7 @@ class DecisionVariables(JuliaName):
 
         Returns
         -------
-        pdp.DecisionStrategy
+        dp.DecisionStrategy
             The optimal decision strategy wrapped in a Python object.
 
         '''
@@ -688,7 +688,7 @@ class StateProbabilities(JuliaName):
     diagram: Diagram
         An influence diagram
 
-    decision_strategy: pdp.DecisionStrategy
+    decision_strategy: dp.DecisionStrategy
         A decision strategy created for the diagram.
 
     """
@@ -878,7 +878,7 @@ class Paths(JuliaName):
     states: List of strings
         List of paths to connect
 
-    fixed: pdp.FixedPath
+    fixed: dp.FixedPath
         Describes states that are held fixed.
 
     """
@@ -912,13 +912,13 @@ class CompatiblePaths(JuliaName):
 
     Parameters
     ----------
-    diagram: pdp.Diagram
+    diagram: dp.Diagram
         An influence diagram.
 
-    decision_strategy: pdp.DecisionStrategy
+    decision_strategy: dp.DecisionStrategy
         A decision strategy for the diagram.
 
-    fixed: pdp.FixedPath
+    fixed: dp.FixedPath
         Describes states that are held fixed.
 
     '''

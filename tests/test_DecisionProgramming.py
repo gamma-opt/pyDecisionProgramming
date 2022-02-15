@@ -1,4 +1,4 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 import os
 import pytest
 import numpy as np
@@ -15,7 +15,7 @@ def test_setupProject():
     if os.path.exists("Project.toml"):
         os.remove("Project.toml")
 
-    pdp.setupProject()
+    dp.setupProject()
 
     assert(os.path.exists("Manifest.toml"))
 
@@ -23,16 +23,16 @@ def test_setupProject():
 def test_activate():
     '''
     Check that DecisionProgramming is available after
-    pdp.activate()
+    dp.activate()
     '''
     if not os.path.exists("Manifest.toml"):
-        pdp.setupProject()
+        dp.setupProject()
 
-    pdp.activate()
+    dp.activate()
 
     # If everything is correct, at least InfluenceDiagram
     # should be defined
-    assert(pdp.julia.eval("isdefined(Main, :InfluenceDiagram)"))
+    assert(dp.julia.eval("isdefined(Main, :InfluenceDiagram)"))
 
 
 def test_random_number_generator():
@@ -41,32 +41,32 @@ def test_random_number_generator():
     JuliaName and that the name is defined.
     '''
 
-    generator = pdp.juliaUtils.random_number_generator()
+    generator = dp.juliaUtils.random_number_generator()
     name = generator._name
 
-    assert(pdp.julia.eval(f"isdefined(Main, :{name})"))
+    assert(dp.julia.eval(f"isdefined(Main, :{name})"))
 
 
 def test_JuliaMain():
     '''
     Check setting and fetching values with JuliaMain.
-    pdp.julia is an instance of JuliaMain
+    dp.julia is an instance of JuliaMain
     '''
 
     # fetching thisisinotdefined should raise an
     # AttributeError
     with pytest.raises(AttributeError):
-        x = pdp.julia.thisisinotdefined
+        x = dp.julia.thisisinotdefined
 
     # Now set it
-    pdp.julia.thisisinotdefined = 5
+    dp.julia.thisisinotdefined = 5
 
     # and it should be fetchable
-    assert(pdp.julia.thisisinotdefined == 5)
+    assert(dp.julia.thisisinotdefined == 5)
 
     # use eval to set something and try to fetch it
-    pdp.julia.eval("anotherthing = 4")
-    assert(pdp.julia.anotherthing == 4)
+    dp.julia.eval("anotherthing = 4")
+    assert(dp.julia.anotherthing == 4)
 
 
 def test_handle_index_syntax():
@@ -74,7 +74,7 @@ def test_handle_index_syntax():
     Check handle_index_syntax with a few examples
     '''
 
-    handle = pdp.juliaUtils.handle_index_syntax
+    handle = dp.juliaUtils.handle_index_syntax
 
     assert(handle(1)==2)
     assert(handle('a')=='"a"')
@@ -85,8 +85,8 @@ def test_handle_index_syntax():
 
 @pytest.fixture
 def julianame1():
-    name = pdp.JuliaName()
-    pdp.julia.eval(f'''
+    name = dp.JuliaName()
+    dp.julia.eval(f'''
         {name._name} = 1
     ''')
     return name
@@ -94,8 +94,8 @@ def julianame1():
 
 @pytest.fixture
 def julianame2():
-    name = pdp.JuliaName()
-    pdp.julia.eval(f'''
+    name = dp.JuliaName()
+    dp.julia.eval(f'''
         {name._name} = 2
     ''')
     return name
@@ -103,12 +103,12 @@ def julianame2():
 
 @pytest.fixture
 def diagram_simple():
-    diagram = pdp.InfluenceDiagram()
-    D = pdp.DecisionNode("D", [], ["1", "2"])
+    diagram = dp.InfluenceDiagram()
+    D = dp.DecisionNode("D", [], ["1", "2"])
     diagram.add_node(D)
-    O = pdp.ChanceNode("O", [], ["lemon", "peach"])
+    O = dp.ChanceNode("O", [], ["lemon", "peach"])
     diagram.add_node(O)
-    V = pdp.ValueNode("V", ["D","O"])
+    V = dp.ValueNode("V", ["D","O"])
     diagram.add_node(V)
     diagram.generate_arcs()
 
@@ -145,13 +145,13 @@ class TestJuliaName():
         '''
         Check accessing by attribute
         '''
-        pdp.julia.eval(f'''
+        dp.julia.eval(f'''
             {julianame1._name} = InfluenceDiagram()
         ''')
 
         # This should return a JuliaName
         nodes = julianame1.Nodes
-        assert(type(nodes) is pdp.JuliaName)
+        assert(type(nodes) is dp.JuliaName)
 
         # Try getting an attribute that does not exist
         with pytest.raises(AttributeError):
@@ -162,18 +162,18 @@ class TestJuliaName():
         Check item syntax
         '''
         # create and array in Julia and assign it to the name
-        pdp.julia.l = [1, 2, 3, 4]
-        pdp.julia.eval(f'''
+        dp.julia.l = [1, 2, 3, 4]
+        dp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
         # This should return JuliaName containing only the number
         n = julianame1[1]
-        assert(type(n) is pdp.JuliaName)
+        assert(type(n) is dp.JuliaName)
         # There is no direct way to fetch the number
         # directly. Let's check it anyway
-        pdp.julia.n = n
-        assert(pdp.julia.n == 2)
+        dp.julia.n = n
+        assert(dp.julia.n == 2)
 
         # Try getting outside the array
         with pytest.raises(IndexError):
@@ -188,18 +188,18 @@ class TestJuliaName():
         Check slicing
         '''
         # create and array in Julia and assign it to the name
-        pdp.julia.l = [1, 2, 3, 4]
-        pdp.julia.eval(f'''
+        dp.julia.l = [1, 2, 3, 4]
+        dp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
         # This should return JuliaName containing only the number
         n = julianame1[:]
-        assert(type(n) is pdp.JuliaName)
+        assert(type(n) is dp.JuliaName)
         # There is no direct way to fetch the number
         # directly. Let's check it anyway
-        pdp.julia.n = n
-        assert(pdp.julia.n[0] == 1)
+        dp.julia.n = n
+        assert(dp.julia.n[0] == 1)
 
         # Try getting outside the array
         with pytest.raises(IndexError):
@@ -210,15 +210,15 @@ class TestJuliaName():
         Check getting at index
         '''
         # create and array in Julia and assign it to the name
-        pdp.julia.l = [1, 2, 3, 4]
-        pdp.julia.eval(f'''
+        dp.julia.l = [1, 2, 3, 4]
+        dp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
         # set an entry
         julianame1[1] = 10
-        pdp.julia.n = julianame1
-        assert(pdp.julia.n[1] == 10)
+        dp.julia.n = julianame1
+        assert(dp.julia.n[1] == 10)
 
         # Try setting outside the array
         with pytest.raises(IndexError):
@@ -229,18 +229,18 @@ class TestJuliaName():
         Check getting at index
         '''
         # create and array in Julia and assign it to the name
-        pdp.julia.l = [1, 2, 3, 4]
-        pdp.julia.eval(f'''
+        dp.julia.l = [1, 2, 3, 4]
+        dp.julia.eval(f'''
             {julianame1._name} = l
         ''')
 
         # set an entry
         julianame1[:] = [5, 6, 7, 8]
-        pdp.julia.n = julianame1
-        assert(pdp.julia.n[0] == 5)
-        assert(pdp.julia.n[1] == 6)
-        assert(pdp.julia.n[2] == 7)
-        assert(pdp.julia.n[3] == 8)
+        dp.julia.n = julianame1
+        assert(dp.julia.n[0] == 5)
+        assert(dp.julia.n[1] == 6)
+        assert(dp.julia.n[2] == 7)
+        assert(dp.julia.n[3] == 8)
 
 
 class TestInfluenceDiagram():
@@ -249,15 +249,15 @@ class TestInfluenceDiagram():
         '''
         Test initializing a diagram
         '''
-        diagram = pdp.InfluenceDiagram()
-        assert(type(diagram) is pdp.InfluenceDiagram)
+        diagram = dp.InfluenceDiagram()
+        assert(type(diagram) is dp.InfluenceDiagram)
 
     def test_build_random(self):
         '''
         Test the building random diagram and setting
         random values.
         '''
-        diagram = pdp.InfluenceDiagram()
+        diagram = dp.InfluenceDiagram()
         diagram.build_random(2, 2, 2, 4, 4, [2, 3, 4])
 
         c = diagram.C[0]
@@ -272,11 +272,11 @@ class TestInfluenceDiagram():
         are best tested together, since this allows
         accessing and checking the result easily.
         '''
-        diagram = pdp.InfluenceDiagram()
-        O = pdp.ChanceNode("O", [], ["1", "2"])
+        diagram = dp.InfluenceDiagram()
+        O = dp.ChanceNode("O", [], ["1", "2"])
         diagram.add_node(O)
 
-        D = pdp.DecisionNode("D", ["O"], ["1", "2"])
+        D = dp.DecisionNode("D", ["O"], ["1", "2"])
         diagram.add_node(D)
 
         diagram.generate_arcs()
@@ -289,12 +289,12 @@ class TestInfluenceDiagram():
         '''
         Test setting utilities
         '''
-        diagram = pdp.InfluenceDiagram()
-        D = pdp.DecisionNode("D", [], ["1", "2"])
+        diagram = dp.InfluenceDiagram()
+        D = dp.DecisionNode("D", [], ["1", "2"])
         diagram.add_node(D)
-        V = pdp.ValueNode("V", ["D"])
+        V = dp.ValueNode("V", ["D"])
         diagram.add_node(V)
-        V2 = pdp.ValueNode("V2", ["D"])
+        V2 = dp.ValueNode("V2", ["D"])
         diagram.add_node(V2)
 
         diagram.generate_arcs()
@@ -314,10 +314,10 @@ class TestInfluenceDiagram():
         '''
         Test setting probabilities
         '''
-        diagram = pdp.InfluenceDiagram()
-        O = pdp.ChanceNode("O", [], ["1", "2"])
+        diagram = dp.InfluenceDiagram()
+        O = dp.ChanceNode("O", [], ["1", "2"])
         diagram.add_node(O)
-        O2 = pdp.ChanceNode("O2", [], ["1", "2"])
+        O2 = dp.ChanceNode("O2", [], ["1", "2"])
         diagram.add_node(O2)
 
         diagram.generate_arcs()
@@ -335,8 +335,8 @@ class TestInfluenceDiagram():
         '''
         Test getting the number of states
         '''
-        diagram = pdp.InfluenceDiagram()
-        O = pdp.ChanceNode("O", [], ["1", "2"])
+        diagram = dp.InfluenceDiagram()
+        O = dp.ChanceNode("O", [], ["1", "2"])
         diagram.add_node(O)
         diagram.generate_arcs()
 
@@ -347,8 +347,8 @@ class TestInfluenceDiagram():
         '''
         Test getting the number of states
         '''
-        diagram = pdp.InfluenceDiagram()
-        O = pdp.ChanceNode("O", [], ["1", "2"])
+        diagram = dp.InfluenceDiagram()
+        O = dp.ChanceNode("O", [], ["1", "2"])
         diagram.add_node(O)
         diagram.generate_arcs()
 
@@ -359,22 +359,22 @@ class TestInfluenceDiagram():
         '''
         Test getting decision variables
         '''
-        model = pdp.Model()
+        model = dp.Model()
         z = diagram_simple.decision_variables(model)
-        assert(type(z) == pdp.Diagram.DecisionVariables)
+        assert(type(z) == dp.Diagram.DecisionVariables)
 
     @pytest.mark.with_gurobi
     def test_model_build(self, diagram_simple):
         '''
         Test getting path compatibility variable
         '''
-        model = pdp.Model()
+        model = dp.Model()
 
         x_s = diagram_simple.path_compatibility_variables(model)
-        assert(type(x_s) == pdp.Diagram.PathCompatibilityVariables)
+        assert(type(x_s) == dp.Diagram.PathCompatibilityVariables)
 
         EV = diagram_simple.expected_value(model, x_s)
-        assert(type(EV) == pdp.Diagram.ExpectedValue)
+        assert(type(EV) == dp.Diagram.ExpectedValue)
 
         model.objective(EV, "Max")
         model.setup_Gurobi_optimizer(
@@ -385,7 +385,7 @@ class TestInfluenceDiagram():
 
     @pytest.mark.with_gurobi
     def test_decision_strategy(self, diagram_simple):
-        model = pdp.Model()
+        model = dp.Model()
         z = diagram_simple.decision_variables(model)
         x_s = diagram_simple.path_compatibility_variables(model, z)
         EV = diagram_simple.expected_value(model, x_s)
@@ -398,11 +398,11 @@ class TestInfluenceDiagram():
         model.optimize()
 
         Z = z.decision_strategy()
-        assert(type(Z) == pdp.Diagram.DecisionStrategy)
+        assert(type(Z) == dp.Diagram.DecisionStrategy)
 
         S_probabilities = diagram_simple.state_probabilities(Z)
-        assert(type(S_probabilities) == pdp.Diagram.StateProbabilities)
+        assert(type(S_probabilities) == dp.Diagram.StateProbabilities)
 
         U_distribution = diagram_simple.utility_distribution(Z)
-        assert(type(U_distribution) == pdp.Diagram.UtilityDistribution)
+        assert(type(U_distribution) == dp.Diagram.UtilityDistribution)
 

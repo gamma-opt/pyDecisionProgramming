@@ -1,8 +1,8 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 import numpy as np
 
-# pdp.setupProject()
-pdp.activate()
+# dp.setupProject()
+dp.activate()
 
 
 N = 4
@@ -18,25 +18,25 @@ def fortification(k, a):
         return 0
 
 
-diagram = pdp.InfluenceDiagram()
+diagram = dp.InfluenceDiagram()
 
-load_node = pdp.ChanceNode("L", [], ["high", "low"])
+load_node = dp.ChanceNode("L", [], ["high", "low"])
 diagram.add_node(load_node)
 
 for i in range(N):
-    report_node = pdp.ChanceNode(f"R{i}", ["L"], ["high", "low"])
+    report_node = dp.ChanceNode(f"R{i}", ["L"], ["high", "low"])
     diagram.add_node(report_node)
-    reinforcement_node = pdp.DecisionNode(f"A{i}", [f"R{i}"], ["yes", "no"])
+    reinforcement_node = dp.DecisionNode(f"A{i}", [f"R{i}"], ["yes", "no"])
     diagram.add_node(reinforcement_node)
 
-Fail_state_node = pdp.ChanceNode(
+Fail_state_node = dp.ChanceNode(
     "F",
     ["L", *[f"A{i}" for i in range(N)]],
     ["failure", "success"]
 )
 diagram.add_node(Fail_state_node)
 
-value_node = pdp.ValueNode("T", ["F", *[f"A{i}" for i in range(N)]])
+value_node = dp.ValueNode("T", ["F", *[f"A{i}" for i in range(N)]])
 diagram.add_node(value_node)
 
 diagram.generate_arcs()
@@ -59,7 +59,7 @@ for i in range(N):
 X_F = diagram.construct_probability_matrix("F")
 
 x, y = np.random.random(2)
-for path in pdp.Diagram.Paths([2]*N):
+for path in dp.Diagram.Paths([2]*N):
     forticications = [fortification(k, a) for k, a in enumerate(path)]
     denominator = np.exp(b * np.sum(forticications))
     X_F[(0, *path, 0)] = max(x, 1-x) / denominator
@@ -71,7 +71,7 @@ diagram.set_probabilities("F", X_F)
 
 Y_T = diagram.construct_utility_matrix('T')
 
-for path in pdp.Diagram.Paths([2]*N):
+for path in dp.Diagram.Paths([2]*N):
     forticications = [fortification(k, a) for k, a in enumerate(path)]
     cost = -sum(forticications)
     Y_T[(0, *path)] = 0 + cost
@@ -81,7 +81,7 @@ diagram.set_utility('T', Y_T)
 
 diagram.generate(positive_path_utility=True)
 
-model = pdp.Model()
+model = dp.Model()
 z = diagram.decision_variables(model)
 x_s = diagram.path_compatibility_variables(
     model, z,

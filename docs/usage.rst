@@ -13,8 +13,8 @@ the Julia environment.
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
-  pdp.activate()
+  import DecisionProgramming as dp
+  dp.activate()
 
 Adding Nodes
 ............
@@ -27,7 +27,7 @@ First we create a new influence diagram.
 
 .. code-block:: Python
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 Next we define each node as a
 :python:`DecisionNode`, a :python:`ChanceNode` or
@@ -43,13 +43,13 @@ Use the add_node method to add nodes to the diagram.
 
 .. code-block:: Python
 
-  D1 = pdp.DecisionNode("D1", [], ["a", "b"])
+  D1 = dp.DecisionNode("D1", [], ["a", "b"])
   diagram.add_node(D1)
 
-  C2 = pdp.ChanceNode("C2", ["D1", "C1"], ["v", "w"])
+  C2 = dp.ChanceNode("C2", ["D1", "C1"], ["v", "w"])
   diagram.add_node(C2)
 
-  C1 = pdp.ChanceNode("C1", [], ["x", "y", "z"])
+  C1 = dp.ChanceNode("C1", [], ["x", "y", "z"])
   diagram.add_node(C1)
 
 Value nodes only need a name and their information
@@ -58,7 +58,7 @@ is to map their information state to utility values.
 
 .. code-block:: Python
 
-  V = pdp.ValueNode("V", ["C2"])
+  V = dp.ValueNode("V", ["C2"])
   diagram.add_node(V)
 
 Once all the nodes have been added, we generate the
@@ -159,7 +159,7 @@ the arcs have been generated.
 .. code-block:: Python
 
   # How C1 was added:
-  # C1 = pdp.ChanceNode("C1", [], ["x", "y", "z"])
+  # C1 = dp.ChanceNode("C1", [], ["x", "y", "z"])
   # diagram.add_node(C1)
 
   X_C1 = [0.1, 0.3, 0.6]
@@ -269,7 +269,7 @@ with zeros.
   Out[14]: (2, 3, 2)
 
 
-A matrix of type :code:`pdp.ProbabilityMatrix` can
+A matrix of type :code:`dp.ProbabilityMatrix` can
 be filled using the names of the states. The states
 must however be given in the correct order,
 according to the order of the nodes in the
@@ -295,7 +295,7 @@ Trying with an incorrect name causes a
   JuliaError: Exception 'UndefVarError: probability_matrix not defined' occurred while calling julia code:
   pyDP74ca39945e["z","a","v"] = 0.75
 
-A matrix of type :code:`pdp.ProbabilityMatrix` can
+A matrix of type :code:`dp.ProbabilityMatrix` can
 also be filled using the matrix indices if that is
 more convenient. The following achieves the same
 as what was done above.
@@ -322,7 +322,7 @@ influence diagram once it has been filled with
 probability values. The probability matrix of node
 C2 is added exactly like before, despite
 :code:`X_C2` now being a matrix of type
-:python:`pdp.ProbabilityMatrix`.
+:python:`dp.ProbabilityMatrix`.
 
 .. code-block:: Python
 
@@ -441,7 +441,7 @@ instructions from there.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
 
 We then extract the objective function from the
 diagram and use it in the JuMP model.

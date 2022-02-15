@@ -1,10 +1,10 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 import numpy as np
 import pandas as pd
 from types import SimpleNamespace
 
-# pdp.setupProject()
-pdp.activate()
+# dp.setupProject()
+dp.activate()
 
 orig_data = pd.read_csv("examples/risk_prediction_data.csv")
 
@@ -112,24 +112,24 @@ def state_probabilities(risk_p, t, h, prior):
     return state_probabilites
 
 
-diagram = pdp.InfluenceDiagram()
+diagram = dp.InfluenceDiagram()
 
 H_states = ["CHD", "no CHD"]
 T_states = ["TRS", "GRS", "no test"]
 TD_states = ["treatment", "no treatment"]
 R_states = [str(risk_step*x) + "%" for x in range(n_risk_levels)]
 
-diagram.add_node(pdp.ChanceNode("R0", [], R_states))
-diagram.add_node(pdp.ChanceNode("R1", ["R0", "H", "T1"], R_states))
-diagram.add_node(pdp.ChanceNode("R2", ["R1", "H", "T2"], R_states))
-diagram.add_node(pdp.ChanceNode("H",  ["R0"], H_states))
+diagram.add_node(dp.ChanceNode("R0", [], R_states))
+diagram.add_node(dp.ChanceNode("R1", ["R0", "H", "T1"], R_states))
+diagram.add_node(dp.ChanceNode("R2", ["R1", "H", "T2"], R_states))
+diagram.add_node(dp.ChanceNode("H",  ["R0"], H_states))
 
-diagram.add_node(pdp.DecisionNode("T1",  ["R0"], T_states))
-diagram.add_node(pdp.DecisionNode("T2",  ["R1"], T_states))
-diagram.add_node(pdp.DecisionNode("TD",  ["R2"], TD_states))
+diagram.add_node(dp.DecisionNode("T1",  ["R0"], T_states))
+diagram.add_node(dp.DecisionNode("T2",  ["R1"], T_states))
+diagram.add_node(dp.DecisionNode("TD",  ["R2"], TD_states))
 
-diagram.add_node(pdp.ValueNode("TC",  ["T1", "T2"]))
-diagram.add_node(pdp.ValueNode("HB",  ["H", "TD"]))
+diagram.add_node(dp.ValueNode("TC",  ["T1", "T2"]))
+diagram.add_node(dp.ValueNode("HB",  ["H", "TD"]))
 
 diagram.generate_arcs()
 
@@ -176,7 +176,7 @@ diagram.set_utility("HB", Y_HB)
 
 diagram.generate()
 
-model = pdp.Model()
+model = dp.Model()
 z = diagram.decision_variables(model)
 
 forbidden_tests = diagram.forbidden_path(["T1", "T2"], [("TRS", "TRS"), ("GRS", "GRS"), ("no test", "TRS"), ("no test", "GRS")])

@@ -63,25 +63,25 @@ Chance states of market size :math:`c_j^M \in C_j^M`.
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
+  import DecisionProgramming as dp
   import numpy as np
 
-  pdp.activate()
+  dp.activate()
   np.random.seed(42)
 
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
-  DP = pdp.DecisionNode("DP", [], ["0-3 patents", "3-6 patents", "6-9 patents"])
+  DP = dp.DecisionNode("DP", [], ["0-3 patents", "3-6 patents", "6-9 patents"])
   diagram.add_node(DP)
 
-  CT = pdp.ChanceNode("CT", ["DP"], ["low", "medium", "high"])
+  CT = dp.ChanceNode("CT", ["DP"], ["low", "medium", "high"])
   diagram.add_node(CT)
 
-  DA = pdp.DecisionNode("DA", ["DP", "CT"], ["0-5 applications", "5-10 applications", "10-15 applications"])
+  DA = dp.DecisionNode("DA", ["DP", "CT"], ["0-5 applications", "5-10 applications", "10-15 applications"])
   diagram.add_node(DA)
 
-  CM = pdp.ChanceNode("CM", ["CT", "DA"], ["low", "medium", "high"])
+  CM = dp.ChanceNode("CM", ["CT", "DA"], ["low", "medium", "high"])
   diagram.add_node(CM)
 
   diagram.generate_arcs()
@@ -151,7 +151,7 @@ path activation.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
   z = diagram.decision_variables(model)
 
 Creating problem specific variables
@@ -160,7 +160,7 @@ Creating problem specific variables
 In pyDecisionProgramming problems specific constraints
 are defined as strings. The syntax is closer to Julia than
 Python. First, it is convenient to define the variables
-we will need in :python:`pdp.julia`. These will be
+we will need in :python:`dp.julia`. These will be
 available when defining the constraints.
 
 We recommend reading section 4.2. in [#Salo]_ for
@@ -186,17 +186,17 @@ provides cash flow :math:`V(a\mid c_l^M)\in\mathbb R^+`.
   I_a = np.random.random(n_T)*2     # costs of application projects
   O_a = np.random.randint(2, 5, n_T)   # number of applications for each appl. project
 
-  # Set the names in pdp.julia to use them when setting constraints
-  pdp.julia.I_t = I_t
-  pdp.julia.O_t = O_t
-  pdp.julia.I_a = I_a
-  pdp.julia.O_a = O_a
+  # Set the names in dp.julia to use them when setting constraints
+  dp.julia.I_t = I_t
+  dp.julia.O_t = O_t
+  dp.julia.I_a = I_a
+  dp.julia.O_a = O_a
 
   V_A = np.random.random((n_CM, n_A)) + 0.5  # Value of an application
   V_A[0, :] += -0.5           # Low market share: less value
   V_A[2, :] += 0.5            # High market share: more value
 
-  pdp.julia.V_A = V_A
+  dp.julia.V_A = V_A
 
 
 
@@ -209,10 +209,10 @@ indicate which applications are selected.
 
 .. code-block:: Python
 
-  x_T = pdp.JuMP.Array(model, [n_DP, n_T], binary=True)
-  x_A = pdp.JuMP.Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
-  pdp.julia.x_T = x_T
-  pdp.julia.x_A = x_A
+  x_T = dp.JuMP.Array(model, [n_DP, n_T], binary=True)
+  x_A = dp.JuMP.Array(model, [n_DP, n_CT, n_DA, n_A], binary=True)
+  dp.julia.x_T = x_T
+  dp.julia.x_A = x_A
 
 Number of patents
 :math:`x^T(t)=\sum_ix_i^T(t)z(d_i^P)`.
@@ -229,29 +229,29 @@ Small constant :math:`\epsilon = \frac 12 \min\{O_t,O_a\}`.
 
 .. code-block:: Python
 
-  pdp.julia.M = 20                        # a large constant
-  pdp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
+  dp.julia.M = 20                        # a large constant
+  dp.julia.eps = 0.5*np.min([O_t, O_a])  # a helper variable, allows using ≤ instead of < in constraints (28b) and (29b)
 
 Limits :math:`q_i^P` and :math:`q_k^A` of the intervals
 
 .. code-block:: Python
 
-  pdp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
-  pdp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
+  dp.julia.q_P = [0, 3, 6, 9]          # limits of the technology intervals
+  dp.julia.q_A = [0, 5, 10, 15]        # limits of the application intervals
 
 Shorthand for the decision variables :math:`z`
 
 .. code-block:: Python
 
-  pdp.julia.z_dP = z.z[0]
-  pdp.julia.z_dA = z.z[1]
+  dp.julia.z_dP = z.z[0]
+  dp.julia.z_dA = z.z[1]
 
 
 The diagram itself
 
 .. code-block:: Python
 
-  pdp.julia.diagram = diagram
+  dp.julia.diagram = diagram
 
 
 Creating problem specific constraints
@@ -375,19 +375,19 @@ objective formulation presented in [#Salo]_:
 
 .. code-block:: Python
 
-  pdp.julia.patent_investment_cost = pdp.JuMP.Expression(
+  dp.julia.patent_investment_cost = dp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}]",
       f"sum(x_T[i, t] * I_t[t] for t in 1:{n_T})"
   )
 
-  pdp.julia.application_investment_cost = pdp.JuMP.Expression(
+  dp.julia.application_investment_cost = dp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}]",
       f"sum(x_A[i, j, k, a] * I_a[a] for a in 1:{n_A})"
   )
 
-  pdp.julia.application_value = pdp.JuMP.Expression(
+  dp.julia.application_value = dp.JuMP.Expression(
       model,
       f"[i=1:{n_DP}, j=1:{n_CT}, k=1:{n_DA}, l=1:{n_CM}]",
       f"sum(x_A[i, j, k, a] * V_A[l, a] for a in 1:{n_A})"
@@ -449,11 +449,11 @@ utility distribution.
 
   # Note that indexing in Julia starts from 1, so we
   # must add 1 to each index
-  pdp.julia.DP_i = diagram.index_of("DP") + 1
-  pdp.julia.CT_i = diagram.index_of("CT") + 1
-  pdp.julia.DA_i = diagram.index_of("DA") + 1
-  pdp.julia.CM_i = diagram.index_of("CM") + 1
-  path_utilities = pdp.Diagram.ExpressionPathUtilities(
+  dp.julia.DP_i = diagram.index_of("DP") + 1
+  dp.julia.CT_i = diagram.index_of("CT") + 1
+  dp.julia.DA_i = diagram.index_of("DA") + 1
+  dp.julia.CM_i = diagram.index_of("CM") + 1
+  path_utilities = dp.Diagram.ExpressionPathUtilities(
       model, diagram,
       f'''sum(x_A[s[index_of(diagram, "DP")], s[index_of(diagram, "CT")], s[index_of(diagram, "DA")], a] * (V_A[s[index_of(diagram, "CM")], a] - I_a[a]) for a in 1:{n_A}) -
           sum(x_T[s[index_of(diagram, "DP")], t] * I_t[t] for t in 1:{n_T})

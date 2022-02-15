@@ -21,5 +21,5 @@ help:
 
 # Regenerate API docs
 apidoc:
-	rm -f api/pyDecisionProgramming.*
+	rm -f api/DecisionProgramming.*
 	sphinx-apidoc --force -e -H "pyDecisionProgramming API docs" -o api/ ../pyDecisionProgramming/

@@ -102,12 +102,12 @@ discussed in the following sections.
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
+  import DecisionProgramming as dp
   import numpy as np
   import pandas as pd
   from types import SimpleNamespace
 
-  pdp.activate()
+  dp.activate()
 
   data = pd.read_csv("examples/risk_prediction_data.csv")
   chosen_risk_level = "12%"
@@ -127,7 +127,7 @@ initialising the influence diagram.
 
 .. code-block:: Python
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 For brevity in the next sections, we define the states of
 the nodes to be readily available. Notice, that
@@ -136,7 +136,7 @@ the nodes to be readily available. Notice, that
 
 .. code-block:: Python
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 We then add the nodes. The chance and decision nodes are
 identified by their names. When declaring the nodes, they
@@ -148,14 +148,14 @@ following way.
 
 .. code-block:: Python
 
-  diagram.add_node(pdp.ChanceNode("R0", [], R_states))
-  diagram.add_node(pdp.ChanceNode("R1", ["R0", "H", "T1"], R_states))
-  diagram.add_node(pdp.ChanceNode("R2", ["R1", "H", "T2"], R_states))
-  diagram.add_node(pdp.ChanceNode("H",  ["R0"], H_states))
+  diagram.add_node(dp.ChanceNode("R0", [], R_states))
+  diagram.add_node(dp.ChanceNode("R1", ["R0", "H", "T1"], R_states))
+  diagram.add_node(dp.ChanceNode("R2", ["R1", "H", "T2"], R_states))
+  diagram.add_node(dp.ChanceNode("H",  ["R0"], H_states))
 
-  diagram.add_node(pdp.DecisionNode("T1",  ["R0"], T_states))
-  diagram.add_node(pdp.DecisionNode("T2",  ["R1"], T_states))
-  diagram.add_node(pdp.DecisionNode("TD",  ["R2"], TD_states))
+  diagram.add_node(dp.DecisionNode("T1",  ["R0"], T_states))
+  diagram.add_node(dp.DecisionNode("T2",  ["R1"], T_states))
+  diagram.add_node(dp.DecisionNode("TD",  ["R2"], TD_states))
 
 The value nodes are added in a similar fashion. However,
 value nodes do not have states because they map their
@@ -163,8 +163,8 @@ information states to utility values instead.
 
 .. code-block:: Python
 
-  diagram.add_node(pdp.ValueNode("TC",  ["T1", "T2"]))
-  diagram.add_node(pdp.ValueNode("HB",  ["H", "TD"]))
+  diagram.add_node(dp.ValueNode("TC",  ["T1", "T2"]))
+  diagram.add_node(dp.ValueNode("HB",  ["H", "TD"]))
 
 
 Generate arcs
@@ -376,7 +376,7 @@ We define the JuMP model and declare the decision variables.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
   z = diagram.decision_variables(model)
 
 In this problem, we want to forbid the model from choosing

@@ -69,10 +69,10 @@ of the probabilities and utilities are defined.
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
-  pdp.activate()
+  import DecisionProgramming as dp
+  dp.activate()
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 
 Car's state
@@ -86,7 +86,7 @@ is a root node.
 
 .. code-block:: Python
 
-  O = pdp.ChanceNode("O", [], ["lemon", "peach"])
+  O = dp.ChanceNode("O", [], ["lemon", "peach"])
   diagram.add_node(O)
 
 Stranger's offer decision
@@ -97,7 +97,7 @@ set and its states.
 
 .. code-block:: Python
 
-  T = pdp.DecisionNode("T", [], ["no test", "test"])
+  T = dp.DecisionNode("T", [], ["no test", "test"])
   diagram.add_node(T)
 
 Test's outcome
@@ -110,7 +110,7 @@ the car to be a lemon or a peach.
 
 .. code-block:: Python
 
-  R = pdp.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
+  R = dp.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
   diagram.add_node(R)
 
 Purchase decision
@@ -121,7 +121,7 @@ as follows.
 
 .. code-block:: Python
 
-  A = pdp.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
+  A = dp.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
   diagram.add_node(A)
 
 Testing fee, base profit and repair costs
@@ -131,11 +131,11 @@ Value nodes are defined by only their names and information sets because they do
 
 .. code-block:: Python
 
-  V1 = pdp.ValueNode("V1", ["T"])
+  V1 = dp.ValueNode("V1", ["T"])
   diagram.add_node(V1)
-  V2 = pdp.ValueNode("V2", ["A"])
+  V2 = dp.ValueNode("V2", ["A"])
   diagram.add_node(V2)
-  V3 = pdp.ValueNode("V3", ["O", "A"])
+  V3 = dp.ValueNode("V3", ["O", "A"])
   diagram.add_node(V3)
 
 Generate arcs
@@ -269,7 +269,7 @@ expected value.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
   z = diagram.decision_variables(model)
   x_s = diagram.path_compatibility_variables(model, z)
   EV = diagram.expected_value(model, x_s)

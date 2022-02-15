@@ -1,28 +1,28 @@
-import pyDecisionProgramming as pdp
+import DecisionProgramming as dp
 
-# pdp.setupProject()
-pdp.activate()
+# dp.setupProject()
+dp.activate()
 
-diagram = pdp.InfluenceDiagram()
+diagram = dp.InfluenceDiagram()
 
-car_results = pdp.ChanceNode("O", [], ["lemon", "peach"])
+car_results = dp.ChanceNode("O", [], ["lemon", "peach"])
 diagram.add_node(car_results)
 
-test_options = pdp.DecisionNode("T", [], ["no test", "test"])
+test_options = dp.DecisionNode("T", [], ["no test", "test"])
 diagram.add_node(test_options)
 
-test_outcomes = pdp.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
+test_outcomes = dp.ChanceNode("R", ["O", "T"], ["no test", "lemon", "peach"])
 diagram.add_node(test_outcomes)
 
-buy_options = pdp.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
+buy_options = dp.DecisionNode("A", ["R"], ["buy without guarantee", "buy with guarantee", "don't buy"])
 diagram.add_node(buy_options)
 
 
-value_node = pdp.ValueNode("V1", ["T"])
+value_node = dp.ValueNode("V1", ["T"])
 diagram.add_node(value_node)
-value_node = pdp.ValueNode("V2", ["A"])
+value_node = dp.ValueNode("V2", ["A"])
 diagram.add_node(value_node)
-value_node = pdp.ValueNode("V3", ["O", "A"])
+value_node = dp.ValueNode("V3", ["O", "A"])
 diagram.add_node(value_node)
 
 diagram.generate_arcs()
@@ -60,7 +60,7 @@ diagram.set_utility('V3', Y_V3)
 
 diagram.generate()
 
-model = pdp.Model()
+model = dp.Model()
 z = diagram.decision_variables(model)
 x_s = diagram.path_compatibility_variables(model, z)
 EV = diagram.expected_value(model, x_s)

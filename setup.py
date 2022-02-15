@@ -32,7 +32,7 @@ setup(
       "License :: OSI Approved :: MIT License",
       "Operating System :: OS Independent",
    ],
-   packages=['pyDecisionProgramming'],
+   packages=['DecisionProgramming'],
    scripts=['scripts/pdp_setup_julia.jl'],
    install_requires=requirements
 )

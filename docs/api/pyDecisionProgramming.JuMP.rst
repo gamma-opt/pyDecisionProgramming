@@ -1,7 +1,7 @@
-pyDecisionProgramming.JuMP module
+DecisionProgramming.JuMP module
 =================================
 
-.. automodule:: pyDecisionProgramming.JuMP
+.. automodule:: DecisionProgramming.JuMP
    :members:
    :undoc-members:
    :show-inheritance:

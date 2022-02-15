@@ -1,7 +1,7 @@
-pyDecisionProgramming API docs
+DecisionProgramming API docs
 ==============================
 
 .. toctree::
    :maxdepth: 4
 
-   pyDecisionProgramming
+   DecisionProgramming

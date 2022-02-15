@@ -1,7 +1,7 @@
-pyDecisionProgramming.juliaUtils module
+DecisionProgramming.juliaUtils module
 =======================================
 
-.. automodule:: pyDecisionProgramming.juliaUtils
+.. automodule:: DecisionProgramming.juliaUtils
    :members:
    :undoc-members:
    :show-inheritance:

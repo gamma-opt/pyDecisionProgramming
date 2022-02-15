@@ -1,7 +1,7 @@
-pyDecisionProgramming.Diagram module
+DecisionProgramming.Diagram module
 ====================================
 
-.. automodule:: pyDecisionProgramming.Diagram
+.. automodule:: DecisionProgramming.Diagram
    :members:
    :undoc-members:
    :show-inheritance:

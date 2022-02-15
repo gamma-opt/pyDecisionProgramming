@@ -1,7 +1,7 @@
-pyDecisionProgramming.Nodes module
+DecisionProgramming.Nodes module
 ==================================
 
-.. automodule:: pyDecisionProgramming.Nodes
+.. automodule:: DecisionProgramming.Nodes
    :members:
    :undoc-members:
    :show-inheritance:

@@ -39,8 +39,8 @@ problem and thus, declare :math:`N = 4`.
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
-  pdp.activate()
+  import DecisionProgramming as dp
+  dp.activate()
   N = 4
 
 In Decision Programming, we start by initialising
@@ -50,7 +50,7 @@ add them to the influence diagram.
 
 .. code-block:: Python
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 
 Health at first month
@@ -64,7 +64,7 @@ are :math:`ill` and :math:`healthy`.
 
 .. code-block:: Python
 
-  H0 = pdp.ChanceNode("H0", [], ["ill", "healthy"])
+  H0 = dp.ChanceNode("H0", [], ["ill", "healthy"])
   diagram.add_node(H0)
 
 Health, test results and treatment decisions at subsequent months
@@ -86,19 +86,19 @@ result
 
   for i in range(N-1):
       # testing result
-      T = pdp.ChanceNode(f"T{i}", [f"H{i}"], ["positive", "negative"])
+      T = dp.ChanceNode(f"T{i}", [f"H{i}"], ["positive", "negative"])
       diagram.add_node(T)
 
       # Decision to treat
-      D = pdp.DecisionNode(f"D{i}", [f"T{i}"], ["treat", "pass"])
+      D = dp.DecisionNode(f"D{i}", [f"T{i}"], ["treat", "pass"])
       diagram.add_node(D)
 
       # Cost of treatment
-      C = pdp.ValueNode(f"C{i}", [f"D{i}"])
+      C = dp.ValueNode(f"C{i}", [f"D{i}"])
       diagram.add_node(C)
 
       # Health of next period
-      H = pdp.ChanceNode(f"H{i+1}", [f"H{i}", f"D{i}"], ["ill", "healthy"])
+      H = dp.ChanceNode(f"H{i+1}", [f"H{i}", f"D{i}"], ["ill", "healthy"])
       diagram.add_node(H)
 
 Market price
@@ -110,7 +110,7 @@ price, is added. It has the final health node
 
 .. code-block:: Python
 
-  MP = pdp.ValueNode("MP", [f"H{N-1}"])
+  MP = dp.ValueNode("MP", [f"H{N-1}"])
   diagram.add_node(MP)
 
 Generate arcs
@@ -125,7 +125,7 @@ information into the correct form.
 
 .. code-block:: Python
 
-  MP = pdp.ValueNode("MP", [f"H{N-1}"])
+  MP = dp.ValueNode("MP", [f"H{N-1}"])
   diagram.add_node(MP)
 
 
@@ -311,7 +311,7 @@ of this documentation.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
   z = diagram.decision_variables(model)
   x_s = diagram.path_compatibility_variables(model, z, probability_cut = False)
 

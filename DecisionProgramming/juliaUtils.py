@@ -28,7 +28,7 @@ def random_number_generator(seed=None):
 
     Returns
     -------
-    pdp.JuliaName
+    dp.JuliaName
         The random number generator wrapped in a JuliaName
 
     '''
@@ -73,7 +73,7 @@ class JuliaMain():
         return Main.eval(command)
 
 
-# Expose the Julia runner as pdp.julia
+# Expose the Julia runner as dp.julia
 julia = JuliaMain()
 
 

@@ -1,4 +1,4 @@
-pyDecisionProgramming package
+DecisionProgramming package
 =============================
 
 Submodules
@@ -6,15 +6,15 @@ Submodules
 
 .. toctree::
 
-   pyDecisionProgramming.Diagram
-   pyDecisionProgramming.JuMP
-   pyDecisionProgramming.Nodes
-   pyDecisionProgramming.juliaUtils
+   DecisionProgramming.Diagram
+   DecisionProgramming.JuMP
+   DecisionProgramming.Nodes
+   DecisionProgramming.juliaUtils
 
 Module contents
 ---------------
 
-.. automodule:: pyDecisionProgramming
+.. automodule:: DecisionProgramming
    :members:
    :undoc-members:
    :show-inheritance:

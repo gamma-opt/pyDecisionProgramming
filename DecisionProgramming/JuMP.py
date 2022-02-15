@@ -66,7 +66,7 @@ class Model(JuliaName):
             ); 0'''
             julia.eval(command)
         else:
-            raise ValueError("expected a pdp.Diagram.ExpectedValue object"
+            raise ValueError("expected a dp.Diagram.ExpectedValue object"
             + " or a string")
 
     def optimize(self):
@@ -103,7 +103,7 @@ class Model(JuliaName):
 class Expression(JuliaName):
     ''' Builds a JuMP expression from a string or set of strings.
 
-    model: pdp.Model
+    model: dp.Model
         A JuMP Model object
 
     loop: String (optional)
@@ -137,7 +137,7 @@ class Array(JuliaName):
     Parameters
     ----------
 
-    model: pdp.Model
+    model: dp.Model
         A JuMP Model object
 
     dims: List of Integers

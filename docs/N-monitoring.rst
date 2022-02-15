@@ -43,10 +43,10 @@ as
 
 .. code-block:: Python
 
-  import pyDecisionProgramming as pdp
+  import DecisionProgramming as dp
   import numpy as np
 
-  pdp.activate()
+  dp.activate()
 
   N = 4
   np.random.seed(13)
@@ -68,7 +68,7 @@ it.
 
 .. code-block:: Python
 
-  diagram = pdp.InfluenceDiagram()
+  diagram = dp.InfluenceDiagram()
 
 
 Adding nodes
@@ -81,7 +81,7 @@ load, they are :math:`high` and :math:`low`.
 
 .. code-block:: Python
 
-  L = pdp.ChanceNode("L", [], ["high", "low"])
+  L = dp.ChanceNode("L", [], ["high", "low"])
   diagram.add_node(L)
 
 The report nodes :math:`R_k` and action nodes :math:`A_k`
@@ -97,9 +97,9 @@ whether to fortify the structure or not.
 .. code-block:: Python
 
   for i in range(N):
-      R = pdp.ChanceNode(f"R{i}", ["L"], ["high", "low"])
+      R = dp.ChanceNode(f"R{i}", ["L"], ["high", "low"])
       diagram.add_node(R)
-      A = pdp.DecisionNode(f"A{i}", [f"R{i}"], ["yes", "no"])
+      A = dp.DecisionNode(f"A{i}", [f"R{i}"], ["yes", "no"])
       diagram.add_node(A)
 
 The failure node :math:`F` has the load node :math:`L` and
@@ -109,7 +109,7 @@ in its information set. The failure node has states
 
 .. code-block:: Python
 
-  F = pdp.ChanceNode(
+  F = dp.ChanceNode(
       "F",
       ["L", *[f"A{i}" for i in range(N)]],
       ["failure", "success"]
@@ -120,7 +120,7 @@ The value node :math:`T` is added as follows.
 
 .. code-block:: Python
 
-  T = pdp.ValueNode("T", ["F", *[f"A{i}" for i in range(N)]])
+  T = dp.ValueNode("T", ["F", *[f"A{i}" for i in range(N)]])
   diagram.add_node(T)
 
 
@@ -231,17 +231,17 @@ in the back-end. For instance, the load states
 :math:`high` and :math:`low` are referred to as 1 and 2.
 The same applies for the action states :math:`yes` and
 :math:`no`, they are states 1 and 2. The
-:python:`pdp.Diagram.Paths` class allows us to iterate over the
+:python:`dp.Diagram.Paths` class allows us to iterate over the
 subpaths of specific nodes. In these paths, the states are
 referred to by their indices. Using this information, we
 can easily iterate over the information states using the
-:python:`pdp.Diagram.Paths` class and enter the probability
+:python:`dp.Diagram.Paths` class and enter the probability
 values into the probability matrix.
 
 .. code-block:: Python
 
    x, y = np.random.random(2)
-   for path in pdp.Diagram.Paths([2]*N):
+   for path in dp.Diagram.Paths([2]*N):
        forticications = [fortification(k, a) for k, a in enumerate(path)]
        denominator = np.exp(b * np.sum(forticications))
        X_F[(0, *path, 0)] = max(x, 1-x) / denominator
@@ -301,7 +301,7 @@ probabilities were added above.
 
 .. code-block:: Python
 
-  for path in pdp.Diagram.Paths([2]*N):
+  for path in dp.Diagram.Paths([2]*N):
       forticications = [fortification(k, a) for k, a in enumerate(path)]
       cost = -sum(forticications)
       Y_T[(0, *path)] = 0 + cost
@@ -342,7 +342,7 @@ cut can be excluded from the model formulation.
 
 .. code-block:: Python
 
-  model = pdp.Model()
+  model = dp.Model()
   z = diagram.decision_variables(model)
   x_s = diagram.path_compatibility_variables(
       model, z,
